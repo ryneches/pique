@@ -67,15 +67,14 @@ def writebookmarks( filename, track_name, regions ) :
     f.write( '>name: ' + track_name + ' peak bookmarks\n' )
     f.write( 'Chromosome\tStart\tEnd\tStrand\tName\tAnnotation\n' )
     for r in regions :
-        f.write(    track_name + '\t'                   \
-                    + str(r['forward']['start']) + '\t' \
-                    + str(r['reverse']['stop'])  + '\t' \
-                    + 'none\tpeak\t'                    )
-        keys = r.keys()
-        keys.remove('forward')
-        keys.remove('reverse')
-        for key in keys :
-            f.write( str(key) + ':' + str(r[key]) + '\n' )
+        f.write(    track_name + '\t'        \
+                    + str(r['start']) + '\t' \
+                    + str(r['stop'] ) + '\t' \
+                    + 'none\tpeak\t'         )
+        if r.has_key( 'annotations' ) :
+            for key,value in r['annotations'].items() :
+                f.write( str(key) + ':' + str(value) + ' ' )
+        f.write( '\n' )
     f.close()
 
 def findregions( data, N ) :
@@ -120,7 +119,12 @@ def overlaps( forward, reverse ) :
         for m in reverse :
             if m['start'] < l['stop'] < m['stop'] :
                 if l['start'] < m['start'] < l['stop'] :
-                    envelope.append( {'forward':l,'reverse':m} )
+                    e = {   'forward':l,        \
+                            'reverse':m,        \
+                            'start':l['start'], \
+                            'stop':m['stop'],   \
+                            'annotations':{}    }
+                    envelope.append( e )
     return envelope
 
 def sizeselect( regions, too_big, too_small ) :
