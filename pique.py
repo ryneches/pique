@@ -1,12 +1,10 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python
 """
-Usage : ./stupid_peak.py 
-    CHiP-seq_fwd.txt 
-    CHiP-seq_rev.txt 
-    background_fwd.txt 
-    background_rev.txt 
-    masking_file.txt
-    track_name
+This is the main peak caller script. Once you have identified the
+noise threshold in your data using piquant.py, use this script to
+generate bookmark files containing putative peak annotations.
+
+Usage : ./pique.py <config.yaml>
 """
 import numpy
 import sys

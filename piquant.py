@@ -4,11 +4,15 @@ import yaml
 import sys
 import pique
 """
+This is an itterative peak recovery script. It is designed to tell you
+where the noise threshold is in your data, and provides an upper limit
+to the number of statistically significant peaks that can be
+recovered.
 
+Usage : ./piquant.py <config.yaml>
 """
 
 # Parse config file, set runtime parameters
-
 num_opts = [    'steps',                \
                 'l_thresh',             \
                 'too_big',              \
