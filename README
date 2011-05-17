@@ -3,16 +3,13 @@ experiments that yield high coverage allignments to the reference
 genome. It was developed for studying gene expression in Halobacterium
 salinarum sp. NRC1, sequenced using barcoded 40bp Illumina reads as
 part of an ongoing project in Marc Facciotti's lab at UC Davis.
-I got very tired of invoking formatdb and blastall from the command
-line and parsing the results. So I wrote this very simple wrapper to
-do it. This is not intended to be an efficient way of using BLAST.
 
 INSTALLING
 ----------
 
 Do the usual python thing.
 
-    $ cd raygun
+    $ cd pique
     $ python setup.py install --prefix=/someplace/PYTHONPATH/knows/about
 
 
