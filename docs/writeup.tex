@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\author{R.Y.~Neches \& E.G.~Wilbanks} 
+\title{Analyzing ChIP-seq data with Pique}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+
+\begin{document}
+\maketitle
+
+\newcommand{\imsize}{0.45\columnwidth}
+\newcommand{\threeup}{0.26\columnwidth}
+\newcommand{\cotwo}{$\text{CO}_{2}$}
+\newcommand{\htwo}{$\text{H}_2$}
+\newcommand{\otwo}{$\text{O}_2$}
+\newcommand{\water}{$\text{H}_2\text{O}$}
+\newcommand{\htwos}{$\text{H}_2\text{S}$}
+
+\begin{abstract}
+\end{abstract}
+
+It was found that most peak finders designed for ChIP-seq experiments
+are designed for ChIP-seq in eukaryotic systems, and cleverly
+optimized to work with sparse-coverage data, and must take into
+account the effect of chromatin structure on the variation in
+background coverage. Because of the differences in their genome
+structure, organization and size, the models used for identifying
+coverage enrichment in ChIP-seq experiments eukaryotes are not optimal
+for bacteria and archaea. For example, on this data, CSDeconv has a
+running time on the order of days for a single ChIP-seq mapping.
+
+% Why not? Examples, evidence, hypothesis. 
+
+Fortunately, many of the statistical challenges for ChIP-seq in
+eukaryotes are simply not present in experiments using bacterial and
+archaeal models; this is due in part to higher genome coverage,
+typically by several orders of magnitude, and in part to the absence
+of non-random coverage variation due to highly structured chromatin.
+
+\section{Experimental design}
+
+
+
+\section{Analysis}
+
+% what we did
+
+The 40-bp reads were quality filtered and quality trimmed and aligned
+to the {\em Halobacterium salinarum sp. NRC1} reverence genome using
+bowtie. Reads mapped in the forward and reverse orientation were
+separated, and used to calculate distinct coverage tracks.
+
+% design paradigm
+
+Because ChIP-seq in archaea yields coverage several orders of
+magnitude larger than in eukaryotic systems, we designed a system to
+take maximum advantage of this fact. Given the importance of manual
+curation and settings optimization, Pique provides output suitable for
+use in the Gaggle Genome Browser. This permits convenient interactive
+curation of the peak list. 
+
+For simplicity of design, we have employed several standard algorithms
+and design principles from signal processing.
+
+\begin{itemize}
+
+\item Raw data is normalized with respect to the background.
+
+\item Apply a mask to the ChIP track to remove regions with ambiguous
+  read mapping. For example, it is impossible to map reads to unique
+  loci in highly repetitive or palindromic regions, such as IS
+  elements. As a result, the coverage is impossible to measure
+  unambiguously, and the regions must be excluded from downstream
+  analysis. 
+
+\item The ``DC'' component is removed using linear detrending
+  (scipy.detrend). This removes effects due to coverage variation
+  features larger than about 100Kb.
+
+\item High-$k$ noise in coverage is removed using a Wiener-Kolmogorov
+  filter. The filter delay $\alpha$ is chosen to approximate to the
+  expected footprint size of the targeted protein.
+
+\item A coverage amplitude cutoff calculated from the detrended
+  background track such that any given locus is equally likely to be
+  above or below the cutoff. Enrichment features are defined with
+  respect to this coverage level.
+
+\item A sliding window moving average is used to identify regions
+  whose coverage level deviates from the background. Peaks usually
+  contain gaps in coverage that with widths on the order of the
+  experimentally selected fragment size; the window width is chosen to
+  correspond to this size.
+
+% FIXME : Lizzy needs to verify that this is indeed the case
+
+\end{itemize}
+
+These steps yield simple rectangular envelopes around putative regions
+of enrichment. To determine if these enriched regions correspond to
+binding events, we apply a very simple statistical model :
+
+\begin{itemize}
+
+\item Coordinates of enriched regions in a peak are offset between
+  strands, with the forward strand enriched upstream of the reverse
+  strand. The first condition of the model is that the envelops must
+  be overlapping rectangles; the end coordinate of the forward strand
+  envelope must fall within the reverse strand envelope, and the
+  start coordinate of the reverse strand envelope must fall within the
+  forward strand envelope. 
+
+\item Enrichment that are thought to represent binding events produce
+  a characteristic shape envelope, which we model using a sum over set
+  of Gaussians.
+
+\end{itemize}
+
+If the putative peak passes all of the above tests, this means that
+the peak ``looks'' like a peak. To make sure that we are not finding
+horsies by gazing at clouds, we also require that the integral of the
+coverage in the raw data within the putative peak region exceeds the
+integral of the coverage in the background by a margin set by the
+user. (Other tests for statistical significance may also work, be more
+shiny, et cetera. For example, Monte Carlo simulations of random
+subsamples of the ChIP track and the background track until a
+coalescent is found. )
+
+\section{Theory}
+
+The choice of filter implies some specific assumptions about the
+nature of the coverage noise. The Wiener-Kolmogorov filter was the
+first and simplest statistical signal filter, first published by
+Norbert Wiener in 1949, and independently derived in discrete-time
+form by Andrey Kolmogorov in 1941. The approach assumes the existence
+of two inputs; a ``true'' signal, and a noise source. Both are assumed
+to be stationary stochastic processes combined additively. 
+
+\section{How many peaks are there?}
+
+
+
+\end{document}
