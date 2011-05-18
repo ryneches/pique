@@ -16,7 +16,7 @@ Usage : ./piquant.py <config.yaml>
 num_opts = [    'steps',                \
                 'l_thresh',             \
                 'too_big',              \
-                'too_small'             ]
+                'too_small',            ]
 str_opts = [    'track_name',           \
                 'forward_ChIP_track',   \
                 'forward_bgnd_track',   \
@@ -24,6 +24,8 @@ str_opts = [    'track_name',           \
                 'masking_loci',         \
                 'reverse_bgnd_track',   \
                 'piquant_output',       ]
+opt_pots =      'n_min',                \
+                'n_max',                ]
 
 opt_dict = yaml.load( open( sys.argv[1] ).read() )
 
@@ -32,6 +34,12 @@ for opt in num_opts + str_opts :
         print 'config file missing option : ' + opt
         quit()
     setattr( sys.modules[__name__], opt, opt_dict[opt] )
+
+for opt in opt_opts :
+    if opt_dict.has_key( opt ) :
+        setattr( sys.modules[__name__], opt, opt_dict[opt] )
+    else :
+        setattr( sys.modules[__name__], opt, None )
 
 pique.msg( 'reading track data...' )
 data_ff = pique.readtrack( forward_ChIP_track )
@@ -60,10 +68,16 @@ b_r     = pique.filterset( b_rr,    300, l_thresh )
 
 pique.msg( 'running evaporating lake...' )
 
-top = max( ( max(data_f), max(data_r) ) )
-bot = min( ( min(data_f), min(data_r) ) )
+# if n_min and n_max were defined in the config file, use them as the
+# iteration bounds; otherwise, use the minumum and maximum in the data
+if n_min == n_max == None :
+    top = max( ( max(data_f), max(data_r) ) )
+    bot = min( ( min(data_f), min(data_r) ) )
+else :
+    top = n_max
+    bot = n_min
+
 step = ( top - bot ) / steps
-#top = 500
 lake_overlaps = []
 lake_forward  = []
 lake_reverse  = []
