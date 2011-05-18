@@ -74,8 +74,8 @@ if n_min == n_max == None :
     top = max( ( max(data_f), max(data_r) ) )
     bot = min( ( min(data_f), min(data_r) ) )
 else :
-    top = n_max
-    bot = n_min
+    top = float(n_max)
+    bot = float(n_min)
 
 step = ( top - bot ) / steps
 lake_overlaps = []
