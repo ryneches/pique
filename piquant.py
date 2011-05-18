@@ -22,7 +22,8 @@ str_opts = [    'track_name',           \
                 'forward_bgnd_track',   \
                 'reverse_ChIP_track',   \
                 'masking_loci',         \
-                'reverse_bgnd_track'    ]
+                'reverse_bgnd_track',   \
+                'piquant_output',       ]
 
 opt_dict = yaml.load( open( sys.argv[1] ).read() )
 
@@ -88,3 +89,22 @@ for i,n in enumerate( X ) :
     lake_bg_reverse.append( reverse )
     if i%10 == 0 :
         pique.msg( '   iteration : ' + str(i) + ', peaks recovered : ' + str(len(envelope) ))
+
+pique.msg( 'writing output table...' )
+# build summary table
+summary = zip(  range(len(X)),              \
+                X,                          \
+                map(len, lake_overlaps),    \
+                map(len, lake_bg_overlaps), \
+                map(len, lake_forward),     \
+                map(len, lake_bg_forward),  \
+                map(len, lake_reverse),     \
+                map(len, lake_bg_reverse)   )
+
+# write output
+f = open( piquant_output, 'w' )
+f.write( 'n\tthreshold\toverlaps\tbg_overlaps\tforward\tbg_forward\treverse\tbg_reverse\n' )
+for i in summary :
+    f.write( '\t'.join(map( str, i )) + '\n' )
+f.close()
+
