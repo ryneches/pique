@@ -24,7 +24,7 @@ str_opts = [    'track_name',           \
                 'masking_loci',         \
                 'reverse_bgnd_track',   \
                 'piquant_output',       ]
-opt_pots = [    'n_min',                \
+opt_opts = [    'n_min',                \
                 'n_max',                ]
 
 opt_dict = yaml.load( open( sys.argv[1] ).read() )
