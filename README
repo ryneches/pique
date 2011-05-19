@@ -33,31 +33,37 @@ USAGE
 
 The workflow pique is designed for goes something like this :
 
-    [1] Perform a chromatin immunoprecipitation, extract the DNA, put
-        it in the sequencing machine, get sequence data back.
+    [1]  Perform a chromatin immunoprecipitation, extract the DNA, put
+         it in the sequencing machine, get sequence data back.
 
-    [2] Align the reads to the reference genome of your organism.
+    [2]  Align the reads to the reference genome of your organism.
 
-    [3] Generate coverage tracks for the forward and reverse strands for
-        the ChIP data and for the controls. You did remember to do 
-        controls, right?
+    [3]  Generate coverage tracks for the forward and reverse strands for
+         the ChIP data and for the controls. You did remember to do 
+         controls, right?
 
-    [4] Some regions of the genome may be repetitive or ambiguous, such 
-        as IS elements. Create a masking file for these regions.
+    [4]  Some regions of the genome may be repetitive or ambiguous, such 
+         as IS elements. Create a masking file for these regions.
 
-    [5] Run piquant.py to find the noise threshold.
+    [5]  Use a genome browser to select some regions that are
+         definitely not peaks. Make a bookmark file.
 
-    [6] Run pique.py to build a bookmark file of putative enrichment
-        regions.
+    [6]  Run piquify.py to generate normalized background tracks using
+         the bookmarked non-peak regions.
 
-    [7] View the bookmarks in your favorite genome browser (pique was
-        designed around the Gaggle Genome Browser). Delete false 
-        positives, manually add false negatives, and adjust any 
-        start:stop coordinates that look badly off. Save the bookmark 
-        file.
+    [7]  Run piquant.py to find the noise threshold.
 
-    [8] Run piquancy.py to re-annotate the curated bookmark file with
-        enrichment ratios.
+    [8]  Run pique.py to build a bookmark file of putative enrichment
+         regions.
+
+    [9]  View the bookmarks in your favorite genome browser (pique was
+         designed around the Gaggle Genome Browser). Delete false 
+         positives, manually add false negatives, and adjust any 
+         start:stop coordinates that look badly off. Save the bookmark 
+         file.
+
+    [10] Run piquancy.py to re-annotate the curated bookmark file with
+         enrichment ratios.
 
 CAVEATS
 -------
