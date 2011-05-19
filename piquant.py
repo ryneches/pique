@@ -77,7 +77,7 @@ else :
     top = float(n_max)
     bot = float(n_min)
 
-step = ( top - bot ) / steps
+step = ( top - bot ) / float(steps)
 lake_overlaps = []
 lake_forward  = []
 lake_reverse  = []

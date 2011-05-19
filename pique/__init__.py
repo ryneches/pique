@@ -49,8 +49,9 @@ def readbookmarks( filename ) :
         start, stop = map( int, (start,stop) )
         annot = {}
         for annotation in annotations.split() :
-            key,value = annotation.split(':')
-            annot[key] = value
+            if annotation.__contains__(':') :
+                key,value = annotation.split(':')
+                annot[key] = value
         regions.append( {   'start':start,          \
                             'stop':stop,            \
                             'strand':strand,        \
