@@ -28,22 +28,26 @@
 \end{abstract}
 
 It was found that most peak finders designed for ChIP-seq experiments
-are designed for ChIP-seq in eukaryotic systems, and cleverly
-optimized to work with sparse-coverage data, and must take into
-account the effect of chromatin structure on the variation in
-background coverage. Because of the differences in their genome
-structure, organization and size, the models used for identifying
-coverage enrichment in ChIP-seq experiments eukaryotes are not optimal
-for bacteria and archaea. For example, on this data, CSDeconv has a
-running time on the order of days for a single ChIP-seq mapping.
+are designed for ChIP-seq in eukaryotes. To make cost-effective use of
+current sequencing capacity, they must be cleverly optimized to work
+with sparse-coverage data, and must take into account the effect of
+chromatin structure on the variation in background coverage. For
+ChIP-seq in bacteria and archaea, the differences in genome structure,
+organization and size make the models used for identifying coverage
+enrichment in eukaryotic poorly suited for use in bacteria and
+archaea. 
+
+For example, on this data, CSDeconv has a running time on the order of
+days for a single ChIP-seq mapping.
 
 % Why not? Examples, evidence, hypothesis. 
 
 Fortunately, many of the statistical challenges for ChIP-seq in
 eukaryotes are simply not present in experiments using bacterial and
-archaeal models; this is due in part to higher genome coverage,
-typically by several orders of magnitude, and in part to the absence
-of non-random coverage variation due to highly structured chromatin.
+archaeal models; this is due in part to higher genome coverage --
+typically in inverse proportion to genome size -- and in part to the
+absence of non-random coverage variation due to highly structured
+chromatin.
 
 \section{Experimental design}
 
