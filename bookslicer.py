@@ -58,5 +58,6 @@ for s in slices :
 pique.msg( 'writing sliced tracks...' )
 file = new_track_prefix + '_IP_' + track_name + '.track'
 pique.write_track( data_ff, data_rr, file, track_name )
+file = new_track_prefix + '_BG_' + track_name + '.track'
 pique.write_track( b_ff,    b_rr,    file, track_name )
 
