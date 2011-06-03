@@ -27,13 +27,39 @@ def readtrack( filename ) :
         raise PiqueException( 'Empty input file or parsing error : ' + filename )
     return numpy.array( data )
 
-def write_strandless_track( data, filename, track_name ) :
-    f = open( filename, 'w' )
+def write_strandless_track( data, file, track_name ) :
+    f = open( file, 'w' )
     f.write( 'sequence\tstrand\tposition\tvalue\n' )
     for n,i in enumerate( data ) :
         if i != 0 :
             f.write( track_name + '\t.\t' + str(n) + '\t' + str(i) + '\n' )
     f.close()
+
+def write_track( data_forward, data_reverse, file, track_name ) :
+    f = open( file, 'w' )
+    f.write( 'sequence\tstrand\tposition\tvalue\n' )
+    for n,i in enumerate( data_forward ) :
+        if i != 0 :
+            f.write( track_name + '\t+\t' + str(n) + '\t' + str(i) + '\n' )
+    for n,i in enumerate( data_reverse ) :
+        if i != 0 :
+            f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
+    f.close()
+
+def read_track( file, track_name ) :
+    data_ff = []
+    data_rr = []
+    for line in open( filename ) :
+        if line.__contains__( '\"' ) :
+            continue
+        if not line.__contains__( track_name ) :
+            continue
+        strand = line.split()[1]
+        if strand == '+' :
+            data_ff.append( float( line.split()[3] ) )
+        if strand == '-' :
+            data_rr.append( float( line.split()[3] ) )
+    return {'forward':numpy.array(data_ff), 'reverse':numpy.array(data_rr) }
 
 def readbookmarks( filename ) :
     """

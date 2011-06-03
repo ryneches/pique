@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Report the amplitudes with respect to the bacground in a region list.
+Add gene annotations to a GGB bookmark file.
 """
 import pique
 import yaml

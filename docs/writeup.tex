@@ -64,45 +64,52 @@ separated, and used to calculate distinct coverage tracks.
 
 % design paradigm
 
-Because ChIP-seq in archaea yields coverage several orders of
-magnitude larger than in eukaryotic systems, we designed a system to
-take maximum advantage of this fact. Given the importance of manual
-curation and settings optimization, Pique provides output suitable for
-use in the Gaggle Genome Browser. This permits convenient interactive
-curation of the peak list. 
+ChIP-seq in archaea yields coverage several orders of magnitude larger
+than in eukaryotic systems, and so we designed a system to take
+advantage of this fact. Given the importance of manual curation and
+settings optimization, Pique provides output suitable for use in the
+Gaggle Genome Browser. This permits convenient interactive curation of
+the peak list. 
 
 For simplicity of design, we have employed several standard algorithms
 and design principles from signal processing.
 
 \begin{itemize}
 
-\item Raw data is normalized with respect to the background.
+\item Raw data is normalized with respect to the background. The user
+  selects one or more regions which are representative of the
+  un-enriched background. Resequenced genomes often have coverage
+  artifacts caused by features such as repetitive regions and gene
+  dosage variation. For this reason, we advise the use of curated
+  background regions. This operation is carried out by
+  \texttt{piquify.py}.
 
-\item Apply a mask to the ChIP track to remove regions with ambiguous
-  read mapping. For example, it is impossible to map reads to unique
-  loci in highly repetitive or palindromic regions, such as IS
-  elements. As a result, the coverage is impossible to measure
+\item A mask is applied to the ChIP track to remove regions with
+  ambiguous read mapping. For example, it is impossible to map reads
+  to unique loci in highly repetitive or palindromic regions, such as
+  IS elements. As a result, the coverage is impossible to measure
   unambiguously, and the regions must be excluded from downstream
-  analysis. 
+  analysis. (\texttt{pique.py})
 
 \item The ``DC'' component is removed using linear detrending
   (scipy.detrend). This removes effects due to coverage variation
-  features larger than about 100Kb.
+  features larger than about 100Kb. (\texttt{pique.py})
 
 \item High-$k$ noise in coverage is removed using a Wiener-Kolmogorov
   filter. The filter delay $\alpha$ is chosen to approximate to the
-  expected footprint size of the targeted protein.
+  expected footprint size of the targeted protein. (\texttt{pique.py})
 
 \item A coverage amplitude cutoff calculated from the detrended
   background track such that any given locus is equally likely to be
   above or below the cutoff. Enrichment features are defined with
-  respect to this coverage level.
+  respect to this coverage level (\texttt{pique.py})
 
 \item A sliding window moving average is used to identify regions
   whose coverage level deviates from the background. Peaks usually
   contain gaps in coverage that with widths on the order of the
   experimentally selected fragment size; the window width is chosen to
-  correspond to this size.
+  correspond to this size. (\texttt{pique.py})
+
 
 % FIXME : Lizzy needs to verify that this is indeed the case
 
