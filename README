@@ -64,6 +64,10 @@ The workflow pique is designed for goes something like this :
 
     [10] Run piquancy.py to re-annotate the curated bookmark file with
          enrichment ratios.
+    
+    [11] Run piquilate.py to re-annotate the curated bookmark file
+         with genes likely to be associated with the enrichment site.
+
 
 CAVEATS
 -------
