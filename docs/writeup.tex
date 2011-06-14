@@ -1,28 +1,18 @@
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{enumerate}
+\documentclass{bioinfo}
+%\usepackage{amsmath}
+%\usepackage{enumerate}
 \usepackage{graphicx}
-\author{R.Y.~Neches \& E.G.~Wilbanks} 
-\title{Analyzing ChIP-seq data with Pique}
+%\author{R.Y.~Neches \& E.G.~Wilbanks} 
+%\title{Analyzing ChIP-seq data with Pique}
 
-\addtolength{\oddsidemargin}{-.875in}
-\addtolength{\evensidemargin}{-.875in}
-\addtolength{\textwidth}{1.75in}
+%\addtolength{\oddsidemargin}{-.875in}
+%\addtolength{\evensidemargin}{-.875in}
+%\addtolength{\textwidth}{1.75in}
+%\addtolength{\topmargin}{-.875in}
+%\addtolength{\textheight}{1.75in}
 
-\addtolength{\topmargin}{-.875in}
-\addtolength{\textheight}{1.75in}
-
-
-\begin{document}
-\maketitle
-
-\newcommand{\imsize}{0.45\columnwidth}
-\newcommand{\threeup}{0.26\columnwidth}
-\newcommand{\cotwo}{$\text{CO}_{2}$}
-\newcommand{\htwo}{$\text{H}_2$}
-\newcommand{\otwo}{$\text{O}_2$}
-\newcommand{\water}{$\text{H}_2\text{O}$}
-\newcommand{\htwos}{$\text{H}_2\text{S}$}
+\copyrightyear{2011}
+\pubyear{2011}
 
 % This writeup is intended to be submitted to Bioinformatics as an
 % Applicaiton Note under either the Gene Expression or Sequence
@@ -60,8 +50,33 @@
 %
 % http://www.oxfordjournals.org/our_journals/bioinformatics/
 
+\begin{document}
+\firstpage{1}
+
+\title[In a fit of pique]{Analyzing ChIP-seq data with Pique}
+\author[Neches \textit{et~al}]{R.Y.~Neches\,$^{1}$\footnote{to whom
+    correspondence should be addressed}, E.G.~Wilbanks\,$^{1}$ and
+  M.T.~Facciotti\,$^2$}
+\address{$^{1}$Microbiology Graduate Group, University of California, Davis.\\
+  $^{2}$Department of Biomedical Engineering, University of
+  California, Davis.}
+
+\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+
+\editor{Associate Editor: XXXXXXX}
+
+\maketitle
+
+%\newcommand{\imsize}{0.45\columnwidth}
+%\newcommand{\threeup}{0.26\columnwidth}
+%\newcommand{\cotwo}{$\text{CO}_{2}$}
+%\newcommand{\htwo}{$\text{H}_2$}
+%\newcommand{\otwo}{$\text{O}_2$}
+%\newcommand{\water}{$\text{H}_2\text{O}$}
+%\newcommand{\htwos}{$\text{H}_2\text{S}$}
+
 \begin{abstract}
-\end{abstract}
+\section{Motivation:}
 
 It was found that most peak finders designed for ChIP-seq experiments
 are designed for ChIP-seq in eukaryotes. To make cost-effective use of
@@ -71,10 +86,8 @@ chromatin structure on the variation in background coverage. For
 ChIP-seq in bacteria and archaea, the differences in genome structure,
 organization and size make the models used for identifying coverage
 enrichment in eukaryotic poorly suited for use in bacteria and
-archaea. 
-
-For example, on this data, CSDeconv has a running time on the order of
-days for a single ChIP-seq mapping.
+archaea. For example, on this data, CSDeconv has a running time on the
+order of days for a single ChIP-seq mapping.
 
 % Why not? Examples, evidence, hypothesis. 
 
@@ -85,14 +98,14 @@ typically in inverse proportion to genome size -- and in part to the
 absence of non-random coverage variation due to highly structured
 chromatin.
 
-\section{Experimental design}
+\section{Results:}
+\section{Availability:}
+\section{Contact:} \href{ryneches@ucdavis.edu}{ryneches@ucdavis.edu}
 
+\end{abstract}
 
-
-\section{Analysis}
-
-% what we did
-
+\section{Introduction}
+\section{Approach}
 The 40-bp reads were quality filtered and quality trimmed and aligned
 to the {\em Halobacterium salinarum sp. NRC1} reverence genome using
 bowtie. Reads mapped in the forward and reverse orientation were
@@ -106,6 +119,9 @@ advantage of this fact. Given the importance of manual curation and
 settings optimization, Pique provides output suitable for use in the
 Gaggle Genome Browser. This permits convenient interactive curation of
 the peak list. 
+
+\begin{methods}
+\section{Methods}
 
 For simplicity of design, we have employed several standard algorithms
 and design principles from signal processing.
@@ -171,6 +187,15 @@ binding events, we apply a very simple statistical model :
 
 \end{itemize}
 
+\end{methods}
+
+\begin{figure}[!tpb]%figure1
+%\centerline{\includegraphics{fig01.eps}}
+\caption{Caption, caption.}\label{fig:01}
+\end{figure}
+
+\section{Discussion}
+
 If the putative peak passes all of the above tests, this means that
 the peak ``looks'' like a peak. To make sure that we are not finding
 horsies by gazing at clouds, we also require that the integral of the
@@ -181,8 +206,8 @@ shiny, et cetera. For example, Monte Carlo simulations of random
 subsamples of the ChIP track and the background track until a
 coalescent is found. )
 
-\section{Theory}
 
+\section{Conclusion}
 The choice of filter implies some specific assumptions about the
 nature of the coverage noise. The Wiener-Kolmogorov filter was the
 first and simplest statistical signal filter, first published by
@@ -191,8 +216,17 @@ form by Andrey Kolmogorov in 1941. The approach assumes the existence
 of two inputs; a ``true'' signal, and a noise source. Both are assumed
 to be stationary stochastic processes combined additively. 
 
-\section{How many peaks are there?}
+\section*{Acknowledgement}
+\paragraph{Funding\textcolon}
 
+\bibliographystyle{natbib}
+\bibliographystyle{achemnat}
+\bibliographystyle{plainnat}
+\bibliographystyle{abbrv}
+\bibliographystyle{bioinformatics}
 
+\bibliographystyle{plain}
+
+\bibliography{writeup}
 
 \end{document}
