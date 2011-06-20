@@ -8,9 +8,8 @@ import numpy
 def loadBAM( file ) :
     samfile = pysam.Samfile( file, 'rb' )
     tracks = {}
-    for replicon in samfile.header['SQ'] :
-        name   = replicon['SN']
-        length = replicon['LN']
+    for n,name in enumerate(samfile.references) :
+        length = samfile.lengths[0]
         tracks[name] = {    'length'  : length,                 \
                             'forward' : numpy.zeros(length),    \
                             'reverse' : numpy.zeros(length), }
