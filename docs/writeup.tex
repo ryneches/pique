@@ -53,13 +53,13 @@
 \begin{document}
 \firstpage{1}
 
-\title[In a fit of pique]{Analyzing ChIP-seq data with Pique}
-\author[Neches \textit{et~al}]{R.Y.~Neches\,$^{1}$\footnote{to whom
-    correspondence should be addressed}, E.G.~Wilbanks\,$^{1}$ and
-  M.T.~Facciotti\,$^2$}
+\title[In a fit of pique]{Analyzing high coverage microbial ChIP-seq data with Pique}
+\author[Neches \textit{et~al}]{R.Y.~Neches\,$^{1,3}$\footnote{to whom
+    correspondence should be addressed}, E.G.~Wilbanks\,$^{1,3}$ and
+  M.T.~Facciotti\,$^{2,3}$
 \address{$^{1}$Microbiology Graduate Group, University of California, Davis.\\
   $^{2}$Department of Biomedical Engineering, University of
-  California, Davis.}
+  California, Davis.\\$^{3}$Genome Center BOO, University of California, Davis.}
 
 \history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
 
@@ -78,9 +78,8 @@
 \begin{abstract}
 \section{Motivation:}
 
-It was found that most peak finders designed for ChIP-seq experiments
-are designed for ChIP-seq in eukaryotes. To make cost-effective use of
-current sequencing capacity, they must be cleverly optimized to work
+Most peak finders designed for ChIP-seq experiments
+are designed for peak detection in eukaryotic datasets. To make cost-effective use of current sequencing capacity, they must be cleverly optimized to work
 with sparse-coverage data, and must take into account the effect of
 chromatin structure on the variation in background coverage. For
 ChIP-seq in bacteria and archaea, the differences in genome structure,
@@ -105,6 +104,8 @@ chromatin.
 \end{abstract}
 
 \section{Introduction}
+ChIP-Seq, the selective chromatin immunoprecipitation of DNA binding proteins and their cognate DNA followed by DNA sequencing, 
+
 \section{Approach}
 The 40-bp reads were quality filtered and quality trimmed and aligned
 to the {\em Halobacterium salinarum sp. NRC1} reverence genome using
@@ -217,7 +218,7 @@ of two inputs; a ``true'' signal, and a noise source. Both are assumed
 to be stationary stochastic processes combined additively. 
 
 \section*{Acknowledgement}
-\paragraph{Funding\textcolon}
+\paragraph{Funding\textcolon} This project was funded by UC Davis startup funds to MTF, NSF graduate fellowship AWARD NUMBER to EGW and DARPA AWARD NUMBER TO RN.
 
 \bibliographystyle{natbib}
 \bibliographystyle{achemnat}
