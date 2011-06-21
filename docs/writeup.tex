@@ -59,7 +59,7 @@
   M.T.~Facciotti\,$^{2,3}$
 \address{$^{1}$Microbiology Graduate Group, University of California, Davis.\\
   $^{2}$Department of Biomedical Engineering, University of
-  California, Davis.\\$^{3}$Genome Center BOO, University of California, Davis.}
+  California, Davis.\\$^{3}$Genome Center, University of California, Davis.}
 
 \history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
 
@@ -78,33 +78,22 @@
 \begin{abstract}
 \section{Motivation:}
 
-Most peak finders designed for ChIP-seq experiments
-are designed for peak detection in eukaryotic datasets. To make cost-effective use of current sequencing capacity, they must be cleverly optimized to work
-with sparse-coverage data, and must take into account the effect of
-chromatin structure on the variation in background coverage. For
-ChIP-seq in bacteria and archaea, the differences in genome structure,
-organization and size make the models used for identifying coverage
-enrichment in eukaryotic poorly suited for use in bacteria and
-archaea. For example, on this data, CSDeconv has a running time on the
-order of days for a single ChIP-seq mapping.
+Most ChIP-Seq peak finders are designed to protein-DNA binding events in eukaryotic datasets. To make cost-effective use of current sequencing capacity, the peak finders must be cleverly optimized to work with sparse-coverage data, and must take into account the effect of chromatin structure on the variation in background coverage. While numerous effective peak finders have been developed  for eukaryotic data, these algorithmic approaches can be suprisingly error prone in our hands when run on high-coverage bacterial and archaeal ChIP-Seq datasets.  
 
 % Why not? Examples, evidence, hypothesis. 
 
-Fortunately, many of the statistical challenges for ChIP-seq in
-eukaryotes are simply not present in experiments using bacterial and
-archaeal models; this is due in part to higher genome coverage --
-typically in inverse proportion to genome size -- and in part to the
-absence of non-random coverage variation due to highly structured
-chromatin.
-
 \section{Results:}
-\section{Availability:}
+Fortunately, many of the statistical challenges for peak detection inherent in eukaryotic ChIP-seq data are not present in bacterial and archaeal datasets; this is due in part to higher genome coverage -- typically in inverse proportion to genome size -- and in part to the absence of non-random coverage variation due to highly structured chromatin.  In response, we have developed Pique, a conceptually simple, easy to run ChIP-Seq peak finding pipeline for bacterial and archaeal ChIP-Seq data.  The software is cross-platform, implemented in Python.  Output is easily imported into the Gaggle Genome Browser for manual curation of peaks and the exploration of the dataset in the context of Gaggle-enabled resources.  
+
+\section{Availability:} 
+RUSSELL - The software is available under the BSD-3 license at http://github.com/ryneches/pique.
+
 \section{Contact:} \href{ryneches@ucdavis.edu}{ryneches@ucdavis.edu}
 
 \end{abstract}
 
 \section{Introduction}
-ChIP-Seq, the selective chromatin immunoprecipitation of DNA binding proteins and their cognate DNA followed by DNA sequencing, 
+Next generation sequencing coupled with chromatin immunoprecipitation (ChIP-Seq) is revolutionizing our abilty to genomically map protein-DNA associations for a wide variety of proteins.  The growing popularity of ChIP-Seq has spurred the  development of numerous peak picking algorithms.  All but one, (CSDeconv (REF)) of the peak picking algorithms have been designed to perform well on eukaryotic datasets.  Given current sequencing capabilites, cost and typical eukaryotic genome sizes this has meant that the datasets are typically sparce, necessitating the use of various statistical approaches and optimizations for  peak detection. The relative performance of 11 represetative peak detection algorithms on eukatyoric data has been recently reviewed by Wilbanks and Facciotti (REF). associated peak picking algorithms offers the potential for relatively low-cost and high resolution mapping of protein-DNA interactions if the interrogated genome is sufficiently small with respect to genomic sequence coverage.  Given current sequencing technologies, most eukaryotic ChIP-Seq experiments
 
 \section{Approach}
 The 40-bp reads were quality filtered and quality trimmed and aligned
