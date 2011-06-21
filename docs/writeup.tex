@@ -93,28 +93,31 @@ RUSSELL - The software is available under the BSD-3 license at http://github.com
 \end{abstract}
 
 \section{Introduction}
-Next generation sequencing coupled with chromatin immunoprecipitation (ChIP-Seq) is revolutionizing our abilty to genomically map protein-DNA associations for a wide variety of proteins.  The growing popularity of ChIP-Seq has spurred the  development of numerous peak picking algorithms.  All but one, (CSDeconv (REF)) of the peak picking algorithms have been designed to perform well on eukaryotic datasets.  Given current sequencing capabilites, cost and typical eukaryotic genome sizes this has meant that the datasets are typically sparce, necessitating the use of various statistical approaches and optimizations for  peak detection. The relative performance of 11 represetative peak detection algorithms on eukatyoric data has been recently reviewed by Wilbanks and Facciotti (REF). associated peak picking algorithms offers the potential for relatively low-cost and high resolution mapping of protein-DNA interactions if the interrogated genome is sufficiently small with respect to genomic sequence coverage.  Given current sequencing technologies, most eukaryotic ChIP-Seq experiments
+Next generation sequencing coupled with chromatin immunoprecipitation (ChIP-Seq) is revolutionizing our abilty to genomically map protein-DNA associations for a wide variety of proteins.  The growing popularity of ChIP-Seq has spurred the  development of numerous peak picking algorithms.  All but one, (CSDeconv (REF)) of the peak picking algorithms have been designed to perform well on eukaryotic datasets.  To make most cost-effective use of current sequencing abilities the peak picking methods have employed a number of sophisticated strategies to detect peaks in the typically sparcely covered eukaryotic datasets for which they are designed.  The problem of finding peaks in such data is apparently so challenging that over 30 different methods have been published since 2007.  The relative performance of 11 represetative peak detection algorithms on eukatyoric data has been recently reviewed by Wilbanks and Facciotti (REF). 
+
+While ChIP-Seq has been predominantly used to interrogate protein-DNA interactions in eukaryotic systems (REFS) there are clear advantages to adopting this technology for studying microbial systems that are largely associated with the relatively small sizes of microbial genomes (e.g. the E. coli genome is ~2000 smaller than the human genome).  Surprisingly, however, existing peak detection algorithms designed for eukaryotic systems have, in our hands, been error prone with microbial ChIP-Seq data.  To our knowledge, only one other peak finding package, CSDeconv (REF) has been explicitly developed for finding peaks in microbial ChIP-Seq data.  This MATLAB package does a good job (WE THINK) of finding peaks in microbial ChIP-Seq data but it's broad applicaiton is limited by the requirement for the proprietary software package MATLAB, relatively slow performance and lack of easy peak curation options.  Herein we describe Pique, a conceptually simple, Python-based peak finding package that enables easy and rapid peak finding in bacterial and archaeal ChIP-Seq datasets.  The output is easily imported into the Gaggle Genome Browser (REF) to enable rapid manual peak list curation and analysis of ChIP-Seq data in the context of other Gaggle-enabled (REF) resources.  
 
 \section{Approach}
-The 40-bp reads were quality filtered and quality trimmed and aligned
-to the {\em Halobacterium salinarum sp. NRC1} reverence genome using
-bowtie. Reads mapped in the forward and reverse orientation were
-separated, and used to calculate distinct coverage tracks.
+ChIP-seq in bacteria and archaea yields coverage several orders of magnitude larger than in eukaryotic systems.  This generates data with near-continuous signal across the microbial chromosome rather than the otherwise sparse coverage typically present in eukaryotic ChIP-Seq data.  This elemenatry feature of microbial ChIP-Seq data allows for greater simplicity of design through the use several standard algorithms and design principles from signal processing.
+
+Finally, given the importance of manual curation and
+settings optimization, Pique provides output suitable for use in the
+Gaggle Genome Browser. This permits convenient interactive curation of
+the peak list and analysis of the ChIP-Seq data in the context of other Gaggle-enabled resources.   
+
+
 
 % design paradigm
 
-ChIP-seq in archaea yields coverage several orders of magnitude larger
-than in eukaryotic systems, and so we designed a system to take
-advantage of this fact. Given the importance of manual curation and
-settings optimization, Pique provides output suitable for use in the
-Gaggle Genome Browser. This permits convenient interactive curation of
-the peak list. 
+
 
 \begin{methods}
 \section{Methods}
 
-For simplicity of design, we have employed several standard algorithms
-and design principles from signal processing.
+Prior to running Pique, 40-bp Illumina (Solexa) reads sould be quality filtered, quality trimmed, and aligned to a reference genome using a favorite short-read sequence aligner. 
+
+Reads mapped in the forward and reverse orientation are
+separated, and used to calculate distinct coverage tracks. (IS THIS STILL FOR REAL?)
 
 \begin{itemize}
 
@@ -179,14 +182,18 @@ binding events, we apply a very simple statistical model :
 
 \end{methods}
 
-\begin{figure}[!tpb]%figure1
+\begin{figure}[!tfbd peak - a nice one]%figure1
 %\centerline{\includegraphics{fig01.eps}}
-\caption{Caption, caption.}\label{fig:01}
+\caption{HOW ABOUT A FIGURE OF A PEAK with rectangular envelope and subsequent shape envelope}\label{fig:01}
 \end{figure}
 
+\begin{figure}[!tfbd data - reasonable spot showing curation]%figure2
+%\centerline{\includegraphics{fig02.eps}}
+\caption{GAGGLE GENOME BROWSER}\label{fig:02}
+\end{figure}
 \section{Discussion}
 
-If the putative peak passes all of the above tests, this means that
+If a putative peak passes all of the tests above, Pique concludes that
 the peak ``looks'' like a peak. To make sure that we are not finding
 horsies by gazing at clouds, we also require that the integral of the
 coverage in the raw data within the putative peak region exceeds the
@@ -194,7 +201,7 @@ integral of the coverage in the background by a margin set by the
 user. (Other tests for statistical significance may also work, be more
 shiny, et cetera. For example, Monte Carlo simulations of random
 subsamples of the ChIP track and the background track until a
-coalescent is found. )
+coalescent is found. YES - WHAT/HOW IS THE CURRENT BG SELECTED?
 
 
 \section{Conclusion}
@@ -204,7 +211,7 @@ first and simplest statistical signal filter, first published by
 Norbert Wiener in 1949, and independently derived in discrete-time
 form by Andrey Kolmogorov in 1941. The approach assumes the existence
 of two inputs; a ``true'' signal, and a noise source. Both are assumed
-to be stationary stochastic processes combined additively. 
+to be stationary stochastic processes combined additively. We note that Pique should also work well with eukaryotic datasets provided they are gathered with greater coverage than has been previously reported.  
 
 \section*{Acknowledgement}
 \paragraph{Funding\textcolon} This project was funded by UC Davis startup funds to MTF, NSF graduate fellowship AWARD NUMBER to EGW and DARPA AWARD NUMBER TO RN.
