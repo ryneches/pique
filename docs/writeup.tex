@@ -53,8 +53,8 @@
 \begin{document}
 \firstpage{1}
 
-\title[In a fit of pique]{Analyzing high coverage microbial ChIP-seq
-  data with Pique} \author[Neches
+\title[In a fit of pique]{Analyzing microbial ChIP-Seq data with
+  Pique} \author[Neches
 \textit{et~al}]{R.Y.~Neches\,$^{1,3}$\footnote{to whom correspondence
     should be addressed}, E.G.~Wilbanks\,$^{1,3}$ and
   M.T.~Facciotti\,$^{2,3}$
@@ -125,57 +125,54 @@ Gaggle-enabled resources.
 immunoprecipitation (ChIP-Seq) is revolutionizing our abilty to
 genomically map protein-DNA associations for a wide variety of
 proteins.  The growing popularity of ChIP-Seq has spurred the
-development of numerous peak picking algorithms.  All but one,
-(CSDeconv (REF)) of the peak picking algorithms have been designed to
-perform well on eukaryotic datasets.  To make most cost-effective use
-of current sequencing abilities the peak picking methods have employed
-a number of sophisticated strategies to detect peaks in the typically
-sparcely covered eukaryotic datasets for which they are designed.  The
-problem of finding peaks in such data is apparently so challenging
-that over 30 different methods have been published since 2007.  The
-relative performance of 11 represetative peak detection algorithms on
-eukatyoric data has been recently reviewed by Wilbanks and Facciotti
-(REF).
+development of numerous peak detection algorithms.  All but one,
+(CSDeconv (REF)) have been designed with eukaryotic data sets in mind.
+To make most cost-effective use of contemporary sequencing abilities,
+these methods have employed a number of sophisticated strategies to
+detect peaks in sparsely covered datasets. The problem of finding
+peaks in such data is apparently so challenging that over thirty
+different methods have been published since 2007. Eleven
+representative peak detection algorithms were recently reviewed by
+Wilbanks and Facciotti (REF).
 
 While ChIP-Seq has been predominantly used to interrogate protein-DNA
 interactions in eukaryotic systems (REFS) there are clear advantages
 to adopting this technology for studying microbial systems that are
 largely associated with the relatively small sizes of microbial
 genomes (the genome of {\em E. coli} is $\approx$2000 times smaller
-than the human genome). In our hands, peak detection algorithms
-designed for use in eukaryotic ChIP-Seq experiments are very prone to
-errors on microbial ChIP-Seq data. This is surprising; eukaryotic
-ChIP-Seq necessarily involves more challenging biochemical and
-statistical approaches than microbial ChIP-Seq.
+than the human genome). Eukaryotic ChIP-Seq necessarily involves more
+challenging biochemical and statistical approaches than microbial
+ChIP-Seq, and so we were surprised to find that software that works
+well in eukaryotic systems evidently fails when presented with a
+lesser challenge.
 
 To our knowledge, only one other peak finding package, CSDeconv (REF)
 has been explicitly developed for finding peaks in microbial ChIP-Seq
-data. This MATLAB package does a good job (WE THINK) of finding peaks
-in microbial ChIP-Seq data but its application is limited by the
-dependency on costly proprietary software, very slow performance and
-lack of support for manual curation.
+data. This MATLAB package successfully finds peaks in microbial
+ChIP-Seq data, but its application is limited by its dependency on
+costly proprietary software, very slow performance, lack of support
+for manual curation, and high false negative rate.
 
 Herein we describe Pique, a conceptually simple, Python-based peak
 finding package that enables easy and rapid peak finding in bacterial
 and archaeal ChIP-Seq datasets.  The output is easily imported into
-the Gaggle Genome Browser (REF) to enable rapid manual peak list
-curation and analysis of ChIP-Seq data in the context of other
-Gaggle-enabled (REF) resources (browsers are that can import GFF data
-also supported).
+the Gaggle Genome Browser (REF) to enable rapid manual curation and
+analysis of ChIP-Seq data in the context of other Gaggle-enabled (REF)
+resources (browsers are that can import GFF data also supported).
 
-Pique is also designed for detection in organisms have genomic
-complexities, such as IS elements, gene dosage polymorphisms and
-accessory genomes that cause variations in sequence coverage unrelated
-to ChIP, or in cases where the organism under study is not identical
-to the reference genome. The resulting enrichment ``pedestals'' and
-``holes'' can be very problematic for detecting peaks and calculating
-enrichment levels. Pique allows the user to optionally supply a map of
-these features as a GFF file, and the software will automatically
-perform a segmented analysis.
+Pique is also designed for use in systems have genomic complexities
+such as IS elements, gene dosage polymorphisms and accessory genomes
+that cause variations in sequence coverage unrelated to ChIP, or in
+cases where the organism under study is not identical to the reference
+genome. The resulting enrichment ``pedestals'' and ``holes'' can be
+very problematic for detecting peaks and calculating enrichment
+levels. Pique allows the user to optionally supply a map of these
+features as a GFF file, and the software will automatically perform a
+segmented analysis.
 
 \section{Approach}
 
-\noindent ChIP-seq in bacteria and archaea yields coverage several
+\noindent ChIP-Seq in bacteria and archaea yields coverage several
 orders of magnitude larger than in eukaryotic systems.  This generates
 data with near-continuous signal across the microbial chromosome
 rather than the sparse coverage typically present in eukaryotic
@@ -190,12 +187,6 @@ peak list and analysis of the ChIP-Seq data in the context of other
 Gaggle-enabled resources. Interactive curation of a microbial ChIP-Seq
 data set can typically be completed in a few minutes. 
 
-
-
-% design paradigm
-
-
-
 \begin{methods}
 \section{Methods}
 
@@ -206,68 +197,57 @@ requires a BAM file as input \cite{sam_format}. We suggest using all
 contigs of the reference genome as the mapping target, but the user
 may prefer to proceed with one contig at a time if desired. 
 
+The user may optionally supply a map of coverage features. Pique
+supports two modes; analysis regions and exclusion regions. By
+default, Pique treats each contig as a single analysis regions, but
+the user may designate regions within a contig for separate
+analysis. This is useful where a gene dosage polymorphism has
+systematically altered the coverage level in a large region. Exclusion
+regions are simply masked out of their respective analysis regions,
+and are useful for removing coverage variation due to repetitive DNA.
+
+The user launches the primary analysis stage by providing alignment an
+file for the ChIP data, an alignment file for the control data, and an
+optional coverage feature map. The primary analysis proceeds thusly :
+
 \begin{itemize}
 
+\item The alignment files are digested, and the analysis regions are
+  initialized. If a coverage feature map provided, the analysis
+  regions are separated and the exclusion regions applied.
 
+\item The coverage noise threshold is measured in both the ChIP and
+  control alignments by adaptive simulated annealing of the cutoff
+  threshold with respect to the peak recovery rate.
 
-\item Raw data is normalized with respect to the background. The user
-  selects one or more regions which are representative of the
-  un-enriched background. Resequenced genomes often have coverage
-  artifacts caused by features such as repetitive regions and gene
-  dosage variation. For this reason, we advise the use of curated
-  background regions. This operation is carried out by
-  \texttt{piquify.py}.
-
-\item A mask is applied to the ChIP track to remove regions with
-  ambiguous read mapping. For example, it is impossible to map reads
-  to unique loci in highly repetitive or palindromic regions, such as
-  IS elements. As a result, the coverage is impossible to measure
-  unambiguously, and the regions must be excluded from downstream
-  analysis. (\texttt{pique.py})
-
-\item The ``DC'' component is removed using linear detrending
-  (scipy.detrend). This removes effects due to coverage variation
-  features larger than about 100Kb. (\texttt{pique.py})
+\item In each analysis region, the ``DC'' component is removed using
+  linear detrending. This removes effects due to coverage variation
+  features larger than about 100Kb.
 
 \item High-$k$ noise in coverage is removed using a Wiener-Kolmogorov
   filter. The filter delay $\alpha$ is chosen to approximate to the
-  expected footprint size of the targeted protein. (\texttt{pique.py})
+  expected footprint size of the targeted protein.
 
-\item A coverage amplitude cutoff calculated from the detrended
-  background track such that any given locus is equally likely to be
-  above or below the cutoff. Enrichment features are defined with
-  respect to this coverage level (\texttt{pique.py})
+\item A sliding window average is used to identify regions whose
+  coverage level deviates from the background. Peaks usually contain
+  gaps in coverage on the order of the experimentally selected
+  fragment size; the window width is chosen to correspond to this
+  size. This yield simple rectangular envelopes around putative
+  regions of enrichment. 
 
-\item A sliding window moving average is used to identify regions
-  whose coverage level deviates from the background. Peaks usually
-  contain gaps in coverage that with widths on the order of the
-  experimentally selected fragment size; the window width is chosen to
-  correspond to this size. (\texttt{pique.py})
-
-
-% FIXME : Lizzy needs to verify that this is indeed the case
-
-\end{itemize}
-
-These steps yield simple rectangular envelopes around putative regions
-of enrichment. To determine if these enriched regions correspond to
-binding events, we apply a very simple statistical model :
-
-\begin{itemize}
-
-\item Coordinates of enriched regions in a peak are offset between
-  strands, with the forward strand enriched upstream of the reverse
-  strand. The first condition of the model is that the envelops must
-  be overlapping rectangles; the end coordinate of the forward strand
-  envelope must fall within the reverse strand envelope, and the
-  start coordinate of the reverse strand envelope must fall within the
-  forward strand envelope. 
-
-\item Enrichment that are thought to represent binding events produce
-  a characteristic shape envelope, which we model using a sum over set
-  of Gaussians.
+\item To determine if a putative enriched region corresponds to a
+  binding event, we require that the stop coordinate of the forward
+  strand enrichment envelope must fall between the coordinates of the
+  reverse strand enrichment envelope, and that the start coordinate of
+  the reverse strand enrichment envelope fall between the coordinates
+  of the forward strand enrichment envelope. (We call this the overlap
+  criterion.)
 
 \end{itemize}
+
+% FIXME : The overlap criterion is a very crude version of the
+% heuristic models other peak callers user. We should say something
+% here about these models, and why decided not to use them.
 
 \end{methods}
 
