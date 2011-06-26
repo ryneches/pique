@@ -1,18 +1,22 @@
 @article{sam_format,
     abstract = {{SUMMARY: The Sequence Alignment/Map (SAM) format is a
-generic alignment format for storing read alignments against reference
-sequences, supporting short and long reads (up to 128 Mbp) produced by
-different sequencing platforms. It is flexible in style, compact in
-size, efficient in random access and is the format in which alignments
-from the 1000 Genomes Project are released. SAMtools implements
-various utilities for post-processing alignments in the SAM format,
-such as indexing, variant caller and alignment viewer, and thus
-provides universal tools for processing read alignments. AVAILABILITY:
-http://samtools.sourceforge.net.}}, author = {Li, Heng and Handsaker,
-Bob and Wysoker, Alec and
-Fennell, Tim and Ruan, Jue and Homer, Nils and Marth, Gabor and
-Abecasis, Goncalo and Durbin, Richard and {1000 Genome Project Data
-Processing Subgroup}},
+                  generic alignment format for storing read alignments
+                  against reference sequences, supporting short and
+                  long reads (up to 128 Mbp) produced by different
+                  sequencing platforms. It is flexible in style,
+                  compact in size, efficient in random access and is
+                  the format in which alignments from the 1000 Genomes
+                  Project are released. SAMtools implements various
+                  utilities for post-processing alignments in the SAM
+                  format, such as indexing, variant caller and
+                  alignment viewer, and thus provides universal tools
+                  for processing read alignments. AVAILABILITY:
+                  http://samtools.sourceforge.net.}}, author = {Li,
+                  Heng and Handsaker, Bob and Wysoker, Alec and
+                  Fennell, Tim and Ruan, Jue and Homer, Nils and
+                  Marth, Gabor and Abecasis, Goncalo and Durbin,
+                  Richard and {1000 Genome Project Data Processing
+                  Subgroup}},
     citeulike-article-id = {4778506},
     citeulike-linkout-0 =
 {http://dx.doi.org/10.1093/bioinformatics/btp352},
@@ -33,7 +37,7 @@ Processing Subgroup}},
     issn = {1367-4811},
     journal = {Bioinformatics (Oxford, England)},
     keywords = {alignment, bam, file\_formats, pique\_paper,
-reference\_alignment, sam, sequence\_mapping},
+                  reference\_alignment, sam, sequence\_mapping},
     month = aug,
     number = {16},
     pages = {2078--2079},
@@ -47,3 +51,503 @@ reference\_alignment, sam, sequence\_mapping},
     year = {2009}
 }
 
+@article{gaggle,
+    abstract = {{BACKGROUND:Systems biologists work with many kinds of
+                  data, from many different sources, using a variety
+                  of software tools. Each of these tools typically
+                  excels at one type of analysis, such as of
+                  microarrays, of metabolic networks and of predicted
+                  protein structure. A crucial challenge is to combine
+                  the capabilities of these (and other forthcoming)
+                  data resources and tools to create a data
+                  exploration and analysis environment that does
+                  justice to the variety and complexity of systems
+                  biology data sets. A solution to this problem should
+                  recognize that data types, formats and software in
+                  this high throughput age of biology are constantly
+                  changing.RESULTS:In this paper we describe the
+                  Gaggle -a simple, open-source Java software
+                  environment that helps to solve the problem of
+                  software and database integration. Guided by the
+                  classic software engineering strategy of separation
+                  of concerns and a policy of semantic flexibility, it
+                  integrates existing popular programs and web
+                  resources into a user-friendly, easily-extended
+                  environment.We demonstrate that four simple data
+                  types (names, matrices, networks, and associative
+                  arrays) are sufficient to bring together diverse
+                  databases and software. We highlight some
+                  capabilities of the Gaggle with an exploration of
+                  Helicobacter pylori pathogenesis genes, in which we
+                  identify a putative ricin-like protein -a discovery
+                  made possible by simultaneous data exploration using
+                  a wide range of publicly available data and a
+                  variety of popular bioinformatics software
+                  tools.CONCLUSION:We have integrated diverse
+                  databases (for example, KEGG, BioCyc, String) and
+                  software (Cytoscape, DataMatrixViewer, R statistical
+                  environment, and TIGR Microarray Expression
+                  Viewer). Through this loose coupling of diverse
+                  software and databases the Gaggle enables
+                  simultaneous exploration of experimental data (mRNA
+                  and protein abundance, protein-protein and
+                  protein-DNA interactions), functional associations
+                  (operon, chromosomal proximity, phylogenetic
+                  pattern), metabolic pathways (KEGG) and Pubmed
+                  abstracts (STRING web resource), creating an
+                  exploratory environment useful to 'web browser and
+                  spreadsheet biologists', to statistically savvy
+                  computational biologists, and those in between. The
+                  Gaggle uses Java RMI and Java Web Start technologies
+                  and can be found at
+                  http://gaggle.systemsbiology.net.}},
+    address = {Institute for Systems Biology, Seattle, WA 98103,
+                  USA. pshannon@systemsbiology.org},
+    author = {Shannon, Paul and Reiss, David and Bonneau, Richard and
+                  Baliga, Nitin},
+    citeulike-article-id = {988445},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1186/1471-2105-7-176},
+    citeulike-linkout-1 =
+                  {http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1464137/},
+    citeulike-linkout-2 = {http://view.ncbi.nlm.nih.gov/pubmed/16569235},
+    citeulike-linkout-3 = {http://www.hubmed.org/display.cgi?uids=16569235},
+    doi = {10.1186/1471-2105-7-176},
+    issn = {1471-2105},
+    journal = {BMC Bioinformatics},
+    keywords = {annotation, data\_sharing, gaggle, genome, isb,
+                  pique\_paper, qualifying\_exam\_alternate},
+    number = {1},
+    pages = {176+},
+    pmcid = {PMC1464137},
+    pmid = {16569235},
+    posted-at = {2011-06-25 07:53:31},
+    priority = {2},
+    title = {{The Gaggle: An open-source software system for
+                  integrating bioinformatics software and data
+                  sources}},
+    url = {http://dx.doi.org/10.1186/1471-2105-7-176},
+    volume = {7},
+    year = {2006}
+}
+
+@article{ggb,
+    abstract = {{BACKGROUND:High-density tiling arrays and new
+                  sequencing technologies are generating rapidly
+                  increasing volumes of transcriptome and protein-DNA
+                  interaction data. Visualization and exploration of
+                  this data is critical to understanding the
+                  regulatory logic encoded in the genome by which the
+                  cell dynamically affects its physiology and
+                  interacts with its environment.RESULTS:The Gaggle
+                  Genome Browser is a cross-platform desktop program
+                  for interactively visualizing high-throughput data
+                  in the context of the genome. Important features
+                  include dynamic panning and zooming, keyword search
+                  and open interoperability through the Gaggle
+                  framework. Users may bookmark locations on the
+                  genome with descriptive annotations and share these
+                  bookmarks with other users. The program handles
+                  large sets of user-generated data using an
+                  in-process database and leverages the facilities of
+                  SQL and the R environment for importing and
+                  manipulating data.A key aspect of the Gaggle Genome
+                  Browser is interoperability. By connecting to the
+                  Gaggle framework, the genome browser joins a suite
+                  of interconnected bioinformatics tools for analysis
+                  and visualization with connectivity to major public
+                  repositories of sequences, interactions and
+                  pathways. To this flexible environment for exploring
+                  and combining data, the Gaggle Genome Browser adds
+                  the ability to visualize diverse types of data in
+                  relation to its coordinates on the
+                  genome.CONCLUSIONS:Genomic coordinates function as a
+                  common key by which disparate biological data types
+                  can be related to one another. In the Gaggle Genome
+                  Browser, heterogeneous data are joined by their
+                  location on the genome to create information-rich
+                  visualizations yielding insight into genome
+                  organization, transcription and its regulation and,
+                  ultimately, a better understanding of the mechanisms
+                  that enable the cell to dynamically respond to its
+                  environment.}},
+    author = {Bare, J. Christopher and Koide, Tie and Reiss, David and
+                  Tenenbaum, Dan and Baliga, Nitin},
+    citeulike-article-id = {7515324},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1186/1471-2105-11-382},
+    citeulike-linkout-1 =
+                  {http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2912892/},
+    citeulike-linkout-2 = {http://view.ncbi.nlm.nih.gov/pubmed/20642854},
+    citeulike-linkout-3 = {http://www.hubmed.org/display.cgi?uids=20642854},
+    day = {19},
+    doi = {10.1186/1471-2105-11-382},
+    issn = {1471-2105},
+    journal = {BMC Bioinformatics},
+    keywords = {browser, data\_visualization, gaggle, genome, isb,
+                  pique\_paper, qualifying\_exam\_alternate,
+                  visualization},
+    month = jul,
+    number = {1},
+    pages = {382+},
+    pmcid = {PMC2912892},
+    pmid = {20642854},
+    posted-at = {2011-06-25 07:52:12},
+    priority = {2},
+    title = {{Integration and visualization of systems biology data in
+                  context of the genome}},
+    url = {http://dx.doi.org/10.1186/1471-2105-11-382},
+    volume = {11},
+    year = {2010}
+}
+
+@article{CSDeconv,
+    abstract = {{We present CSDeconv, a computational method that
+                  determines locations of transcription factor binding
+                  from ChIP-seq data. CSDeconv differs from prior
+                  methods in that it uses a blind deconvolution
+                  approach that allows closely-spaced binding sites to
+                  be called accurately. We apply CSDeconv to novel
+                  ChIP-seq data for DosR binding in Mycobacterium
+                  tuberculosis and to existing data for GABP in humans
+                  and show that it can discriminate binding sites
+                  separated by as few as 40 bp.}},
+    author = {Lun, Desmond and Sherrid, Ashley and Weiner, Brian and
+                  Sherman, David and Galagan, James},
+    citeulike-article-id = {6453253},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1186/gb-2009-10-12-r142},
+    citeulike-linkout-1 = {http://view.ncbi.nlm.nih.gov/pubmed/20028542},
+    citeulike-linkout-2 = {http://www.hubmed.org/display.cgi?uids=20028542},
+    day = {22},
+    doi = {10.1186/gb-2009-10-12-r142},
+    issn = {1465-6906},
+    journal = {Genome Biology},
+    keywords = {chip-seq, csdeconv, peak\_detection, pique\_paper,
+                  qualifying\_exam\_alternate},
+    month = dec,
+    number = {12},
+    pages = {R142+},
+    pmid = {20028542},
+    posted-at = {2011-06-25 07:49:19},
+    priority = {2},
+    title = {{A blind deconvolution approach to high-resolution
+                  mapping of transcription factor binding sites from
+                  ChIP-seq data}},
+    url = {http://dx.doi.org/10.1186/gb-2009-10-12-r142},
+    volume = {10},
+    year = {2009}
+}
+
+@article{peak_benchmark,
+    abstract = {{Chromatin immunoprecipitation (ChIP) followed by high
+                  throughput sequencing (ChIP-seq) is rapidly becoming
+                  the method of choice for discovering cell-specific
+                  transcription factor binding locations genome
+                  wide. By aligning sequenced tags to the genome,
+                  binding locations appear as peaks in the tag
+                  profile. Several programs have been designed to
+                  identify such peaks, but program evaluation has been
+                  difficult due to the lack of benchmark data sets. We
+                  have created benchmark data sets for three
+                  transcription factors by manually evaluating a
+                  selection of potential binding regions that cover
+                  typical variation in peak size and
+                  appearance. Performance of five programs on this
+                  benchmark showed, first, that external control or
+                  background data was essential to limit the number of
+                  false positive peaks from the programs. However,
+                  >80\% of these peaks could be manually filtered out
+                  by visual inspection alone, without using additional
+                  background data, showing that peak shape information
+                  is not fully exploited in the evaluated
+                  programs. Second, none of the programs returned
+                  peak-regions that corresponded to the actual
+                  resolution in ChIP-seq data. Our results showed that
+                  ChIP-seq peaks should be narrowed down to
+                  100–400 bp, which is sufficient to identify unique
+                  peaks and binding sites. Based on these results, we
+                  propose a meta-approach that gives improved peak
+                  definitions.}},
+    author = {Rye, Morten B. and S{\ae}trom, P\r{a}l and Drabl{\o}s, Finn},
+    citeulike-article-id = {8341153},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1093/nar/gkq1187},
+    citeulike-linkout-1 = {http://nar.oxfordjournals.org/content/39/4/e25.abstract},
+    citeulike-linkout-2 = {http://nar.oxfordjournals.org/content/39/4/e25.full.pdf},
+    citeulike-linkout-3 = {http://nar.oxfordjournals.org/cgi/content/abstract/39/4/e25},
+    citeulike-linkout-4 = {http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3045577/},
+    citeulike-linkout-5 = {http://view.ncbi.nlm.nih.gov/pubmed/21113027},
+    citeulike-linkout-6 = {http://www.hubmed.org/display.cgi?uids=21113027},
+    day = {1},
+    doi = {10.1093/nar/gkq1187},
+    issn = {1362-4962},
+    journal = {Nucleic Acids Research},
+    keywords = {benchmark, chip-seq, curation, pique\_paper,
+                  qualifying\_exam\_alternate},
+    month = mar,
+    number = {4},
+    pages = {e25},
+    pmcid = {PMC3045577},
+    pmid = {21113027},
+    posted-at = {2011-06-25 07:48:22},
+    priority = {2},
+    title = {{A manually curated ChIP-seq benchmark demonstrates room
+                  for improvement in current peak-finder programs}},
+    url = {http://dx.doi.org/10.1093/nar/gkq1187},
+    volume = {39},
+    year = {2011}
+}
+
+@article{peakranger,
+    abstract = {{BACKGROUND:Chromatin immunoprecipitation (ChIP),
+                  coupled with massively parallel short-read
+                  sequencing (seq) is used to probe chromatin
+                  dynamics. Although there are many algorithms to call
+                  peaks from ChIP-seq datasets, most are tuned either
+                  to handle punctate sites, such as transcriptional
+                  factor binding sites, or broad regions, such as
+                  histone modification marks; few can do both. Other
+                  algorithms are limited in their configurability,
+                  performance on large data sets, and ability to
+                  distinguish closely-spaced peaks.RESULTS:In this
+                  paper, we introduce PeakRanger, a peak caller
+                  software package that works equally well on punctate
+                  and broad sites, can resolve closely-spaced peaks,
+                  has excellent performance, and is easily
+                  customized. In addition, PeakRanger can be run in a
+                  parallel cloud computing environment to obtain
+                  extremely high performance on very large data
+                  sets. We present a series of benchmarks to evaluate
+                  PeakRanger against 10 other peak callers, and
+                  demonstrate the performance of PeakRanger on both
+                  real and synthetic data sets. We also present real
+                  world usages of PeakRanger, including peak-calling
+                  in the modENCODE project.CONCLUSIONS:Compared to
+                  other peak callers tested, PeakRanger offers
+                  improved resolution in distinguishing extremely
+                  closely-spaced peaks. PeakRanger has above-average
+                  spatial accuracy in terms of identifying the precise
+                  location of binding events. PeakRanger also has
+                  excellent sensitivity and specificity in all
+                  benchmarks evaluated. In addition, PeakRanger offers
+                  significant improvements in run time when running on
+                  a single processor system, and very marked
+                  improvements when allowed to take advantage of the
+                  MapReduce parallel environment offered by a cloud
+                  computing resource. PeakRanger can be downloaded at
+                  the official site of modENCODE project:
+                  http://www.modencode.org/software/ranger/}},
+    author = {Feng, Xin and Grossman, Robert and Stein, Lincoln},
+    citeulike-article-id = {9273864},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1186/1471-2105-12-139},
+    citeulike-linkout-1 = {http://view.ncbi.nlm.nih.gov/pubmed/21554709},
+    citeulike-linkout-2 = {http://www.hubmed.org/display.cgi?uids=21554709},
+    doi = {10.1186/1471-2105-12-139},
+    issn = {1471-2105},
+    journal = {BMC Bioinformatics},
+    keywords = {algorithms, chip-seq, cloud, pique\_paper,
+                  qualifying\_exam\_alternate},
+    number = {1},
+    pages = {139+},
+    pmid = {21554709},
+    posted-at = {2011-06-25 07:46:29},
+    priority = {2},
+    title = {{PeakRanger: A cloud-enabled peak caller for ChIP-seq data}},
+    url = {http://dx.doi.org/10.1186/1471-2105-12-139},
+    volume = {12},
+    year = {2011}
+}
+
+@article{too_many_peak_callers,
+    abstract = {{The current understanding of the regulation of
+                  transcription does not keep the pace with the
+                  spectacular advances in the determination of genomic
+                  sequences. Chromatin immunoprecipitation followed by
+                  massively parallel sequencing (ChIP-seq) promises to
+                  give better insight into transcription regulation by
+                  locating sites of protein–DNA interactions. Such
+                  loci of putative interactions can be inferred from
+                  the genome-wide distributions of ChIP-seq data by
+                  peak-calling software. The analysis of ChIP-seq data
+                  critically depends on this step and a multitude of
+                  these peak-callers have been deployed in the recent
+                  years. A recent study reported severe variation
+                  among peak-calling results. Yet, peak-calling still
+                  lacks systematic quantitative benchmarking. Here, we
+                  summarize benchmarking efforts and explain potential
+                  drawbacks of each benchmarking method.}},
+    author = {Szalkowski, Adam M. and Schmid, Christoph D.},
+    citeulike-article-id = {8240990},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1093/bib/bbq068},
+    citeulike-linkout-1 =
+                  {http://bib.oxfordjournals.org/content/early/2010/11/08/bib.bbq068.abstract},
+    citeulike-linkout-2 =
+                  {http://bib.oxfordjournals.org/content/early/2010/11/08/bib.bbq068.full.pdf},
+    citeulike-linkout-3 = {http://view.ncbi.nlm.nih.gov/pubmed/21059603},
+    citeulike-linkout-4 = {http://www.hubmed.org/display.cgi?uids=21059603},
+    day = {8},
+    doi = {10.1093/bib/bbq068},
+    journal = {Briefings in Bioinformatics},
+    keywords = {algorithms, chip-seq, pique\_paper,
+                  qualifying\_exam\_alternate},
+    month = nov,
+    pmid = {21059603},
+    posted-at = {2011-06-25 07:45:07},
+    priority = {2},
+    title = {{Rapid innovation in ChIP-seq peak-calling algorithms is
+                  outdistancing benchmarking efforts}},
+    url = {http://dx.doi.org/10.1093/bib/bbq068},
+    year = {2010}
+}
+
+@article{Laajala_review,
+    abstract = {{BACKGROUND:Chromatin immunoprecipitation coupled with
+                  massively parallel sequencing (ChIP-seq) is
+                  increasingly being applied to study transcriptional
+                  regulation on a genome-wide scale. While numerous
+                  algorithms have recently been proposed for analysing
+                  the large ChIP-seq datasets, their relative merits
+                  and potential limitations remain unclear in
+                  practical applications.RESULTS:The present study
+                  compares the state-of-the-art algorithms for
+                  detecting transcription factor binding sites in four
+                  diverse ChIP-seq datasets under a variety of
+                  practical research settings. First, we demonstrate
+                  how the biological conclusions may change
+                  dramatically when the different algorithms are
+                  applied. The reproducibility across biological
+                  replicates is then investigated as an internal
+                  validation of the detections. Finally, the predicted
+                  binding sites with each method are compared to
+                  high-scoring binding motifs as well as binding
+                  regions confirmed in independent qPCR
+                  experiments.CONCLUSIONS:In general, our results
+                  indicate that the optimal choice of the
+                  computational approach depends heavily on the
+                  dataset under analysis. In addition to revealing
+                  valuable information to the users of this technology
+                  about the characteristics of the binding site
+                  detection approaches, the systematic evaluation
+                  framework provides also a useful reference to the
+                  developers of improved algorithms for ChIP-seq
+                  data.}},
+    author = {Laajala, Teemu and Raghav, Sunil and Tuomela, Soile and
+                  Lahesmaa, Riitta and Aittokallio, Tero and Elo,
+                  Laura},
+    citeulike-article-id = {6403664},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1186/1471-2164-10-618},
+    citeulike-linkout-1 = {http://view.ncbi.nlm.nih.gov/pubmed/20017957},
+    citeulike-linkout-2 = {http://www.hubmed.org/display.cgi?uids=20017957},
+    day = {18},
+    doi = {10.1186/1471-2164-10-618},
+    issn = {1471-2164},
+    journal = {BMC Genomics},
+    keywords = {chip-seq, dna\_binding\_proteins, pique\_paper,
+                  qualifying\_exam\_alternate},
+    month = dec,
+    number = {1},
+    pages = {618+},
+    pmid = {20017957},
+    posted-at = {2011-06-25 07:44:07},
+    priority = {2},
+    title = {{A practical comparison of methods for detecting
+                  transcription factor binding sites in ChIP-seq
+                  experiments}},
+    url = {http://dx.doi.org/10.1186/1471-2164-10-618},
+    volume = {10},
+    year = {2009}
+}
+
+@article{Pepke,
+    abstract = {{Genome-wide measurements of protein-DNA interactions
+                  and transcriptomes are increasingly done by deep DNA
+                  sequencing methods (ChIP-seq and RNA-seq). The power
+                  and richness of these counting-based measurements
+                  comes at the cost of routinely handling tens to
+                  hundreds of millions of reads. Whereas early
+                  adopters necessarily developed their own custom
+                  computer code to analyze the first ChIP-seq and
+                  RNA-seq datasets, a new generation of more
+                  sophisticated algorithms and software tools are
+                  emerging to assist in the analysis phase of these
+                  projects. Here we describe the multilayered analyses
+                  of ChIP-seq and RNA-seq datasets, discuss the
+                  software packages currently available to perform
+                  tasks at each layer and describe some upcoming
+                  challenges and features for future analysis
+                  tools. We also discuss how software choices and uses
+                  are affected by specific aspects of the underlying
+                  biology and data structure, including genome size,
+                  positional clustering of transcription factor
+                  binding sites, transcript discovery and expression
+                  quantification.}},
+    author = {Pepke, Shirley and Wold, Barbara and Mortazavi, Ali},
+    booktitle = {Nat Meth},
+    citeulike-article-id = {6043685},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1038/nmeth.1371},
+    citeulike-linkout-1 = {http://dx.doi.org/10.1038/nmeth.1371},
+    citeulike-linkout-2 = {http://view.ncbi.nlm.nih.gov/pubmed/19844228},
+    citeulike-linkout-3 = {http://www.hubmed.org/display.cgi?uids=19844228},
+    day = {15},
+    doi = {10.1038/nmeth.1371},
+    issn = {1548-7091},
+    journal = {Nature Methods},
+    keywords = {algorithms, chip-seq, pique\_paper,
+                  qualifying\_exam\_alternate},
+    month = oct,
+    number = {11s},
+    pages = {S22--S32},
+    pmid = {19844228},
+    posted-at = {2011-06-25 07:43:04},
+    priority = {2},
+    publisher = {Nature Publishing Group},
+    title = {{Computation for ChIP-seq and RNA-seq studies}},
+    url = {http://dx.doi.org/10.1038/nmeth.1371},
+    volume = {6},
+    year = {2009}
+}
+
+@article{wilbanks,
+    abstract = {{Next-generation DNA sequencing coupled with chromatin
+                  immunoprecipitation (ChIP-seq) is revolutionizing
+                  our ability to interrogate whole genome protein-DNA
+                  interactions. Identification of protein binding
+                  sites from ChIP-seq data has required novel
+                  computational tools, distinct from those used for
+                  the analysis of ChIP-Chip experiments. The growing
+                  popularity of ChIP-seq spurred the development of
+                  many different analytical programs (at last count,
+                  we noted 31 open source methods), each with some
+                  purported advantage. Given that the literature is
+                  dense and empirical benchmarking challenging,
+                  selecting an appropriate method for ChIP-seq
+                  analysis has become a daunting task. Herein we
+                  compare the performance of eleven different peak
+                  calling programs on common empirical, transcription
+                  factor datasets and measure their sensitivity,
+                  accuracy and usability. Our analysis provides an
+                  unbiased critical assessment of available
+                  technologies, and should assist researchers in
+                  choosing a suitable tool for handling ChIP-seq
+                  data.}},
+    author = {Wilbanks, Elizabeth G. and Facciotti, Marc T.},
+    citeulike-article-id = {7465559},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1371/journal.pone.0011471},
+    citeulike-linkout-1 = {http://view.ncbi.nlm.nih.gov/pubmed/20628599},
+    citeulike-linkout-2 = {http://www.hubmed.org/display.cgi?uids=20628599},
+    day = {8},
+    doi = {10.1371/journal.pone.0011471},
+    issn = {1932-6203},
+    journal = {PLoS ONE},
+    keywords = {algorithms, chip-seq, peak\_detection,
+                  qualifying\_exam\_alternate},
+    month = jul,
+    number = {7},
+    pages = {e11471+},
+    pmid = {20628599},
+    posted-at = {2011-06-25 07:41:48},
+    priority = {2},
+    publisher = {Public Library of Science},
+    title = {{Evaluation of Algorithm Performance in ChIP-Seq Peak
+                  Detection}},
+    url = {http://dx.doi.org/10.1371/journal.pone.0011471},
+    volume = {5},
+    year = {2010}
+}

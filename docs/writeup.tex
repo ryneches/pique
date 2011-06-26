@@ -125,19 +125,20 @@ Gaggle-enabled resources.
 immunoprecipitation (ChIP-Seq) is revolutionizing our abilty to
 genomically map protein-DNA associations for a wide variety of
 proteins.  The growing popularity of ChIP-Seq has spurred the
-development of numerous peak detection algorithms.  All but one,
-(CSDeconv (REF)) have been designed with eukaryotic data sets in mind.
-To make most cost-effective use of contemporary sequencing abilities,
-these methods have employed a number of sophisticated strategies to
-detect peaks in sparsely covered datasets. The problem of finding
-peaks in such data is apparently so challenging that over thirty
-different methods have been published since 2007. Eleven
-representative peak detection algorithms were recently reviewed by
-Wilbanks and Facciotti (REF).
+development of over 30 peak picking algorithms (for a nearly
+completely list see \cite{wilbanks}). The relative performance
+represetative peak detection algorithms on eukatyoric data and methods
+to assess performance have been recently reviewed by several authors
+\cite{Pepke, Laajala_review, too_many_peak_callers, peakranger,
+  peak_benchmark}.  To make most cost-effective use of current
+sequencing abilities the peak picking methods have employed a number
+of sophisticated strategies to detect peaks in the typically sparcely
+covered eukaryotic datasets for which they are designed.
+
 
 While ChIP-Seq has been predominantly used to interrogate protein-DNA
-interactions in eukaryotic systems (REFS) there are clear advantages
-to adopting this technology for studying microbial systems that are
+interactions in eukaryotic systems there are clear advantages to
+adopting this technology for studying microbial systems that are
 largely associated with the relatively small sizes of microbial
 genomes (the genome of {\em E. coli} is $\approx$2000 times smaller
 than the human genome). Eukaryotic ChIP-Seq necessarily involves more
@@ -146,19 +147,20 @@ ChIP-Seq, and so we were surprised to find that software that works
 well in eukaryotic systems evidently fails when presented with a
 lesser challenge.
 
-To our knowledge, only one other peak finding package, CSDeconv (REF)
-has been explicitly developed for finding peaks in microbial ChIP-Seq
-data. This MATLAB package successfully finds peaks in microbial
-ChIP-Seq data, but its application is limited by its dependency on
-costly proprietary software, very slow performance, lack of support
-for manual curation, and high false negative rate.
+To our knowledge, only one other peak finding package, CSDeconv
+\cite{CSDeconv} has been explicitly developed for finding peaks in
+microbial ChIP-Seq data. This MATLAB package successfully finds peaks
+in microbial ChIP-Seq data, but its application is limited by its
+dependency on costly proprietary software, very slow performance, lack
+of support for manual curation, and high false negative rate.
 
 Herein we describe Pique, a conceptually simple, Python-based peak
 finding package that enables easy and rapid peak finding in bacterial
 and archaeal ChIP-Seq datasets.  The output is easily imported into
-the Gaggle Genome Browser (REF) to enable rapid manual curation and
-analysis of ChIP-Seq data in the context of other Gaggle-enabled (REF)
-resources (browsers are that can import GFF data also supported).
+the Gaggle Genome Browser \cite{ggb} to enable rapid manual
+curation and analysis of ChIP-Seq data in the context of other
+Gaggle-enabled \cite{gaggle} resources (browsers are that can
+import GFF data also supported).
 
 Pique is also designed for use in systems have genomic complexities
 such as IS elements, gene dosage polymorphisms and accessory genomes
@@ -226,7 +228,15 @@ optional coverage feature map. The primary analysis proceeds thusly :
 
 \item High-$k$ noise in coverage is removed using a Wiener-Kolmogorov
   filter. The filter delay $\alpha$ is chosen to approximate to the
-  expected footprint size of the targeted protein.
+  expected footprint size of the targeted protein. The choice of
+  filter implies some specific assumptions about the nature of the
+  coverage noise. The Wiener-Kolmogorov filter was the first and
+  simplest statistical signal filter, first published by Norbert
+  Wiener in 1949, and independently derived in discrete-time form by
+  Andrey Kolmogorov in 1941. The approach assumes the existence of two
+  inputs; a ``true'' signal, and a noise source. Both are assumed to
+  be stationary stochastic processes combined additively. The choice
+  of this filter minimizes the assumptions.
 
 \item A sliding window average is used to identify regions whose
   coverage level deviates from the background. Peaks usually contain
@@ -277,16 +287,9 @@ SELECTED?
 
 \section{Conclusion}
 
-The choice of filter implies some specific assumptions about the
-nature of the coverage noise. The Wiener-Kolmogorov filter was the
-first and simplest statistical signal filter, first published by
-Norbert Wiener in 1949, and independently derived in discrete-time
-form by Andrey Kolmogorov in 1941. (SOME OF THIS COULD PERHAPS GO
-ABOVE?) The approach assumes the existence of two inputs; a ``true''
-signal, and a noise source. Both are assumed to be stationary
-stochastic processes combined additively. We note that Pique should
-also work well with eukaryotic datasets provided they are gathered
-with greater coverage than has been previously reported.
+We note that Pique should also work well with eukaryotic datasets
+provided they are gathered with greater coverage than has been
+previously reported.
 
 NEED SOME SUMMARY SHOWING THAT THE PIQUE WORKS
 
@@ -302,7 +305,7 @@ fellowship AWARD NUMBER to EGW and DARPA AWARD NUMBER TO RN.
 %\bibliographystyle{achemnat}
 %\bibliographystyle{plainnat}
 %\bibliographystyle{abbrv}
-\bibliographystyle{bioinformatics}
+%\bibliographystyle{bioinformatics}
 
 \bibliographystyle{plain}
 
