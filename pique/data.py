@@ -15,6 +15,10 @@ class PiqueData :
     def __init__( self ) :
         self.data = {}
 
+    def __init__( self, IP_file, BG_file ) :
+        self.data = {}
+        self.load_data( IP_file, BG_file )
+
     def add_contig( self,   contig_name,    \
                             IP_forward,     \
                             IP_reverse,     \
@@ -45,9 +49,12 @@ class PiqueData :
         IP_tracks = fileIO.loadBAM( IP_file )
         BG_tracks = fileIO.loadBAM( BG_file )
         
-        IP_contigs = IP_tracks.keys().sort()
-        BG_contigs = BG_tracks.keys().sort()
+        IP_contigs = IP_tracks.keys()
+        BG_contigs = BG_tracks.keys()
         
+        IP_contigs.sort()
+        BG_contigs.sort()
+
         if not len(IP_contigs) == len(BG_contigs) :
             raise PiqueDataException( 'BG and IP have different number of contigs.' )
         
@@ -56,7 +63,7 @@ class PiqueData :
                                     { 'IP' : IP_contigs, 'BG' : BG_contigs } )
         
         for contig in IP_contigs :
-            IP_forward = IP_trakcs[contig]['forward']
+            IP_forward = IP_tracks[contig]['forward']
             IP_reverse = IP_tracks[contig]['reverse']
             BG_forward = BG_tracks[contig]['forward']
             BG_reverse = BG_tracks[contig]['reverse']
