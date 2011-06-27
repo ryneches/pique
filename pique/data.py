@@ -6,6 +6,7 @@ import numpy
 import fileIO
 
 class PiqueDataException( Exception ) :
+    pass
 
 class PiqueData :
     """
@@ -21,7 +22,7 @@ class PiqueData :
                             BG_reverse      ) :
         
         l = map(len, [IP_forward, IP_reverse, BG_forward, BG_reverse ] )
-        if not all( x = l[0] for x in l ) :
+        if not all( x == l[0] for x in l ) :
             raise PiqueDataException( 'Track have different lengths.' )
 
         IP = { 'forward' : IP_forward, 'reverse' : IP_reverse }
@@ -51,7 +52,7 @@ class PiqueData :
             raise PiqueDataException( 'BG and IP have different number of contigs.' )
         
         if not all( map( lambda x : x[0] == x[1], zip(IP_contigs,BG_contigs) ) ) :
-            raise PiqueDataException( 'BG and IP contig names do not match.',   \ 
+            raise PiqueDataException( 'BG and IP contig names do not match.',   \
                                     { 'IP' : IP_contigs, 'BG' : BG_contigs } )
         
         for contig in IP_contigs :
