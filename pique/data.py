@@ -4,6 +4,7 @@ Data representations
 """
 import numpy
 import fileIO
+import processing
 
 class PiqueDataException( Exception ) :
     pass
@@ -14,11 +15,11 @@ class PiqueData :
     """
     def __init__( self ) :
         self.data = {}
-
+        
     def __init__( self, IP_file, BG_file ) :
         self.data = {}
         self.load_data( IP_file, BG_file )
-
+        
     def add_contig( self,   contig_name,    \
                             IP_forward,     \
                             IP_reverse,     \
@@ -28,19 +29,19 @@ class PiqueData :
         l = map(len, [IP_forward, IP_reverse, BG_forward, BG_reverse ] )
         if not all( x == l[0] for x in l ) :
             raise PiqueDataException( 'Track have different lengths.' )
-
+        
         IP = { 'forward' : IP_forward, 'reverse' : IP_reverse }
         BG = { 'forward' : BG_forward, 'reverse' : BG_reverse }
-
+        
         self.data[ contig_name ] = { 'IP' : IP, 'BG' : BG }
         
         self.data[ contig_name ][ 'length' ] = len( IP_forward )
-    
+        
     def load_data( self, IP_file, BG_file ) :
         """
         Digest and load data from BAM files containing alignments of
         IP and background reads.
-
+        
         BAM files must be prepared in such a way that the contig names
         are identical, and each IP track must be identical in length
         to its corresponding background contig.
@@ -54,7 +55,7 @@ class PiqueData :
         
         IP_contigs.sort()
         BG_contigs.sort()
-
+        
         if not len(IP_contigs) == len(BG_contigs) :
             raise PiqueDataException( 'BG and IP have different number of contigs.' )
         
@@ -72,5 +73,16 @@ class PiqueData :
                                         IP_reverse, \
                                         BG_forward, \
                                         BG_reverse )
+    
+    def filter_data( self, alpha, l_thresh ) :
+        self.filtered = {}
+        for contig in self.data.keys() :
+            self.filtered[contig] = {}
+            for track in 'IP', 'BG' :
+                for strand in 'forward', 'reverse' :
+                    fdata = processing.filterset( self.data[contig][track][strand], alpha, l_thresh )
+                    self.filtered[contig][track] = {}
+                    self.filtered[contig][track][strand] = fdata
+                    self.filtered[contig]['length'] = len(fdata)
 
-
+            

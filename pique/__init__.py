@@ -104,20 +104,6 @@ def writebookmarks( filename, track_name, regions ) :
         f.write( '\n' )
     f.close()
 
-def findregions( data, N ) :
-    """
-    Return all the regions of an array that exceed N.
-    """
-    pos = filter(lambda(a) : a[1] == abs(a[1]), zip( range(len(data)),data-N) )
-    if len(pos) == 0 :
-        return []
-    pos = numpy.array( zip(*pos)[0] )
-    regions = []
-    for k,g in itertools.groupby( enumerate(pos), lambda(i,x):i-x ) :
-        l = map( operator.itemgetter(1),g )
-        regions.append( {'start':l[0],'stop':l[-1] } )
-    return regions
-
 def mask( data, mask_regions ) :
     """
     Mask regions in an array.
@@ -125,34 +111,6 @@ def mask( data, mask_regions ) :
     for region in mask_regions :
         data[ region['start'] : region['stop'] ] = 0
     return data
-
-def filterset( data, alpha, l_thresh ) :
-    
-    window = scipy.signal.blackman( l_thresh )
-
-    dataf = scipy.signal.detrend( data )
-    dataf = scipy.signal.wiener( dataf, mysize=alpha )
-    datar = scipy.signal.detrend( data[::-1] )
-    datar = scipy.signal.wiener( datar, mysize=alpha )
-
-    dataf = scipy.signal.convolve( dataf, window, mode='full' )
-    datar = scipy.signal.convolve( datar, window, mode='full' )
-
-    return ( dataf + datar ) / 2.0
-
-def overlaps( forward, reverse ) :
-    envelope = []
-    for l in forward :
-        for m in reverse :
-            if m['start'] < l['stop'] < m['stop'] :
-                if l['start'] < m['start'] < l['stop'] :
-                    e = {   'forward':l,        \
-                            'reverse':m,        \
-                            'start':l['start'], \
-                            'stop':m['stop'],   \
-                            'annotations':{}    }
-                    envelope.append( e )
-    return envelope
 
 def sizeselect( regions, too_big, too_small ) :
     for region in regions :
