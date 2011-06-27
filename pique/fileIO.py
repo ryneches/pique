@@ -16,14 +16,14 @@ def loadBAM( file ) :
 
     # loop over the congigs and build forward and reverse coverage
     # tracks for them
-    for n,name in enumerate(samfile.references) :
+    for n,contig in enumerate(samfile.references) :
         
         length = samfile.lengths[n]
-        tracks[name] = {    'length'  : length,                 \
+        tracks[contig] = {  'length'  : length,                 \
                             'forward' : numpy.zeros(length),    \
                             'reverse' : numpy.zeros(length), }
         
-        for pileupcolumn in samfile.pileup( name, 0, length) :
+        for pileupcolumn in samfile.pileup( contig, 0, length) :
             
             fn,rn = 0,0
             
@@ -34,9 +34,26 @@ def loadBAM( file ) :
                 else :
                     fn = fn + 1
                 
-            tracks[name]['forward'][pileupcolumn.pos] = fn
-            tracks[name]['reverse'][pileupcolumn.pos] = rn
+            tracks[contig]['forward'][pileupcolumn.pos] = fn
+            tracks[contig]['reverse'][pileupcolumn.pos] = rn
             
     samfile.close()
     
     return tracks
+
+def write_track( data_forward, data_reverse, file, track_name ) :
+    """
+    Write a Gaggle Genome Browser compatible track file.
+    """
+    f = open( file, 'w' )
+    f.write( 'sequence\tstrand\tposition\tvalue\n' )
+    for n,i in enumerate( data_forward ) :
+        if i != 0 :
+            f.write( track_name + '\t+\t' + str(n) + '\t' + str(i) +
+'\n' )
+    for n,i in enumerate( data_reverse ) :
+        if i != 0 :
+            f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) +
+'\n' )
+    f.close()
+
