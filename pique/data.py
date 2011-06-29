@@ -15,9 +15,11 @@ class PiqueData :
     """
     def __init__( self ) :
         self.data = {}
-        
+        self.filtered = {}    
+    
     def __init__( self, IP_file, BG_file ) :
         self.data = {}
+        self.filtered = {}
         self.load_data( IP_file, BG_file )
         
     def add_contig( self,   contig_name,    \
@@ -35,8 +37,11 @@ class PiqueData :
         
         self.data[ contig_name ] = { 'IP' : IP, 'BG' : BG }
         
-        self.data[ contig_name ][ 'length' ] = len( IP_forward )
-        
+        length = len( IP_forward )
+        region = { 'start' : 0, 'stop' : length }
+        self.data[ contig_name ][ 'length' ]  = length
+        self.data[ contig_name ][ 'regions' ] = [ region ]
+
     def load_data( self, IP_file, BG_file ) :
         """
         Digest and load data from BAM files containing alignments of
@@ -72,17 +77,39 @@ class PiqueData :
             self.add_contig( contig,    IP_forward, \
                                         IP_reverse, \
                                         BG_forward, \
-                                        BG_reverse )
+                                        BG_reverse  )
     
-    def filter_data( self, alpha, l_thresh ) :
-        self.filtered = {}
-        for contig in self.data.keys() :
-            self.filtered[contig] = {}
-            for track in 'IP', 'BG' :
-                for strand in 'forward', 'reverse' :
-                    fdata = processing.filterset( self.data[contig][track][strand], alpha, l_thresh )
-                    self.filtered[contig][track] = {}
-                    self.filtered[contig][track][strand] = fdata
-                    self.filtered[contig]['length'] = len(fdata)
+    def del_analysis_region( self, contig, start, stop ) :
+        """
+        Remove an alaysis region from a contig.
+        """
+        region = { 'start' : start, 'stop' : stop }
+        
+        if not self.data[contig]['regions'].__contains__( region ) :
+            raise PiqueDataException( 'Analysis region does not exist.', region )
+        else :
+            self.data[contig]['regions'].remove( region )
+        
+    def add_analysis_region( self, contig, start, stop ) :
+        """
+        Add an analysis region to a contig. Overlapping regions are
+        not allowed.
+        """
+        for region in self.data[contig]['regions'] :
+            if region['start'] < start and region['stop'] > start   \
+                or region['start'] < stop and region['stop'] > stop :
+                raise PiqueDataException( 'Overlapping alaysis regions are not allowed.' )
+
+        self.data[contig]['regions'].append( { 'start' : int(start), 'stop' : int(stop) } )
+        
+    def filter_data( self, contig, alpha, l_thresh ) :
+        self.filtered[contig] = {}
+        
+        for track in 'IP', 'BG' :
+            fdata = processing.filterset( self.data[contig][track]['forward'], alpha, l_thresh )
+            rdata = processing.filterset( self.data[contig][track]
+            self.filtered[contig][track] = {}
+            self.filtered[contig][track][strand] = fdata
+            self.filtered[contig]['length'] = len(fdata)
 
             
