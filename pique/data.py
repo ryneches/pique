@@ -17,11 +17,41 @@ class PiqueData :
         self.data = {}
         self.filtered = {}    
     
-    def __init__( self, IP_file, BG_file ) :
-        self.data = {}
-        self.filtered = {}
+    def __init__( self, IP_file, BG_file, map_file=None ) :
+        self.data       = {}
+        self.filtered   = {}
         self.load_data( IP_file, BG_file )
         
+        # load genome map file, if provided
+        if map_file :
+            
+            gff = fileIO.loadGFF( map_file )
+            
+            region_contigs = []
+            for region in gff['regions'] :
+                contig = region['contig']
+                if not self.data.has_key( contig ) :
+                    raise PiqueDataException( 'Map file contains unknown contig : ' + contig )
+                if not region_contigs.__contains__( contig ) :
+                    region_contigs.append( contig )
+
+            # remove default regions from mapped contigs
+            for contig in region_contigs :
+                self.del_analysis_region( contig, 0, self.data[contig]['length'] )
+        
+            for region in gff['regions'] :
+                contig = region['contig']
+                start  = region['start']
+                stop   = region['stop']
+                self.add_analysis_region( contig, start, stop )
+            
+            # add masks
+            for mask in gff['masks'] :
+                contig = mask['contig']
+                start  = mask['start']
+                stop   = mask['stop']
+                self.add_mask( contig, start, stop )
+
     def add_contig( self,   contig_name,    \
                             IP_forward,     \
                             IP_reverse,     \
@@ -37,10 +67,14 @@ class PiqueData :
         
         self.data[ contig_name ] = { 'IP' : IP, 'BG' : BG }
         
+        # create a default analysis region spanning the whole contig
         length = len( IP_forward )
         region = { 'start' : 0, 'stop' : length }
         self.data[ contig_name ][ 'length' ]  = length
         self.data[ contig_name ][ 'regions' ] = [ region ]
+        
+        # create an empty mask list
+        self.data[ contig_name ][ 'masks' ] = []
 
     def load_data( self, IP_file, BG_file ) :
         """
@@ -98,18 +132,56 @@ class PiqueData :
         for region in self.data[contig]['regions'] :
             if region['start'] < start and region['stop'] > start   \
                 or region['start'] < stop and region['stop'] > stop :
-                raise PiqueDataException( 'Overlapping alaysis regions are not allowed.' )
+                raise PiqueDataException( 'Overlapping analysis regions are not allowed.' )
+            
+        if start < 0 or start > self.data[contig]['length'] :
+            raise PiqueDataException( 'Analysis region start coordinate out of bounds.' )
+
+        if stop < 0 or stop > self.data[contig]['length'] :
+            raise PiqueDataException( 'Analysis region stop coordinate out of bounds.' )
+        
+        if start > stop :
+            raise PiqueDataException( 'Analysis region orientation is reversed.' )
 
         self.data[contig]['regions'].append( { 'start' : int(start), 'stop' : int(stop) } )
+
+    def add_mask( self, contig, start, stop ) :
+        """
+        Add a mask to a contig. Overlapping masks are not allowed.
+        """
+        for mask in self.data[contig]['masks'] :
+            if mask['start'] < start and mask['stop'] > start   \
+                or mask['start'] < stop and mask['stop'] > stop :
+                raise PiqueDataException( 'Overlapping masks are not allowed.' )
+            
+        if start < 0 or start > self.data[contig]['length'] :
+            raise PiqueDataException( 'Mask start coordinate out of bounds.' )
+
+        if stop < 0 or stop > self.data[contig]['length'] :
+            raise PiqueDataException( 'Mask stop coordinate out of bounds.' )
         
-    def filter_data( self, contig, alpha, l_thresh ) :
-        self.filtered[contig] = {}
+        if start > stop :
+            raise PiqueDataException( 'Mask orientation is reversed.' )
+
+        self.data[contig]['masks'].append( { 'start' : int(start), 'stop' : int(stop) } )
+
+       
+    def filter_data( self, contig, region, alpha, l_thresh ) :
+        
+        if not self.filtered.has_key( contig ) :
+            self.filtered[contig] = { 'length' : self.data[contig]['length'] }
         
         for track in 'IP', 'BG' :
-            fdata = processing.filterset( self.data[contig][track]['forward'], alpha, l_thresh )
-            rdata = processing.filterset( self.data[contig][track]
-            self.filtered[contig][track] = {}
-            self.filtered[contig][track][strand] = fdata
-            self.filtered[contig]['length'] = len(fdata)
-
+            
+            if not self.filtered[contig].has_key( track ) :
+                self.filtered[contig][track] = { 'forward' : numpy.zeros( self.data[contig]['length'] ),    \
+                                                 'reverse' : numpy.zeros( self.data[contig]['length'] ) }
+            
+            start = region['start']
+            stop  = region['stop']
+            
+            for strand in 'forward', 'reverse' :
+                self.filtered[contig][track][strand][start:stop] =  \
+                    processing.filterset( self.data[contig][track]['forward'][start:stop], alpha, l_thresh )
+            
             

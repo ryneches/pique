@@ -4,6 +4,10 @@ Generate coverage tracks from a BAM file.
 """
 import pysam
 import numpy
+import sys
+
+GFFkeys = ['contig','source','feature','start','stop','score','strand','frame','group']
+
 
 def loadBAM( file ) :
     """
@@ -40,6 +44,29 @@ def loadBAM( file ) :
     samfile.close()
     
     return tracks
+
+def loadGFF( file ) :
+    """
+    Parse a GFF file and return the analysis region and mask features.
+    """
+    regions = []
+    masks   = []
+    for line in open( file ) :
+       g = dict(zip( GFFkeys, line.strip().split('\t') ))
+       if g['feature'] == 'analysis_region' :
+            region = {  'contig' : g['contig']      ,   \
+                        'start'  : int( g['start'] ),   \
+                        'stop'   : int( g['stop']  )    }
+            regions.append(region)
+
+       if g['feature'] == 'mask' :
+            mask =  {   'contig' : g['contig']      ,   \
+                        'start'  : int( g['start'] ),   \
+                        'stop'   : int(g['stop']   )    }
+            masks.append(mask)
+    
+    return { 'regions' : regions, 'masks' : masks }
+
 
 def write_track( data_forward, data_reverse, file, track_name ) :
     """
