@@ -165,23 +165,3 @@ class PiqueData :
 
         self.data[contig]['masks'].append( { 'start' : int(start), 'stop' : int(stop) } )
 
-       
-    def filter_data( self, contig, region, alpha, l_thresh ) :
-        
-        if not self.filtered.has_key( contig ) :
-            self.filtered[contig] = { 'length' : self.data[contig]['length'] }
-        
-        for track in 'IP', 'BG' :
-            
-            if not self.filtered[contig].has_key( track ) :
-                self.filtered[contig][track] = { 'forward' : numpy.zeros( self.data[contig]['length'] ),    \
-                                                 'reverse' : numpy.zeros( self.data[contig]['length'] ) }
-            
-            start = region['start']
-            stop  = region['stop']
-            
-            for strand in 'forward', 'reverse' :
-                self.filtered[contig][track][strand][start:stop] =  \
-                    processing.filterset( self.data[contig][track]['forward'][start:stop], alpha, l_thresh )
-            
-            

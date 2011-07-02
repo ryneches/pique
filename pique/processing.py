@@ -4,6 +4,8 @@ Data processing functions for Pique.
 """
 import numpy
 import scipy
+import itertools
+import operator
 
 def findregions( data, N ) :
     """
@@ -34,7 +36,7 @@ def filterset( data, alpha, l_thresh ) :
     dataf = scipy.signal.convolve( dataf, window, mode='full' )
     datar = scipy.signal.convolve( datar, window, mode='full' )
 
-    return ( dataf + datar ) / 2.0
+    return ( dataf + datar[::-1] ) / 2.0
 
 def overlaps( forward_regions, reverse_regions ) :
     """
