@@ -21,6 +21,12 @@ def findregions( data, N ) :
         regions.append( {'start':l[0],'stop':l[-1] } )
     return regions
 
+def sortbyintegral( data, regions ) :
+    """
+    Sort regions of an array according to their definite integrals.
+    """
+    return sorted( regions, key=lambda r: sum(data[r['start']:r['stop']]) )
+    
 def filterset( data, alpha, l_thresh ) :
     """
     Core data filtering function.
