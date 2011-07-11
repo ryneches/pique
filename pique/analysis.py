@@ -6,6 +6,7 @@ import data
 import processing
 import numpy
 import scipy
+import pique
 
 
 class PiqueAnalysis :
@@ -20,29 +21,65 @@ class PiqueAnalysis :
         """
         self.PD = PD
         
-    def noise_threshold( self, IP, BG ) :
+        self.data = {}
+        
+        # populate local data container
+        
+        for contig in self.PD.data.keys() :
+            
+            ip_f = self.PD.data[contig]['IP']['forward']
+            ip_r = self.PD.data[contig]['IP']['reverse']
+            bg_f = self.PD.data[contig]['BG']['forward']
+            bg_r = self.PD.data[contig]['BG']['reverse']
+                    
+            for mask in self.PD.data[contig]['masks'] :
+                l = mask['stop'] - mask['start']
+                
+                ip_f[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
+                ip_r[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
+                bg_f[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
+                bg_r[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
+            
+            for r in self.PD.data[contig]['regions'] :
+                
+                IP = { 'forward' : ip_f[ r['start'] : r['stop'] ],  \
+                       'reverse' : ip_r[ r['start'] : r['stop'] ]   } 
+                BG = { 'forward' : bg_f[ r['start'] : r['stop'] ],  \
+                       'reverse' : bg_r[ r['start'] : r['stop'] ]   } 
+                
+                ar = { 'contig' : contig, 'IP' : IP, 'BG' : BG, 'region' : r }
+                
+                ar['n_thresh'] = self.noise_threshold( ar )
+
+                name = contig + '_' + str( r['start'] ) + ':' + str( r['stop'] )
+                
+                self.data[name] = ar
+                
+    def noise_threshold( self, ar ) :
         """
-        Takes an array of IP coverage data and background coverage
-        data, and searches for the noies threshold in the data.
+        Computes the noise threshold in an analysis region. For now,
+        this is the simple mean of the forward and reverse background
+        tracks.
         """
-        for data in IP, BG :
-            for n in arange( min(data), max(data), 
+        return numpy.mean( ar['BG']['forward'] + ar['BG']['reverse'] )
+    
+    def apply_filter( self, ar_name, alpha, l_thresh, ) :
+        """
+        Apply the filter set to an analysis region.
+        """
+        ar = self.data[ar_name]
+
+        fip_f = processing.filterset( ar['IP']['forward'], alpha, l_thresh )
+        fip_r = processing.filterset( ar['IP']['reverse'], alpha, l_thresh )
+        fbg_f = processing.filterset( ar['BG']['forward'], alpha, l_thresh )
+        fbg_r = processing.filterset( ar['BG']['reverse'], alpha, l_thresh )
         
-    def filter_data( self, contig, region, alpha, l_thresh ) :
+        self.data[ar_name]['ip'] = { 'forward' : fip_f, 'reverse' : fip_r }
+        self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
         
-        if not self.filtered.has_key( contig ) :
-            self.filtered[contig] = { 'length' : self.data[contig]['length'] }
-        
-        for track in 'IP', 'BG' :
-            
-            if not self.filtered[contig].has_key( track ) :
-                self.filtered[contig][track] = { 'forward' : numpy.zeros( self.data[contig]['length'] ),    \
-                                                 'reverse' : numpy.zeros( self.data[contig]['length'] ) }
-            
-            start = region['start']
-            stop  = region['stop']
-            
-            for strand in 'forward', 'reverse' :
-                self.filtered[contig][track][strand][start:stop] =  \
-                    processing.filterset( self.data[contig][track]['forward'][start:stop], alpha, l_thresh )
+    
+    def filter_all( self, alpha, l_thresh ) :
+        for ar_name in self.data.keys() :
+            pique.msg( ':: applying filters to analysis region ' + ar_name )
+            self.apply_filter( ar_name, alpha, l_thresh )
 

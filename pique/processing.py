@@ -33,6 +33,7 @@ def filterset( data, alpha, l_thresh ) :
     """
     
     window = scipy.signal.blackman( l_thresh )
+    window = window / sum(window)
 
     dataf = scipy.signal.detrend( data )
     dataf = scipy.signal.wiener( dataf, mysize=alpha )
