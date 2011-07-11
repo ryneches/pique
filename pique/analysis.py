@@ -7,6 +7,7 @@ import processing
 import numpy
 import scipy
 import pique
+import stats
 
 
 class PiqueAnalysis :
@@ -49,19 +50,18 @@ class PiqueAnalysis :
                 
                 ar = { 'contig' : contig, 'IP' : IP, 'BG' : BG, 'region' : r }
                 
-                ar['n_thresh'] = self.noise_threshold( ar )
+                ar['N_thresh'] = self.noise_threshold( ar['BG']['forward'] + ar['BG']['reverse'] )
 
                 name = contig + '_' + str( r['start'] ) + ':' + str( r['stop'] )
                 
                 self.data[name] = ar
                 
-    def noise_threshold( self, ar ) :
+    def noise_threshold( self, data ) :
         """
         Computes the noise threshold in an analysis region. For now,
-        this is the simple mean of the forward and reverse background
-        tracks.
+        this is the 90th quantile of the data.
         """
-        return numpy.mean( ar['BG']['forward'] + ar['BG']['reverse'] )
+        return stats.scoreatpercentile( data.tolist(), 90 )
     
     def apply_filter( self, ar_name, alpha, l_thresh, ) :
         """
@@ -76,7 +76,7 @@ class PiqueAnalysis :
         
         self.data[ar_name]['ip'] = { 'forward' : fip_f, 'reverse' : fip_r }
         self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
-        
+        self.data[ar_name]['n_thresh'] = self.noise_threshold( fbg_f, fbg_r )
     
     def filter_all( self, alpha, l_thresh ) :
         for ar_name in self.data.keys() :
