@@ -50,8 +50,11 @@ class PiqueAnalysis :
                 
                 ar = { 'contig' : contig, 'IP' : IP, 'BG' : BG, 'region' : r }
                 
-                ar['N_thresh'] = self.noise_threshold( ar['BG']['forward'] + ar['BG']['reverse'] )
-
+                bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
+                ar['N_thresh'] = self.noise_threshold( bg_all )
+                
+                ar['peaks'] = []
+                
                 name = contig + '_' + str( r['start'] ) + ':' + str( r['stop'] )
                 
                 self.data[name] = ar
@@ -62,7 +65,7 @@ class PiqueAnalysis :
         this is the 90th quantile of the data.
         """
         return stats.scoreatpercentile( data.tolist(), 90 )
-    
+        
     def apply_filter( self, ar_name, alpha, l_thresh, ) :
         """
         Apply the filter set to an analysis region.
@@ -76,10 +79,30 @@ class PiqueAnalysis :
         
         self.data[ar_name]['ip'] = { 'forward' : fip_f, 'reverse' : fip_r }
         self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
-        self.data[ar_name]['n_thresh'] = self.noise_threshold( fbg_f, fbg_r )
-    
+        
+        fbg_all = numpy.concatenate( (fbg_f,fbg_r) )
+        self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all)
+        
     def filter_all( self, alpha, l_thresh ) :
         for ar_name in self.data.keys() :
             pique.msg( ':: applying filters to analysis region ' + ar_name )
             self.apply_filter( ar_name, alpha, l_thresh )
-
+            
+    def find_peaks( self, ar_name ) :
+        fp = processing.findregions( self.data[ar_name]['ip']['forward'],   \
+                                     self.data[ar_name]['n_thresh']         )
+        rp = processing.findregions( self.data[ar_name]['ip']['reverse'],   \
+                                     self.data[ar_name]['n_thresh']         )
+        
+        for e in processing.overlaps( fp, rp ) :
+            ip_e = sum( self.data[ar_name]['IP']['forward'][e['start']:e['stop']]   \
+                      + self.data[ar_name]['IP']['reverse'][e['start']:e['stop']]   )
+            
+            bg_e = sum( self.data[ar_name]['BG']['forward'][e['start']:e['stop']]   \
+                      + self.data[ar_name]['BG']['reverse'][e['start']:e['stop']]   )
+            
+            e['annotations']['enrichment_ratio'] = float(ip_e) / float(bg_e)
+                
+            self.data[ar_name]['peaks'].append(e)
+            
+            

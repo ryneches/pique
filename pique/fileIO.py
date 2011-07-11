@@ -52,22 +52,43 @@ def loadGFF( file ) :
     regions = []
     masks   = []
     for line in open( file ) :
-       g = dict(zip( GFFkeys, line.strip().split('\t') ))
-       if g['feature'] == 'analysis_region' :
+        g = dict(zip( GFFkeys, line.strip().split('\t') ))
+        if g['feature'] == 'analysis_region' :
             region = {  'contig' : g['contig']      ,   \
                         'start'  : int( g['start'] ),   \
                         'stop'   : int( g['stop']  )    }
             regions.append(region)
-
-       if g['feature'] == 'mask' :
+            
+        if g['feature'] == 'mask' :
             mask =  {   'contig' : g['contig']      ,   \
                         'start'  : int( g['start'] ),   \
-                        'stop'   : int(g['stop']   )    }
+                        'stop'   : int( g['stop']  )    }
             masks.append(mask)
     
     return { 'regions' : regions, 'masks' : masks }
 
-
+def writepeaksGFF( file, data ) :
+    """
+    Write peak list as a GFF file.
+    """
+    f = open( file, 'w' )
+    for ar_name in data.keys() :
+        ar      = data[ar_name]
+        contig  = ar['contig']
+        source  = 'Pique-1.0'
+        feature = 'peak'
+        strand  = '.'
+        frame   = '.'
+        group   = ''
+        rstart  = ar['region']['start']
+        for e in ar['peaks'] :
+            start = str( rstart + e['start'] )
+            stop  = str( rstart + e['stop']  )
+            er    = str( e['annotations']['enrichment_ratio'] )
+            s = '\t'.join( [contig,source,feature,start,stop,er,strand,frame,group ] )
+            f.write( s + '\n' )
+    f.close()
+        
 def write_track( data_forward, data_reverse, file, track_name ) :
     """
     Write a Gaggle Genome Browser compatible track file.
@@ -76,11 +97,10 @@ def write_track( data_forward, data_reverse, file, track_name ) :
     f.write( 'sequence\tstrand\tposition\tvalue\n' )
     for n,i in enumerate( data_forward ) :
         if i != 0 :
-            f.write( track_name + '\t+\t' + str(n) + '\t' + str(i) +
-'\n' )
+            f.write( track_name + '\t+\t' + str(n) + '\t' + str(i) + '\n' )
     for n,i in enumerate( data_reverse ) :
         if i != 0 :
-            f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) +
-'\n' )
+            f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
     f.close()
+
 
