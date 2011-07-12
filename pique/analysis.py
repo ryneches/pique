@@ -113,8 +113,8 @@ class PiqueAnalysis :
             binds_at = self.data[ar_name]['region']['start']    \
                      + e['start']                               \
                      + int( ( fip_f.argmax() + fip_r.argmax() ) / 2.0 )
-
-            e['annotations']['binds_at'] = binds_at            
+            
+            e['annotations']['binds_at'] = binds_at
             
             # add the annotated peak to the peak list for this
             # analysis region

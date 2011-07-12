@@ -3,7 +3,7 @@
 Data processing functions for Pique.
 """
 import numpy
-import scipy
+import scipy.signal
 import itertools
 import operator
 
