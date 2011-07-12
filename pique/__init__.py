@@ -1,12 +1,12 @@
 #!/usr/bin/env python2.6
 """
 """
-import scipy.signal
-import numpy
-import itertools
-import operator
 import sys
 import warnings
+import data
+import analysis
+import fileIO
+import processing
 
 # suppress annoying scypy warnings
 warnings.simplefilter("ignore", DeprecationWarning)
@@ -83,40 +83,6 @@ def readbookmarks( filename ) :
                             'strand':strand,        \
                             'chromosome':chromosome,\
                             'annotations':annot     } )
-    return regions
-
-def writebookmarks( filename, track_name, regions ) :
-    """
-    Write a GGB bookmark file, where any keys besides 'forward' and
-    'reverse' are added to the annotation column.
-    """
-    f = open( filename, 'w' )
-    f.write( '>name: ' + track_name + ' peak bookmarks\n' )
-    f.write( 'Chromosome\tStart\tEnd\tStrand\tName\tAnnotation\n' )
-    for r in regions :
-        f.write(    track_name + '\t'        \
-                    + str(r['start']) + '\t' \
-                    + str(r['stop'] ) + '\t' \
-                    + 'none\tpeak\t'         )
-        if r.has_key( 'annotations' ) :
-            for key,value in r['annotations'].items() :
-                f.write( str(key) + ':' + str(value) + ' ' )
-        f.write( '\n' )
-    f.close()
-
-def mask( data, mask_regions ) :
-    """
-    Mask regions in an array.
-    """
-    for region in mask_regions :
-        data[ region['start'] : region['stop'] ] = 0
-    return data
-
-def sizeselect( regions, too_big, too_small ) :
-    for region in regions :
-        size = region['stop'] - region['start']
-        if size > too_big or size < too_small :
-            regions.remove( region )
     return regions
 
 def msg( message ) :
