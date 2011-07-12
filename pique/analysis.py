@@ -94,6 +94,8 @@ class PiqueAnalysis :
         rp = processing.findregions( self.data[ar_name]['ip']['reverse'],   \
                                      self.data[ar_name]['n_thresh']         )
         
+        # loop over the peaks that meet the overlap criterion and add
+        # annotations for enrichment ratio and putative binding coordinate
         for e in processing.overlaps( fp, rp ) :
             ip_e = sum( self.data[ar_name]['IP']['forward'][e['start']:e['stop']]   \
                       + self.data[ar_name]['IP']['reverse'][e['start']:e['stop']]   )
@@ -101,8 +103,21 @@ class PiqueAnalysis :
             bg_e = sum( self.data[ar_name]['BG']['forward'][e['start']:e['stop']]   \
                       + self.data[ar_name]['BG']['reverse'][e['start']:e['stop']]   )
             
+            fip_f = self.data[ar_name]['ip']['forward'][e['start']:e['stop']]
+            fip_r = self.data[ar_name]['ip']['reverse'][e['start']:e['stop']]
+           
             e['annotations']['enrichment_ratio'] = float(ip_e) / float(bg_e)
-                
-            self.data[ar_name]['peaks'].append(e)
+
+            # simple estimate of binding coordinate; centerpoint
+            # between forward and reverse maxima
+            binds_at = self.data[ar_name]['region']['start']    \
+                     + e['start']                               \
+                     + int( ( fip_f.argmax() + fip_r.argmax() ) / 2.0 )
+
+            e['annotations']['binds_at'] = binds_at            
             
+            # add the annotated peak to the peak list for this
+            # analysis region
+            self.data[ar_name]['peaks'].append(e)
+    
             

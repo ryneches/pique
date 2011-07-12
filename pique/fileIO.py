@@ -69,7 +69,7 @@ def loadGFF( file ) :
 
 def writepeaksGFF( file, data ) :
     """
-    Write peak list as a GFF file.
+    Write peak list as a GFF file from a PiqueAnalysis.data object.
     """
     f = open( file, 'w' )
     for ar_name in data.keys() :
@@ -101,6 +101,36 @@ def write_track( data_forward, data_reverse, file, track_name ) :
     for n,i in enumerate( data_reverse ) :
         if i != 0 :
             f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
+    f.close()
+
+def writebookmarks( file, data ) :
+    """
+    Write a GGB bookmark file from an PiqueAnalyis.data object.
+    """
+    f = open( file, 'w' )
+    f.write( '>name: Pique bookmarks\n' )
+    f.write( 'Chromosome\tStart\tEnd\tStrand\tName\tAnnotation\n' )
+    for ar_name in data.keys() :
+        ar      = data[ar_name]
+        contig  = ar['contig']
+        source  = 'Pique-1.0'
+        feature = 'peak'
+        strand  = '.'
+        frame   = '.'
+        group   = ''
+        rstart  = ar['region']['start']
+        for e in ar['peaks'] :
+            start = str( rstart + e['start'] )
+            stop  = str( rstart + e['stop']  )
+            er    = str( e['annotations']['enrichment_ratio'] )
+            f.write( contig + '\t'      \
+                    + start + '\t'      \
+                    + stop  + '\t'      \
+                    + 'none\tpeak\t'    )
+            if e.has_key( 'annotations' ) :
+                for key,value in e['annotations'].items() :
+                    f.write( str(key) + ':' + str(value) + ' ' )
+            f.write( '\n' )
     f.close()
 
 
