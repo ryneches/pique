@@ -2,12 +2,11 @@
 """
 Pique analysis module.
 """
-import data
 import processing
+import pique
 import numpy
 import scipy
-import pique
-import stats
+#import stats
 
 
 class PiqueAnalysis :
@@ -64,7 +63,8 @@ class PiqueAnalysis :
         Computes the noise threshold in an analysis region. For now,
         this is the 90th quantile of the data.
         """
-        return stats.scoreatpercentile( data.tolist(), 90 )
+        #return stats.scoreatpercentile( data.tolist(), 90 )
+        return sorted(data)[ min( len(data)-1, int(len(data)*0.90)) ]
         
     def apply_filter( self, ar_name, alpha, l_thresh, ) :
         """
@@ -85,7 +85,7 @@ class PiqueAnalysis :
         
     def filter_all( self, alpha, l_thresh ) :
         for ar_name in self.data.keys() :
-            pique.msg( ':: applying filters to analysis region ' + ar_name )
+            pique.msg( '  :: applying filters to analysis region ' + ar_name )
             self.apply_filter( ar_name, alpha, l_thresh )
             
     def find_peaks( self, ar_name ) :
@@ -119,5 +119,3 @@ class PiqueAnalysis :
             # add the annotated peak to the peak list for this
             # analysis region
             self.data[ar_name]['peaks'].append(e)
-    
-            

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """
 A very, very basic genome browser.
+
+usage : ./basic_browser.py forward.track    \
+                           reverse.track    \
+                           peak.bookmark    \
+                           genes.bed
 """
 import numpy
 import pique
@@ -9,12 +14,12 @@ import sys
 
 # read track data
 pique.msg( 'reading track data...' )
-data_ff = pique.readtrack( 'tfbD_IP_fwd.txt' )
-data_rr = pique.readtrack( 'tfbD_IP_rev.txt' )
+data_ff = pique.readtrack( sys.argv[1] )
+data_rr = pique.readtrack( sys.argv[2] )
 
 # read peak data
 pique.msg( 'reading peak bookmarks...' )
-peaks = pique.readbookmarks( 'peak7.bookmark' )
+peaks = pique.readbookmarks( sys.argv[3] )
 
 # draw peaks 
 pique.msg( 'drawing peak bookmarks...' )
@@ -24,7 +29,7 @@ for peak in peaks :
 # read BED formatted gene annotations
 pique.msg( 'reading gene annotations...' )
 genes = {}
-for line in open( 'genes/annotations.bed' ) :
+for line in open( sys.argv[4] ) :
     if line.__contains__('Chromosome') :
         start, stop = map( int, line.split()[1:3] )
         name = line.split()[3]

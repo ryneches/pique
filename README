@@ -27,6 +27,15 @@ files, so you have to run nosetests from the main module directory
     $ cd pique
     $ nosetests
 
+DEPENDENCIES
+------------
+
+This package requires the following packages :
+
+    scipy
+    numpy
+    pysam
+        
 
 USAGE
 -----

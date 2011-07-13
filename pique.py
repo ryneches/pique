@@ -134,8 +134,21 @@ class PiqueApp :
         if not self.mapfile :
             D = pique.data.PiqueData( self.IPfile, self.BGfile )
         else :
-            D = pique.data.PiqueData( self.IPfile, self.BGfile, self.mapfile )     
+            D = pique.data.PiqueData( self.IPfile, self.BGfile, self.mapfile )
         
+        pique.msg( '  -> found contigs :' )
+        for contig in D.data.keys() :
+            pique.msg( '    ' + contig )
+            pique.msg( '      length : ' + str(D.data[contig]['length']) )
+            for r in D.data[contig]['regions'] :
+                start = str( r['start'] )
+                stop  = str( r['stop']  )
+                pique.msg( '      analysis region : ' + start + ':' + stop )
+            for m in D.data[contig]['masks'] :
+                start = str( m['start'] )
+                stop  = str( m['stop']  )
+                pique.msg( '      masking region  : ' + start + ':' + stop )
+
         # start analysis workbench
         pique.msg( 'creating analysis workbench...' )
         self.master.title( 'Pique : creating workbench...' )
@@ -153,6 +166,7 @@ class PiqueApp :
         self.master.title( 'Pique : finding peaks...' )
         for ar_name in PA.data.keys() :
             PA.find_peaks(ar_name)
+            pique.msg( '  :: ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
         
         # write output files
         pique.msg( 'writing output files...' )
