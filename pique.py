@@ -17,10 +17,21 @@ class PiqueApp :
         self.mapfile = None
         self.alpha   = 300
         self.l_thresh= 30
-        self.master = master 
+        self.name    = 'MyProject'
+        self.master = master
 
         master.title( 'Pique 1.0' )
         
+        # project name
+        frame0 = Frame( master )
+        self.nametext     = Entry(  frame0                  )
+        self.nametext.pack( side=LEFT )
+        self.nametext.insert( 0, self.name )
+        
+        self.namelabel = Label( frame0, text='Project name' )
+        self.namelabel.pack( side=RIGHT, fill=X )
+        frame0.pack( fill=X )
+
         # IP file 
         frame1 = Frame( master )
         self.IPfilebutton = Button( frame1,                 \
@@ -111,6 +122,9 @@ class PiqueApp :
     def run( self ) :
         
         # check inputs...
+        name     = self.nametext.get().strip()
+        pique.msg( 'starting run for project : ' + name )
+        
         alpha    = int( self.alphatext.get().strip() )
         l_thresh = int( self.lthreshtext.get().strip() )
         
@@ -143,8 +157,8 @@ class PiqueApp :
         # write output files
         pique.msg( 'writing output files...' )
         self.master.title( 'Pique : writing output...' )
-        pique.fileIO.writepeaksGFF( 'test_out.gff', PA.data )
-        pique.fileIO.writebookmarks( 'test.bookmark', PA.data )
+        pique.fileIO.writepeaksGFF( name + '.gff', PA.data )
+        pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
         
         # done!
         pique.msg( 'run completed.' )
