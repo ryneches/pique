@@ -36,52 +36,116 @@ This package requires the following packages :
     numpy
     pysam
         
+Suggested :
+
+    ipython
+    samtools
+    Gaggle Genome Browser
 
 USAGE
 -----
 
-The workflow pique is designed for goes something like this :
+This software can be used either as a stand-alone application, or as a
+library accessed by your own software.
 
-    [1]  Perform a chromatin immunoprecipitation, extract the DNA, put
-         it in the sequencing machine, get sequence data back.
+As a stand-alone application, simply invoke pique.py like so :
 
-    [2]  Align the reads to the reference genome of your organism.
+    $ ./pique.py
 
-    [3]  Generate coverage tracks for the forward and reverse strands for
-         the ChIP data and for the controls. You did remember to do 
-         controls, right?
+The application window will appear. Enter a name for your project in
+the 'Project name' field; this will be the name prefix for the output
+files. Choose files for the IP and BG (background) tracks; these
+should be indexed BAM files, created by mapping your IP and control
+reads to the reference sequence. Many different tools can be used for
+this, such as bowtie, bwa and SHRiMP.
 
-    [4]  Some regions of the genome may be repetitive or ambiguous, such 
-         as IS elements. Create a masking file for these regions.
+If you have BAM files that are not indexed, install samtools, and
+create an index like so :
 
-    [5]  Use a genome browser to select some regions that are
-         definitely not peaks. Make a bookmark file.
+    $ samtools index BAMfile.bam
 
-    [6]  Run piquify.py to generate normalized background tracks using
-         the bookmarked non-peak regions.
+The IP and background BAM files must contain identical contig names.
 
-    [7]  Run piquant.py to find the noise threshold.
+If desired, choose a genome map file ('Map (optional)'). See below for
+how to create one.
 
-    [8]  Run pique.py to build a bookmark file of putative enrichment
-         regions.
+Enter the dominant fragment length of the sequencing library, and the
+read length used for the sequencing run. If you have performed quality
+trimming, you may wish to use the average or median read length after
+trimming for the read length.
 
-    [9]  View the bookmarks in your favorite genome browser (pique was
-         designed around the Gaggle Genome Browser). Delete false 
-         positives, manually add false negatives, and adjust any 
-         start:stop coordinates that look badly off. Save the bookmark 
-         file.
+Then, click 'Run.' Your BAM files will be loaded and processed, and
+output files will be written in the directory from which pique.py was
+invoked. Run time for a bacterial genome depends on the number of
+mapped reads and the length of the genome. For our projects, we have
+found that a run takes about one to five minutes.
 
-    [10] Run piquancy.py to re-annotate the curated bookmark file with
-         enrichment ratios.
-    
-    [11] Run piquilate.py to re-annotate the curated bookmark file
-         with genes likely to be associated with the enrichment site.
+GENOME MAP FILE
+---------------
 
+Optionally, you can provide a genome map file ('Map (optional)'). This
+file must be a GFF-formatted file describing two kinds of features,
+analysis regions and masking regions. 
+
+Analysis regions should use the feature name 'analysis_region' in the
+file, and describe sub-regions of the contig that you wish to process
+independently. For example, if there are inconsistencies in coverage
+level due to gene dosage variations with respect to the reference,
+processing the dosage regions separately can improve peak detection.
+
+Masking regions should use the feature name 'mask' in the file, and
+describe sub-regions of the analysis regions that you wish to delete
+from the analysis. (Note: Masking regions *must* fall completely
+within an analysis region.) This is useful for hiding coverage
+aberrations due to repetitive regions, such as IS elements.
+
+By default, an analysis region describing the whole contig is created
+for each contig. When an analysis region is loaded by the user via the
+mapping file, the default analysis region for that contig is deleted. 
+
+Features described in the genome map file must use the same contig
+names as the IP and background BAM files. To see them, run :
+
+    $ samtools view -H BAMfile.bam
+
+Most columns in the GFF file are unused, and may be left empty (as
+long as the correct number of tabs are present). The required fields
+are :
+
+    0   contig name
+    2   'analysis_region' or 'mask'
+    3   start coordinate
+    4   end coordinate
+
+An example genome map file is provided (data/map.gff).
+
+OUTPUT FILES
+------------
+
+    <name>.IP.track  : A GGB-formatted track file of the IP data
+    <name>.BG.track  : A GGB-formatted track file of the BG data
+    <name>.bookmark  : A list of GGB bookmarks for each peak
+    <name>.gff       : A GFF file of each peak
+
+The GFF output file includes the following columns :
+
+    0   contig name
+    1   software version
+    2   feature description
+    3   start coordinate
+    4   end coordinate
+    5   enrichment ratio relative to background
+
+The bookmark file contains some additional annotations in addition to
+the required GGB bookmark information :
+
+    binds_at            estimated binding coordinate
+    enrichment_ratio    enrichment ratio relative to background
 
 CAVEATS
 -------
 
-Binding coodinates : The peak calling step (pique.py) will attempt to
+Binding coordinates : The peak calling step (pique.py) will attempt to
 calculate a binding coordinate for the putative peaks it finds. The
 method used is extremely naive, but we find that it generally comes
 within about 40bp of the expected binding site.
@@ -92,8 +156,6 @@ these regions through several other peak callers with little success.
 We have included a script for identifying sites that are likely to be
 double peaks to assist with curation.
 
-CONFIG FILES
-------------
 
 INSPIRATIONAL QUOTE
 -------------------
