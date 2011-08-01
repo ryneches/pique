@@ -89,18 +89,20 @@ def writepeaksGFF( file, data ) :
             f.write( s + '\n' )
     f.close()
         
-def write_track( data_forward, data_reverse, file, track_name ) :
+def writetrack( file, data, track='IP' ) :
     """
-    Write a Gaggle Genome Browser compatible track file.
+    Write a Gaggle Genome Browser compatible track file from a
+    PiqueData.data object.
     """
     f = open( file, 'w' )
     f.write( 'sequence\tstrand\tposition\tvalue\n' )
-    for n,i in enumerate( data_forward ) :
-        if i != 0 :
-            f.write( track_name + '\t+\t' + str(n) + '\t' + str(i) + '\n' )
-    for n,i in enumerate( data_reverse ) :
-        if i != 0 :
-            f.write( track_name + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
+    for contig in data.keys() :
+        for n,i in enumerate( data[contig][track]['forward'] ) :
+            if i != 0 :
+                f.write( contig + '\t+\t' + str(n) + '\t' + str(i) + '\n' )
+        for n,i in enumerate( data[contig][track]['reverse'] ) :
+            if i != 0 :
+                f.write( contig + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
     f.close()
 
 def writebookmarks( file, data ) :

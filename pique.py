@@ -166,13 +166,16 @@ class PiqueApp :
         self.master.title( 'Pique : finding peaks...' )
         for ar_name in PA.data.keys() :
             PA.find_peaks(ar_name)
-            pique.msg( '  :: ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
-        
+            pique.msg( '  peaks ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
+            pique.msg( '     noise threshold : ' + str(PA.data[ar_name]['n_thresh']) )
+
         # write output files
         pique.msg( 'writing output files...' )
         self.master.title( 'Pique : writing output...' )
         pique.fileIO.writepeaksGFF( name + '.gff', PA.data )
         pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
+        pique.fileIO.writetrack( name + '.IP.track', D.data )
+        pique.fileIO.writetrack( name + '.BG.track', D.data, track='BG' )
         
         # done!
         pique.msg( 'run completed.' )
