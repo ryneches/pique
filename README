@@ -59,11 +59,6 @@ should be indexed BAM files, created by mapping your IP and control
 reads to the reference sequence. Many different tools can be used for
 this, such as bowtie, bwa and SHRiMP.
 
-If you have BAM files that are not indexed, install samtools, and
-create an index like so :
-
-    $ samtools index BAMfile.bam
-
 The IP and background BAM files must contain identical contig names.
 
 If desired, choose a genome map file ('Map (optional)'). See below for
