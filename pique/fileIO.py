@@ -15,6 +15,10 @@ def loadBAM( file ) :
     Each track contains scalar length, and two vectors representing
     the forward and everse coverage across the contig.
     """
+    # index the BAM file
+    pysam.index( file )
+    
+    # open the BAM file
     samfile = pysam.Samfile( file, 'rb' )
     tracks = {}
 
