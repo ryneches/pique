@@ -105,9 +105,9 @@ class PiqueAnalysis :
             
             fip_f = self.data[ar_name]['ip']['forward'][e['start']:e['stop']]
             fip_r = self.data[ar_name]['ip']['reverse'][e['start']:e['stop']]
-           
+            
             e['annotations']['enrichment_ratio'] = float(ip_e) / float(bg_e)
-
+            
             # simple estimate of binding coordinate; centerpoint
             # between forward and reverse maxima
             binds_at = self.data[ar_name]['region']['start']    \

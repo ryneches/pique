@@ -132,19 +132,19 @@ class PiqueData :
         for region in self.data[contig]['regions'] :
             if region['start'] < start and region['stop'] > start   \
                 or region['start'] < stop and region['stop'] > stop :
-                raise PiqueDataException( 'Overlapping analysis regions are not allowed.' )
+                raise PiqueDataException( 'Overlapping analysis regions are not allowed.', contig, start, stop )
             
         if start < 0 or start > self.data[contig]['length'] :
-            raise PiqueDataException( 'Analysis region start coordinate out of bounds.' )
-
+            raise PiqueDataException( 'Analysis region start coordinate out of bounds.', contig, start, stop )
+        
         if stop < 0 or stop > self.data[contig]['length'] :
-            raise PiqueDataException( 'Analysis region stop coordinate out of bounds.' )
+            raise PiqueDataException( 'Analysis region stop coordinate out of bounds.', contig, start, stop )
         
         if start > stop :
-            raise PiqueDataException( 'Analysis region orientation is reversed.' )
-
+            raise PiqueDataException( 'Analysis region orientation is reversed.', contig, start, stop )
+        
         self.data[contig]['regions'].append( { 'start' : int(start), 'stop' : int(stop) } )
-
+        
     def add_mask( self, contig, start, stop ) :
         """
         Add a mask to a contig. Overlapping masks are not allowed.
@@ -152,16 +152,16 @@ class PiqueData :
         for mask in self.data[contig]['masks'] :
             if mask['start'] < start and mask['stop'] > start   \
                 or mask['start'] < stop and mask['stop'] > stop :
-                raise PiqueDataException( 'Overlapping masks are not allowed.' )
+                raise PiqueDataException( 'Overlapping masks are not allowed.', contig, start, stop )
             
         if start < 0 or start > self.data[contig]['length'] :
-            raise PiqueDataException( 'Mask start coordinate out of bounds.' )
-
+            raise PiqueDataException( 'Mask start coordinate out of bounds.', contig, start, stop )
+        
         if stop < 0 or stop > self.data[contig]['length'] :
-            raise PiqueDataException( 'Mask stop coordinate out of bounds.' )
+            raise PiqueDataException( 'Mask stop coordinate out of bounds.', contig, start, stop )
         
         if start > stop :
-            raise PiqueDataException( 'Mask orientation is reversed.' )
-
+            raise PiqueDataException( 'Mask orientation is reversed.', contig, start, stop )
+        
         self.data[contig]['masks'].append( { 'start' : int(start), 'stop' : int(stop) } )
 
