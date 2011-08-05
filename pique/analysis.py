@@ -106,7 +106,12 @@ class PiqueAnalysis :
             fip_f = self.data[ar_name]['ip']['forward'][e['start']:e['stop']]
             fip_r = self.data[ar_name]['ip']['reverse'][e['start']:e['stop']]
             
-            e['annotations']['enrichment_ratio'] = float(ip_e) / float(bg_e)
+            if not float(bg_e) == 0 :
+                er = float(ip_e) / float(bg_e)
+            else :
+                er = None
+            
+            e['annotations']['enrichment_ratio'] = er
             
             # simple estimate of binding coordinate; centerpoint
             # between forward and reverse maxima
