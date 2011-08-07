@@ -20,12 +20,49 @@ class PiqueData :
     def __init__( self, IP_file, BG_file, map_file=None ) :
         self.data       = {}
         self.filtered   = {}
+        
+        # check the map file for errors now before loading the data
+        if map_file :
+            gff = fileIO.loadGFF( map_file )
+
+            err = 'Overlapping analysis regions : '
+            rvs = 'Reversed coodinates in analysis region : '
+            for region in gff['regions'] :
+                contig = region['contig']
+                start  = region['start']
+                stop   = region['stop']
+                if start > stop :
+                    coord = str(start) + ':' + str(stop)
+                    raise PiqueDataException( rvs + contig + coord )
+                for r in gff['regions'] :
+                    if r['contig'] == contig :
+                        if r['start'] > start and r['start'] < stop or  \
+                           r['stop']  > start and r['stop']  < stop :
+                            fist   = str(start)      + ':' + str(stop)
+                            second = str(r['start']) + ':' + str(r['stop'])
+                            raise PiqueDataException( err + contig + ' ' + first + '::' + second )
+            err = 'Overlapping masking regions : '
+            rvs = 'Reversed coodinates in masking region : '
+            for mask in gff['masks'] :
+                contig = mask['contig']
+                start  = mask['start']
+                stop   = mask['stop']
+                if start > stop :
+                    coord = str(start) + ':' + str(stop)
+                    raise PiqueDataException( rvs + contig + coord )
+                for r in gff['masks'] :
+                    if r['contig'] == contig :
+                        if r['start'] > start and r['start'] < stop or  \
+                           r['stop']  > start and r['stop']  < stop :
+                            fist   = str(start)      + ':' + str(stop)
+                            second = str(r['start']) + ':' + str(r['stop'])
+                            raise PiqueDataException( err + contig + ' ' + first + '::' + second )
+           
+        # load the track data 
         self.load_data( IP_file, BG_file )
         
         # load genome map file, if provided
         if map_file :
-            
-            gff = fileIO.loadGFF( map_file )
             
             region_contigs = []
             for region in gff['regions'] :
@@ -34,7 +71,7 @@ class PiqueData :
                     raise PiqueDataException( 'Map file contains unknown contig : ' + contig )
                 if not region_contigs.__contains__( contig ) :
                     region_contigs.append( contig )
-
+            
             # remove default regions from mapped contigs
             for contig in region_contigs :
                 self.del_analysis_region( contig, 0, self.data[contig]['length'] )
@@ -51,7 +88,7 @@ class PiqueData :
                 start  = mask['start']
                 stop   = mask['stop']
                 self.add_mask( contig, start, stop )
-
+    
     def add_contig( self,   contig_name,    \
                             IP_forward,     \
                             IP_reverse,     \
@@ -129,19 +166,6 @@ class PiqueData :
         Add an analysis region to a contig. Overlapping regions are
         not allowed.
         """
-        for region in self.data[contig]['regions'] :
-            if region['start'] < start and region['stop'] > start   \
-                or region['start'] < stop and region['stop'] > stop :
-                raise PiqueDataException( 'Overlapping analysis regions are not allowed.', contig, start, stop )
-            
-        if start < 0 or start > self.data[contig]['length'] :
-            raise PiqueDataException( 'Analysis region start coordinate out of bounds.', contig, start, stop )
-        
-        if stop < 0 or stop > self.data[contig]['length'] :
-            raise PiqueDataException( 'Analysis region stop coordinate out of bounds.', contig, start, stop )
-        
-        if start > stop :
-            raise PiqueDataException( 'Analysis region orientation is reversed.', contig, start, stop )
         
         self.data[contig]['regions'].append( { 'start' : int(start), 'stop' : int(stop) } )
         
@@ -149,19 +173,6 @@ class PiqueData :
         """
         Add a mask to a contig. Overlapping masks are not allowed.
         """
-        for mask in self.data[contig]['masks'] :
-            if mask['start'] < start and mask['stop'] > start   \
-                or mask['start'] < stop and mask['stop'] > stop :
-                raise PiqueDataException( 'Overlapping masks are not allowed.', contig, start, stop )
-            
-        if start < 0 or start > self.data[contig]['length'] :
-            raise PiqueDataException( 'Mask start coordinate out of bounds.', contig, start, stop )
-        
-        if stop < 0 or stop > self.data[contig]['length'] :
-            raise PiqueDataException( 'Mask stop coordinate out of bounds.', contig, start, stop )
-        
-        if start > stop :
-            raise PiqueDataException( 'Mask orientation is reversed.', contig, start, stop )
         
         self.data[contig]['masks'].append( { 'start' : int(start), 'stop' : int(stop) } )
 
