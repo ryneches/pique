@@ -184,10 +184,11 @@ class PiqueApp :
         # write output files
         pique.msg( logfile, 'writing output files...' )
         self.master.title( 'Pique : writing output...' )
-        pique.fileIO.writepeaksGFF( name + '.gff', PA.data )
+        pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
         pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
-        pique.fileIO.writetrack( name + '.IP.track', D.data )
-        pique.fileIO.writetrack( name + '.BG.track', D.data, track='BG' )
+        pique.fileIO.writeQP(        name + '.qp',       PA.data )
+        pique.fileIO.writetrack(     name + '.IP.track', D.data  )
+        pique.fileIO.writetrack(     name + '.BG.track', D.data, track='BG' )
         
         # done!
         pique.msg( logfile, 'run completed.' )

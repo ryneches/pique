@@ -109,6 +109,25 @@ def writetrack( file, data, track='IP' ) :
                 f.write( contig + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
     f.close()
 
+def writeQP( file, data ) :
+    """
+    Write GGB quantitative positional file of estimated binding
+    coodinates.
+    """
+    f = open( file, 'w' )
+    f.write( 'sequence\tstrand\tposition\tvalue\n' )
+    for ar_name in data.keys() :
+        ar      = data[ar_name]
+        contig  = ar['contig']
+        for e in ar['peaks'] :
+            er    = str( e['annotations']['enrichment_ratio'] )
+            bc    = str( e['annotations']['binds_at'] )
+            f.write( contig + '\t'  \
+                    + '.\t'         \
+                    + bc + '\t'     \
+                    + er + '\n'     )
+    f.close()
+
 def writebookmarks( file, data ) :
     """
     Write a GGB bookmark file from an PiqueAnalyis.data object.
