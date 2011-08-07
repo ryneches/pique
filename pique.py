@@ -123,54 +123,66 @@ class PiqueApp :
         
         # check inputs...
         name     = self.nametext.get().strip()
-        pique.msg( 'starting run for project : ' + name )
         
+        # set logfile
+        logfile = name + '.log'
+        
+        pique.msg( logfile, 'starting run for project : ' + name )
+         
         alpha    = int( self.alphatext.get().strip() )
         l_thresh = int( self.lthreshtext.get().strip() )
+               
+        # log inputs
+        pique.msg( logfile, '  -> IP file  : ' + self.IPfile   )
+        pique.msg( logfile, '  -> BG file  : ' + self.BGfile   )
+        pique.msg( logfile, '  -> map file : ' + self.mapfile  )
+        pique.msg( logfile, '  -> alpha    : ' + str(alpha)    )
+        pique.msg( logfile, '  -> l_thresh : ' + str(l_thresh) )
         
         # load the data
-        pique.msg( 'loading data...' )
+        pique.msg( logfile, 'loading data...' )
         self.master.title( 'Pique : loading data...' )
         if not self.mapfile :
             D = pique.data.PiqueData( self.IPfile, self.BGfile )
         else :
             D = pique.data.PiqueData( self.IPfile, self.BGfile, self.mapfile )
         
-        pique.msg( '  -> found contigs :' )
+        pique.msg( logfile, '  found contigs :' )
         for contig in D.data.keys() :
-            pique.msg( '    ' + contig )
-            pique.msg( '      length : ' + str(D.data[contig]['length']) )
+            pique.msg( logfile, '    ' + contig )
+            pique.msg( logfile, '      length : ' + str(D.data[contig]['length']) )
             for r in D.data[contig]['regions'] :
                 start = str( r['start'] )
                 stop  = str( r['stop']  )
-                pique.msg( '      analysis region : ' + start + ':' + stop )
+                pique.msg( logfile, '      analysis region : ' + start + ':' + stop )
             for m in D.data[contig]['masks'] :
                 start = str( m['start'] )
                 stop  = str( m['stop']  )
-                pique.msg( '      masking region  : ' + start + ':' + stop )
-
+                pique.msg( logfile, '      masking region  : ' + start + ':' + stop )
+        
         # start analysis workbench
-        pique.msg( 'creating analysis workbench...' )
+        pique.msg( logfile, 'creating analysis workbench...' )
         self.master.title( 'Pique : creating workbench...' )
         PA = pique.analysis.PiqueAnalysis( D )
         
         # run filters
-        pique.msg( 'running filters...' )
+        pique.msg( logfile, 'running filters...' )
         self.master.title( 'Pique : running filters...' )
-        pique.msg( '  -> alpha    : ' + str(alpha) )        
-        pique.msg( '  -> l_thresh : ' + str(l_thresh) )
-        PA.filter_all( alpha, l_thresh )
+        
+        for ar_name in PA.data.keys() :
+            pique.msg( logfile, '  :: applying filters to analysis region ' + ar_name )
+            PA.apply_filter( ar_name, alpha, l_thresh )
         
         # find peaks
-        pique.msg( 'finding peaks...' )
+        pique.msg( logfile, 'finding peaks...' )
         self.master.title( 'Pique : finding peaks...' )
         for ar_name in PA.data.keys() :
             PA.find_peaks(ar_name)
-            pique.msg( '  peaks ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
-            pique.msg( '     noise threshold : ' + str(PA.data[ar_name]['n_thresh']) )
+            pique.msg( logfile, '  peaks ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
+            pique.msg( logfile, '     noise threshold : ' + str(PA.data[ar_name]['n_thresh']) )
 
         # write output files
-        pique.msg( 'writing output files...' )
+        pique.msg( logfile, 'writing output files...' )
         self.master.title( 'Pique : writing output...' )
         pique.fileIO.writepeaksGFF( name + '.gff', PA.data )
         pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
@@ -178,7 +190,7 @@ class PiqueApp :
         pique.fileIO.writetrack( name + '.BG.track', D.data, track='BG' )
         
         # done!
-        pique.msg( 'run completed.' )
+        pique.msg( logfile, 'run completed.' )
         self.master.title( 'Pique : run completed.' )
 
 app = PiqueApp( root )

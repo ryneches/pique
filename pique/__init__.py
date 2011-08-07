@@ -85,6 +85,8 @@ def readbookmarks( filename ) :
                             'annotations':annot     } )
     return regions
 
-def msg( message ) :
+def msg( file, message ) :
     sys.stderr.write( message + '\n' )
-
+    f = open( file, 'a' )
+    f.write( message + '\n' )
+    f.close()

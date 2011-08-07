@@ -83,11 +83,6 @@ class PiqueAnalysis :
         fbg_all = numpy.concatenate( (fbg_f,fbg_r) )
         self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all)
         
-    def filter_all( self, alpha, l_thresh ) :
-        for ar_name in self.data.keys() :
-            pique.msg( '  :: applying filters to analysis region ' + ar_name )
-            self.apply_filter( ar_name, alpha, l_thresh )
-            
     def find_peaks( self, ar_name ) :
         fp = processing.findregions( self.data[ar_name]['ip']['forward'],   \
                                      self.data[ar_name]['n_thresh']         )
