@@ -25,38 +25,32 @@ class PiqueData :
         if map_file :
             gff = fileIO.loadGFF( map_file )
 
+            types = []
             err = 'Overlapping analysis regions : '
             rvs = 'Reversed coodinates in analysis region : '
-            for region in gff['regions'] :
-                contig = region['contig']
-                start  = region['start']
-                stop   = region['stop']
-                if start > stop :
-                    coord = str(start) + ':' + str(stop)
-                    raise PiqueDataException( rvs + contig + coord )
-                for r in gff['regions'] :
-                    if r['contig'] == contig :
-                        if r['start'] > start and r['start'] < stop or  \
-                           r['stop']  > start and r['stop']  < stop :
-                            fist   = str(start)      + ':' + str(stop)
-                            second = str(r['start']) + ':' + str(r['stop'])
-                            raise PiqueDataException( err + contig + ' ' + first + '::' + second )
+            types.append( ('regions', err, rvs) )
             err = 'Overlapping masking regions : '
-            rvs = 'Reversed coodinates in masking region : '
-            for mask in gff['masks'] :
-                contig = mask['contig']
-                start  = mask['start']
-                stop   = mask['stop']
-                if start > stop :
-                    coord = str(start) + ':' + str(stop)
-                    raise PiqueDataException( rvs + contig + coord )
-                for r in gff['masks'] :
-                    if r['contig'] == contig :
-                        if r['start'] > start and r['start'] < stop or  \
-                           r['stop']  > start and r['stop']  < stop :
-                            fist   = str(start)      + ':' + str(stop)
-                            second = str(r['start']) + ':' + str(r['stop'])
-                            raise PiqueDataException( err + contig + ' ' + first + '::' + second )
+            rvs = 'Reversed coodinates in masking region : '  
+            types.append( ('masks', err, rvs) )
+            err = 'Overlapping normalization regions : '
+            rvs = 'Reversed coodinates in normalization region : '
+            types.append( ('norms', err, rvs) )
+
+            for t,err,rvs in types :
+                for region in gff[t] :
+                    contig = region['contig']
+                    start  = region['start']
+                    stop   = region['stop']
+                    if start > stop :
+                        coord = str(start) + ':' + str(stop)
+                        raise PiqueDataException( rvs + contig + coord )
+                    for r in gff['regions'] :
+                        if r['contig'] == contig :
+                            if r['start'] > start and r['start'] < stop or  \
+                               r['stop']  > start and r['stop']  < stop :
+                                fist   = str(start)      + ':' + str(stop)
+                                second = str(r['start']) + ':' + str(r['stop'])
+                                raise PiqueDataException( err + contig + ' ' + first + '::' + second )
            
         # load the track data 
         self.load_data( IP_file, BG_file )
@@ -88,6 +82,13 @@ class PiqueData :
                 start  = mask['start']
                 stop   = mask['stop']
                 self.add_mask( contig, start, stop )
+            
+            # add normalization regions
+            for norm in gff['norms'] :
+                contig = norm['contig']
+                start  = norm['start']
+                stop   = norm['stop']
+                self.add_norm( contig, start, stop )
     
     def add_contig( self,   contig_name,    \
                             IP_forward,     \
@@ -112,6 +113,9 @@ class PiqueData :
         
         # create an empty mask list
         self.data[ contig_name ][ 'masks' ] = []
+        
+        # create an empty norm list
+        self.data[ contig_name ][ 'norms' ] = []
 
     def load_data( self, IP_file, BG_file ) :
         """
@@ -175,4 +179,11 @@ class PiqueData :
         """
         
         self.data[contig]['masks'].append( { 'start' : int(start), 'stop' : int(stop) } )
+
+    def add_norm( self, contig, start, stop ) :
+        """
+        Add a mask to a contig. Overlapping masks are not allowed.
+        """
+        
+        self.data[contig]['norms'].append( { 'start' : int(start), 'stop' : int(stop) } )
 

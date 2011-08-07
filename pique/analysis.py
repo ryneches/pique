@@ -31,7 +31,8 @@ class PiqueAnalysis :
             ip_r = self.PD.data[contig]['IP']['reverse']
             bg_f = self.PD.data[contig]['BG']['forward']
             bg_r = self.PD.data[contig]['BG']['reverse']
-                    
+            
+            # apply masks
             for mask in self.PD.data[contig]['masks'] :
                 l = mask['stop'] - mask['start']
                 
@@ -40,6 +41,24 @@ class PiqueAnalysis :
                 bg_f[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
                 bg_r[ mask['start'] : mask['stop'] ] = numpy.zeros(l)
             
+            # calculate normalization factors
+            norms = []
+            for norm in self.PD.data[contig]['norms'] :
+                nip_f = ip_f[ norm['start'] : norm['stop'] ]
+                nip_r = ip_r[ norm['start'] : norm['stop'] ]
+                nbg_f = bg_f[ norm['start'] : norm['stop'] ]
+                nbg_r = bg_r[ norm['start'] : norm['stop'] ]
+                nip = float(sum( nip_f + nip_r ))
+                nbg = float(sum( nbg_f + nbg_r ))
+                if not nbg == 0 :
+                    n = nip/nbg
+                else :
+                    n = None
+                norms.append( { 'start' : norm['start'],    \
+                                'stop'  : norm['stop'],     \
+                                'n'     : n               } )           
+                
+            # create analysis regons
             for r in self.PD.data[contig]['regions'] :
                 
                 IP = { 'forward' : ip_f[ r['start'] : r['stop'] ],  \
@@ -52,6 +71,14 @@ class PiqueAnalysis :
                 bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
                 ar['N_thresh'] = self.noise_threshold( bg_all )
                 
+                # attach norm regions
+                ar['norms'] = []
+                for norm in norms :
+                    start = norm['start']
+                    stop  = norm['stop']
+                    if r['start'] < start and r['stop'] > stop :
+                        ar['norms'].append( norm['n'] )
+
                 ar['peaks'] = []
                 
                 name = contig + '_' + str( r['start'] ) + ':' + str( r['stop'] )
@@ -90,7 +117,8 @@ class PiqueAnalysis :
                                      self.data[ar_name]['n_thresh']         )
         
         # loop over the peaks that meet the overlap criterion and add
-        # annotations for enrichment ratio and putative binding coordinate
+        # annotations for enrichment ratio, and putative binding
+        # coordinate and normalizations
         for e in processing.overlaps( fp, rp ) :
             ip_e = sum( self.data[ar_name]['IP']['forward'][e['start']:e['stop']]   \
                       + self.data[ar_name]['IP']['reverse'][e['start']:e['stop']]   )
@@ -106,7 +134,13 @@ class PiqueAnalysis :
             else :
                 er = None
             
+            # enrichment ratio
             e['annotations']['enrichment_ratio'] = er
+            
+            # normalizations
+            for i,norm in enumerate(self.data[ar_name]['norms']) :
+                name = 'norm_' + str(i)
+                e['annotations'][name] = norm
             
             # simple estimate of binding coordinate; centerpoint
             # between forward and reverse maxima

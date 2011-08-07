@@ -172,7 +172,7 @@ class PiqueApp :
         for ar_name in PA.data.keys() :
             pique.msg( logfile, '  :: applying filters to analysis region ' + ar_name )
             PA.apply_filter( ar_name, alpha, l_thresh )
-        
+            
         # find peaks
         pique.msg( logfile, 'finding peaks...' )
         self.master.title( 'Pique : finding peaks...' )
@@ -180,6 +180,7 @@ class PiqueApp :
             PA.find_peaks(ar_name)
             pique.msg( logfile, '  peaks ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
             pique.msg( logfile, '     noise threshold : ' + str(PA.data[ar_name]['n_thresh']) )
+            pique.msg( logfile, '     normalizations  : ' + ', '.join( map(str, PA.data[ar_name]['norms']) ) )
 
         # write output files
         pique.msg( logfile, 'writing output files...' )

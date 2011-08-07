@@ -55,6 +55,7 @@ def loadGFF( file ) :
     """
     regions = []
     masks   = []
+    norms   = []
     for line in open( file ) :
         g = dict(zip( GFFkeys, line.strip().split('\t') ))
         if g['feature'] == 'analysis_region' :
@@ -68,8 +69,14 @@ def loadGFF( file ) :
                         'start'  : int( g['start'] ),   \
                         'stop'   : int( g['stop']  )    }
             masks.append(mask)
-    
-    return { 'regions' : regions, 'masks' : masks }
+        
+        if g['feature'] == 'norm_region' :
+            norm =  {   'contig' : g['contig']      ,   \
+                        'start'  : int( g['start'] ),   \
+                        'stop'   : int( g['stop']  )    }
+            norms.append(norm)
+
+    return { 'regions' : regions, 'masks' : masks, 'norms' : norms }
 
 def writepeaksGFF( file, data ) :
     """
@@ -92,7 +99,7 @@ def writepeaksGFF( file, data ) :
             s = '\t'.join( [contig,source,feature,start,stop,er,strand,frame,group ] )
             f.write( s + '\n' )
     f.close()
-        
+
 def writetrack( file, data, track='IP' ) :
     """
     Write a Gaggle Genome Browser compatible track file from a
