@@ -135,6 +135,39 @@ def writeQP( file, data ) :
                     + er + '\n'     )
     f.close()
 
+def writepeakTSV( file, data ) :
+    """
+    Write a TSV file containing
+        contig
+        peak start
+        peak stop
+        peak binding coordinate
+        peak enrichment ratio
+        average contig normalization
+        standard deviation of contig normalization
+        norm_0
+        norm_1
+        norm_2
+        norm_3
+        ...
+    """
+    with open( file, 'w' ) as f :
+        f.write( 'contig\tstart\tstop\tbinds_at\tenrichment_ratio\taverage_contig_norm\tstd_contig_norm\n' )
+        for ar_name in data.keys() :
+            ar      = data[ar_name]
+            contig  = ar['contig']
+            norms   = ar['norms']
+            n_av    = str(numpy.mean( norms ))
+            n_std   = str(numpy.std(  norms ))
+            for e in ar['peaks'] :
+                start = str(e['start'])
+                stop  = str(e['stop'])
+                er    = str(e['annotations']['enrichment_ratio'])
+                bc    = str(e['annotations']['binds_at'])
+                line  = '\t'.join( [ contig, start, stop, bc, er, n_av, n_std ] )
+                line  = line + '\t' + '\t'.join( map( str, norms ) ) + '\n'
+                f.write( line )
+
 def writebookmarks( file, data ) :
     """
     Write a GGB bookmark file from an PiqueAnalyis.data object.

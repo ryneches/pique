@@ -188,6 +188,7 @@ class PiqueApp :
         pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
         pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
         pique.fileIO.writeQP(        name + '.qp',       PA.data )
+        pique.fileIO.writepeakTSV(   name + '.peak.tsv', PA.data )
         pique.fileIO.writetrack(     name + '.IP.track', D.data  )
         pique.fileIO.writetrack(     name + '.BG.track', D.data, track='BG' )
         
