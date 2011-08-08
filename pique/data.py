@@ -44,7 +44,7 @@ class PiqueData :
                     if start > stop :
                         coord = str(start) + ':' + str(stop)
                         raise PiqueDataException( rvs + contig + coord )
-                    for r in gff['regions'] :
+                    for r in gff[t] :
                         if r['contig'] == contig :
                             if r['start'] > start and r['start'] < stop or  \
                                r['stop']  > start and r['stop']  < stop :
