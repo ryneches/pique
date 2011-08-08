@@ -48,7 +48,7 @@ class PiqueData :
                         if r['contig'] == contig :
                             if r['start'] > start and r['start'] < stop or  \
                                r['stop']  > start and r['stop']  < stop :
-                                first   = str(start)      + ':' + str(stop)
+                                first  = str(start)      + ':' + str(stop)
                                 second = str(r['start']) + ':' + str(r['stop'])
                                 raise PiqueDataException( err + contig + ' ' + first + '::' + second )
            
