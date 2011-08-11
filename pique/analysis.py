@@ -19,8 +19,8 @@ class PiqueAnalysis :
         Workbench initialization requires a populated PiqueData
         object. Otherwise, there's nothing to do!
         """
-        self.PD = PD
-        
+        self.PD   = PD
+        self.name = PD.name
         self.data = {}
         
         # populate local data container

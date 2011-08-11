@@ -143,9 +143,9 @@ class PiqueApp :
         pique.msg( logfile, 'loading data...' )
         self.master.title( 'Pique : loading data...' )
         if not self.mapfile :
-            D = pique.data.PiqueData( self.IPfile, self.BGfile )
+            D = pique.data.PiqueData( self.IPfile, self.BGfile, name=name )
         else :
-            D = pique.data.PiqueData( self.IPfile, self.BGfile, self.mapfile )
+            D = pique.data.PiqueData( self.IPfile, self.BGfile, self.mapfile, name=name )
         
         pique.msg( logfile, '  found contigs :' )
         for contig in D.data.keys() :
@@ -186,7 +186,7 @@ class PiqueApp :
         pique.msg( logfile, 'writing output files...' )
         self.master.title( 'Pique : writing output...' )
         pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
-        pique.fileIO.writebookmarks( name + '.bookmark', PA.data )
+        pique.fileIO.writebookmarks( name + '.bookmark', PA.data, name=name )
         pique.fileIO.writeQP(        name + '.qp',       PA.data )
         pique.fileIO.writepeakTSV(   name + '.peak.tsv', PA.data )
         pique.fileIO.writetrack(     name + '.IP.track', D.data  )

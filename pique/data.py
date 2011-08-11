@@ -16,10 +16,12 @@ class PiqueData :
     def __init__( self ) :
         self.data = {}
         self.filtered = {}    
+        self.name = ''
     
-    def __init__( self, IP_file, BG_file, map_file=None ) :
+    def __init__( self, IP_file, BG_file, map_file=None, name='' ) :
         self.data       = {}
         self.filtered   = {}
+        self.name       = name
         
         # check the map file for errors now before loading the data
         if map_file :

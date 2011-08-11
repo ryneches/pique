@@ -169,12 +169,12 @@ def writepeakTSV( file, data ) :
                 line  = line + '\t' + '\t'.join( map( str, norms ) ) + '\n'
                 f.write( line )
 
-def writebookmarks( file, data ) :
+def writebookmarks( file, data, name='' ) :
     """
     Write a GGB bookmark file from an PiqueAnalyis.data object.
     """
     f = open( file, 'w' )
-    f.write( '>name: Pique bookmarks\n' )
+    f.write( '>name: Pique bookmarks for ' + name + '\n' )
     f.write( 'Chromosome\tStart\tEnd\tStrand\tName\tAnnotation\n' )
     for ar_name in data.keys() :
         ar      = data[ar_name]
