@@ -155,13 +155,14 @@ def writepeakTSV( file, data ) :
         f.write( 'contig\tstart\tstop\tbinds_at\tenrichment_ratio\taverage_contig_norm\tstd_contig_norm\n' )
         for ar_name in data.keys() :
             ar      = data[ar_name]
+            rstart  = ar['region']['start']
             contig  = ar['contig']
             norms   = ar['norms']
             n_av    = str(numpy.mean( norms ))
             n_std   = str(numpy.std(  norms ))
             for e in ar['peaks'] :
-                start = str(e['start'])
-                stop  = str(e['stop'])
+                start = str( rstart + e['start'] )
+                stop  = str( rstart + e['stop']  )
                 er    = str(e['annotations']['enrichment_ratio'])
                 bc    = str(e['annotations']['binds_at'])
                 line  = '\t'.join( [ contig, start, stop, bc, er, n_av, n_std ] )
