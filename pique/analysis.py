@@ -67,10 +67,7 @@ class PiqueAnalysis :
                        'reverse' : bg_r[ r['start'] : r['stop'] ]   } 
                 
                 ar = { 'contig' : contig, 'IP' : IP, 'BG' : BG, 'region' : r }
-                
-                bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
-                ar['N_thresh'] = self.noise_threshold( bg_all )
-                
+                               
                 # attach norm regions
                 ar['norms'] = []
                 for norm in norms :
@@ -78,7 +75,10 @@ class PiqueAnalysis :
                     stop  = norm['stop']
                     if r['start'] < start and r['stop'] > stop :
                         ar['norms'].append( norm['n'] )
-
+                
+                bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
+                ar['N_thresh'] = self.noise_threshold( bg_all ) * numpy.mean(ar['norms'])
+                
                 ar['peaks'] = []
                 
                 name = contig + '_' + str( r['start'] ) + ':' + str( r['stop'] )
