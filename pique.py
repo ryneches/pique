@@ -179,7 +179,7 @@ class PiqueApp :
         for ar_name in PA.data.keys() :
             PA.find_peaks(ar_name)
             pique.msg( logfile, '  peaks ' + ar_name + ' : ' + str(len(PA.data[ar_name]['peaks'])) )
-            pique.msg( logfile, '     noise threshold : ' + str(PA.data[ar_name]['n_thresh']) )
+            pique.msg( logfile, '     noise threshold : ' + str(PA.data[ar_name]['N_thresh']) )
             pique.msg( logfile, '     normalizations  : ' + ', '.join( map(str, PA.data[ar_name]['norms']) ) )
 
         # write output files

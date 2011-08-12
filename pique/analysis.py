@@ -70,12 +70,17 @@ class PiqueAnalysis :
                                
                 # attach norm regions
                 ar['norms'] = []
+                ar['n_regions'] = []
                 for norm in norms :
                     start = norm['start']
                     stop  = norm['stop']
                     if r['start'] < start and r['stop'] > stop :
                         ar['norms'].append( norm['n'] )
+                        n_start = start - r['start']
+                        n_stop  = stop  - r['start']
+                        ar['n_regions'].append( { 'start' : n_start, 'stop' : n_stop } )
                 
+                # calcualte (normalized) noise threshold
                 bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
                 N = numpy.mean(ar['norms'])
                 if not N == 0 :
@@ -111,8 +116,17 @@ class PiqueAnalysis :
         self.data[ar_name]['ip'] = { 'forward' : fip_f, 'reverse' : fip_r }
         self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
         
+        n = []
+        for norm in ar['n_regions'] :
+            start = norm['start']
+            stop  = norm['stop']
+            ip = float(sum( fip_f[start:stop] + fip_r[start:stop] ))
+            bg = float(sum( fbg_f[start:stop] + fbg_r[start:stop] ))
+            n.append( ip/bg )
+        n = numpy.mean(n)
+
         fbg_all = numpy.concatenate( (fbg_f,fbg_r) )
-        self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all)
+        self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all) / n
         
     def find_peaks( self, ar_name ) :
         fp = processing.findregions( self.data[ar_name]['ip']['forward'],   \
