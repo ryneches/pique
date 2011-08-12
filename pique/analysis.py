@@ -77,7 +77,11 @@ class PiqueAnalysis :
                         ar['norms'].append( norm['n'] )
                 
                 bg_all = numpy.concatenate( ( ar['BG']['forward'], ar['BG']['reverse'] ) )
-                ar['N_thresh'] = self.noise_threshold( bg_all ) * numpy.mean(ar['norms'])
+                N = numpy.mean(ar['norms'])
+                if not N == 0 :
+                    ar['N_thresh'] = self.noise_threshold( bg_all ) / numpy.mean(ar['norms'])
+                else :
+                    ar['N_thresh'] = self.noise_threshold( bg_all )
                 
                 ar['peaks'] = []
                 
