@@ -122,8 +122,8 @@ class PiqueAnalysis :
         for norm in ar['n_regions'] :
             start = norm['start']
             stop  = norm['stop']
-            ip = float(sum( fip_f[start:stop] + fip_r[start:stop] ))
-            bg = float(sum( fbg_f[start:stop] + fbg_r[start:stop] ))
+            ip = float(sum( fip_f[start:stop] + fip_r[start:stop] )) / (stop-start)
+            bg = float(sum( fbg_f[start:stop] + fbg_r[start:stop] )) / (stop-start)
             n.append( ip - bg )
         n = numpy.mean(n)
         
