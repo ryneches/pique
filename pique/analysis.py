@@ -116,17 +116,19 @@ class PiqueAnalysis :
         self.data[ar_name]['ip'] = { 'forward' : fip_f, 'reverse' : fip_r }
         self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
         
+        # calculate level offset between filtered IP and BG tracks,
+        # and shift the noise threshold accordingly
         n = []
         for norm in ar['n_regions'] :
             start = norm['start']
             stop  = norm['stop']
             ip = float(sum( fip_f[start:stop] + fip_r[start:stop] ))
             bg = float(sum( fbg_f[start:stop] + fbg_r[start:stop] ))
-            n.append( ip/bg )
+            n.append( ip - bg )
         n = numpy.mean(n)
-
+        
         fbg_all = numpy.concatenate( (fbg_f,fbg_r) )
-        self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all) / n
+        self.data[ar_name]['n_thresh'] = self.noise_threshold(fbg_all) + n
         
     def find_peaks( self, ar_name ) :
         fp = processing.findregions( self.data[ar_name]['ip']['forward'],   \
