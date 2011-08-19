@@ -7,6 +7,9 @@ import scipy.signal
 import itertools
 import operator
 
+# numpy burbles about silly things.
+numpy.seterr( all='ignore' )
+
 def findregions( data, N ) :
     """
     Return all the regions of an array that exceed N.
@@ -35,15 +38,10 @@ def filterset( data, alpha, l_thresh ) :
     window = scipy.signal.blackman( l_thresh )
     window = window / sum(window)
 
-    dataf = scipy.signal.detrend( data )
-    dataf = scipy.signal.wiener( dataf, mysize=alpha )
-    datar = scipy.signal.detrend( data[::-1] )
-    datar = scipy.signal.wiener( datar, mysize=alpha )
-
-    dataf = scipy.signal.convolve( dataf, window, mode='full' )
-    datar = scipy.signal.convolve( datar, window, mode='full' )
-
-    return ( dataf + datar[::-1] ) / 2.0
+    data = scipy.signal.wiener( data, mysize=alpha )
+    data = scipy.signal.convolve( data, window, mode='same' )
+    
+    return data
 
 def overlaps( forward_regions, reverse_regions ) :
     """

@@ -100,7 +100,7 @@ class PiqueAnalysis :
         this is the 90th quantile of the data.
         """
         #return stats.scoreatpercentile( data.tolist(), 90 )
-        return sorted(data)[ min( len(data)-1, int(len(data)*0.98)) ]
+        return sorted(data)[ min( len(data)-1, int(len(data)*0.95)) ]
         
     def apply_filter( self, ar_name, alpha, l_thresh, ) :
         """
@@ -117,7 +117,7 @@ class PiqueAnalysis :
         self.data[ar_name]['bg'] = { 'forward' : fbg_f, 'reverse' : fbg_r }
         
         # calculate level offset between filtered IP and BG tracks,
-        # and shift the noise threshold accordingly
+        # and scale the noise threshold accordingly
         n = []
         for norm in ar['n_regions'] :
             start = norm['start']
@@ -126,8 +126,8 @@ class PiqueAnalysis :
             bg = numpy.concatenate( (fbg_f[start:stop], fbg_r[start:stop] ) )
             nip = float(sum( ip )) / (stop-start)
             nbg = float(sum( bg )) / (stop-start)
-            nn  = nip - nbg
-            n.append( self.noise_threshold( bg ) + nn + abs(nn)*0.1 )
+            nn  = nip / nbg
+            n.append( self.noise_threshold( bg ) / nn )
         self.data[ar_name]['n_thresh'] = numpy.mean(n)
         
     def find_peaks( self, ar_name ) :
