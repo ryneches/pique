@@ -216,9 +216,11 @@ optional an coverage feature map. The primary analysis proceeds thusly
   should choose normalization regions that contain neither peaks nor
   coverage level aberrations.)
 
-\item In each analysis region, the ``DC'' component is removed using
-  linear detrending. This removes effects due to coverage variation
-  features larger than about 100Kb.
+% This no longer happens in the current version, as of August 18, 2011
+%
+%\item In each analysis region, the ``DC'' component is removed using
+%  linear detrending. This removes effects due to coverage variation
+%  features larger than about 100Kb.
 
 \item High-$k$ noise in coverage is removed using a Wiener-Kolmogorov
   filter. The filter delay $\alpha$ is chosen to approximate to the
@@ -232,19 +234,21 @@ optional an coverage feature map. The primary analysis proceeds thusly
   % 1949, and independently derived in discrete-time form by Andrey
   % Kolmogorov in 1941.
 
-\item A sliding window average is used to identify regions whose
-  coverage level deviates from the background. Peaks usually contain
-  an offset in coverage on the order of the experimentally selected
-  fragment size; the window width is chosen to correspond to this
-  size. This yields simple rectangular envelopes around putative
-  regions of enrichment.
+\item A Blackman window of a diameter equal to the read length is
+  convolved with the filtered coverage track to remove features
+  smaller than one read. 
 
-\item To determine if a putative enriched region corresponds to a
-  binding event, we require that the stop coordinate of the forward
-  strand enrichment envelope must fall between the coordinates of the
-  reverse strand enrichment envelope, and that the start coordinate of
-  the reverse strand enrichment envelope fall between the coordinates
-  of the forward strand enrichment envelope. (We call this the overlap
+\item The noise threshold in the ChIP coverage track is measured by
+  comparing the coverage distribution in the ChIP track to the control
+  track within user-annotated non-peak regions. Features that exceed
+  the noise threshold are identified.
+
+\item To determine if a feature corresponds to a binding event, we
+  require that the stop coordinate of the forward strand enrichment
+  envelope must fall between the coordinates of the reverse strand
+  enrichment envelope, and that the start coordinate of the reverse
+  strand enrichment envelope fall between the coordinates of the
+  forward strand enrichment envelope. (We call this the overlap
   criterion.)
 
 \end{itemize}
@@ -281,11 +285,18 @@ Pique does not undertake this calculation.
 \end{figure}
 
 \begin{figure}[!tfbd data - reasonable spot showing curation]%figure2
-%\centerline{\includegraphics{fig02.eps}}
-\caption{GAGGLE GENOME BROWSER}\label{fig:02}
+  \begin{center}
+    {\resizebox{\imsize}{!}{\includegraphics{peak_example.pdf}}}
+    {\resizebox{\imsize}{!}{\includegraphics{peak_example_2.pdf}}}
+  \end{center}
+  \caption{Examples of large and medium-size peaks.}\label{fig:02}
 \end{figure}
+
 \section{Discussion}
 
+The coverage enrichment is distributed differently between the forward
+and reverse strands due to the constrained read orientation imposed by
+the fragment size.
 
 \section{Conclusion}
 
