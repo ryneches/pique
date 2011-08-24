@@ -78,9 +78,14 @@ found that a run takes about one to five minutes.
 GENOME MAP FILE
 ---------------
 
-Optionally, you can provide a genome map file ('Map (optional)'). This
-file must be a GFF-formatted file describing two kinds of features,
-analysis regions and masking regions. 
+The Genome Map File is a GFF-formatted file describing three kinds of
+features; analysis regions, masking regions, and normalization
+regions. Analysis and masking region annotations are optional;
+however, each analysis region MUST have at least one normalization
+region. (Note : If you do not describe any analysis regions, one will
+automatically be created spanning each contig. So, if you do not
+describe any analysis regions for a contig, you must still describe at
+least one normalization region for that contig.)
 
 Analysis regions should use the feature name 'analysis_region' in the
 file, and describe sub-regions of the contig that you wish to process
@@ -98,6 +103,14 @@ By default, an analysis region describing the whole contig is created
 for each contig. When an analysis region is loaded by the user via the
 mapping file, the default analysis region for that contig is deleted. 
 
+Normalization regions should use the name 'norm_region' in the map
+file, and describe regions (within analysis regions) in which there
+are thought to be no binding events. These regions will be used to
+calibrate the sequencing coverage between the IP track and the control
+track. If the user chooses poor normalization regions, Pique will
+still function, but will produce incorrect normalization factors and
+may set the peak detection cutoff too stringently.
+
 Features described in the genome map file must use the same contig
 names as the IP and background BAM files. To see them, run :
 
@@ -108,7 +121,7 @@ long as the correct number of tabs are present). The required fields
 are :
 
     0   contig name
-    2   'analysis_region' or 'mask'
+    2   'analysis_region', 'mask' or 'norm_region'
     3   start coordinate
     4   end coordinate
 
@@ -120,7 +133,10 @@ OUTPUT FILES
     <name>.IP.track  : A GGB-formatted track file of the IP data
     <name>.BG.track  : A GGB-formatted track file of the BG data
     <name>.bookmark  : A list of GGB bookmarks for each peak
+    <name>.qp        : GGB-formatted quantitative positional data 
+                       of binding coordinates
     <name>.gff       : A GFF file of each peak
+    <name>.peak.tsv  : Peak statistical quantities in TSV format
 
 The GFF output file includes the following columns :
 
@@ -131,11 +147,24 @@ The GFF output file includes the following columns :
     4   end coordinate
     5   enrichment ratio relative to background
 
+The TSV output includes the following columns :
+
+    0   contig
+    1   start
+    2   stop
+    3   binds_at            # binding coordinate
+    4   enrichment_ratio    
+    5   average_contig_norm # mean of all norms
+    6   std_contig_norm     # standard deviation of all norms
+    7..                     # all subsequent colunms are the norms
+
 The bookmark file contains some additional annotations in addition to
 the required GGB bookmark information :
 
     binds_at            estimated binding coordinate
     enrichment_ratio    enrichment ratio relative to background
+    norm_0, norm_1...   the normalization factors calculated from the
+                        normilization regions
 
 CAVEATS
 -------
@@ -143,7 +172,7 @@ CAVEATS
 Binding coordinates : The peak calling step (pique.py) will attempt to
 calculate a binding coordinate for the putative peaks it finds. The
 method used is extremely naive, but we find that it generally comes
-within about 40bp of the expected binding site.
+within about 5bp of the expected binding site.
 
 Double peaks : Some enriched regions contain two binding sites, but
 the algorithm is unable to de-convolute them. We have tried running
@@ -151,6 +180,57 @@ these regions through several other peak callers with little success.
 We have included a script for identifying sites that are likely to be
 double peaks to assist with curation.
 
+DOWNSTREAM ANALYSIS
+-------------------
+
+Pique does not attempt to filter peaks that are statistically
+insignificant. We have found that this part of the analysis is rather
+specific to the data and to the experiment. 
+
+To address this, Pique is designed to achieve a low false-negative
+rate at the cost of a relatively high false-positive rate. The idea is
+that it is painstaking work to find a putative peak, it is less
+difficult to discard unsatisfactory peaks once they have been found.
+Thus, some kind of post-filtering is necessary. Pique provides the
+user with output that can be used to support a variety of such
+statistical tests.
+
+Some recommended filtering might include :
+
+    [1] Eliminate peaks that are significantly narrower than the size
+        range of the sequencing library, and perhaps other peaks that
+        cluster with them.
+
+    [2] Eliminate peaks with a normalized enrichment ratio below 1.0,
+        or peaks that cluster with them.
+
+    [3] Eliminate peaks that have predicted binding sites that are
+        very skewed from the center of the enriched region.
+
+Depending on how many peaks are recovered, the user may wish to try
+one or all of these, perhaps with clustering to avoid arbitrary
+cutoffs.
+
+However, we do not recommend trying to generate a "perfect" peak list
+by statistical analysis alone.
+
+MANUAL CURATION
+---------------
+
+Microbial genomes are fairly small. It is probably not worth the
+effort to undertake a very complicated statistical effort to eliminate
+all false positives. We recommend applying a few basic statistical
+tests, and then loading tracks, quantitative positionals and bookmarks
+into the Gaggle Genome Browser.
+
+Once the data is loaded into the browser, view the bookmark list. When
+you slect a bookmark, the browser will automatically scan to that
+region of the genome and highlight the putative peak region. If you
+think the peak is a false positive, press the delete key.
+
+When you are finihed, save a copy of the bookmark file. We find that
+curation of a microbial genome in this way takes about ten to twenty
+minutes.
 
 INSPIRATIONAL QUOTE
 -------------------
