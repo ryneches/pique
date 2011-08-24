@@ -224,11 +224,11 @@ tests, and then loading tracks, quantitative positionals and bookmarks
 into the Gaggle Genome Browser.
 
 Once the data is loaded into the browser, view the bookmark list. When
-you slect a bookmark, the browser will automatically scan to that
+you select a bookmark, the browser will automatically scan to that
 region of the genome and highlight the putative peak region. If you
 think the peak is a false positive, press the delete key.
 
-When you are finihed, save a copy of the bookmark file. We find that
+When you are finished, save a copy of the bookmark file. We find that
 curation of a microbial genome in this way takes about ten to twenty
 minutes.
 
