@@ -298,6 +298,34 @@ The coverage enrichment is distributed differently between the forward
 and reverse strands due to the constrained read orientation imposed by
 the fragment size.
 
+Pique does not attempt to filter peaks that are statistically
+insignificant. We have found that this part of the analysis is rather
+specific to the data and to the experiment. Pique is designed to
+achieve a low false-negative rate, which comes at the cost of a
+relatively high false-positive rate. Thus, some kind of post-filtering
+is necessary. Pique provides the user with output that can be used to
+support a variety of such statistical tests.
+
+Some recommended filtering might include :
+
+\begin{itemize}
+\item Eliminate peaks that are significantly narrower than the size
+  range of the sequencing library.
+\item Eliminate peaks with a normalized enrichment ratio below unity.
+\item Eliminate peaks that have predicted binding sites that are very
+  skewed from the center of the enriched region.
+\end{itemize}
+
+Depending on how many peaks are recovered, the user may wish to try
+one or all of these, perhaps with clustering. However, if a
+``perfect'' peak list is required, we do not recommend relying on
+statiastical refinements alone. To facilitate manual curation, Pique
+outputs a track file of the coverage, a quantitative positional data
+of the estimated binding sites, and a bookmark file annotating the
+peaks. These files are simple to process by a variety of tools, and
+can be loaded directly into the Gaggle Genome Browser.\footnote{See
+  supplementary figure.}
+
 \section{Conclusion}
 
 We note that Pique should also work well with eukaryotic datasets
