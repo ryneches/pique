@@ -80,31 +80,22 @@
 \begin{abstract}
 \section{Motivation:}
 
-\noindent Most ChIP-Seq peak finders are designed to identify
-protein-DNA binding events in eukaryotic datasets. To make
-cost-effective use of current sequencing capacity, the peak finders
-must be cleverly optimized to work with sparse-coverage data, and must
-take into account the effect of chromatin structure on the variation
-in background coverage. While numerous effective peak finders have
-been developed for eukaryotic systems, the approaches used can be
-suprisingly error prone in our hands when run on high-coverage
-bacterial and archaeal ChIP-Seq datasets.
+\noindent While numerous effective peak finders have been developed
+for eukaryotic systems, we have found that the approaches used can be
+suprisingly error prone when run on high-coverage bacterial and
+archaeal ChIP-Seq datasets.
 
 % Why not? Examples, evidence, hypothesis. 
 
 \section{Results:}
 
-\noindent Fortunately, many of the statistical challenges for peak
-detection inherent in eukaryotic ChIP-seq data are not present in
-bacterial and archaeal datasets. This is due in part to higher genome
-coverage (typically in inverse proportion to genome size) and in part
-to the absence of non-random coverage variation from to highly
-structured chromatin.  We have developed Pique, a conceptually simple,
-easy to use ChIP-Seq peak finding application for bacterial and
-archaeal ChIP-Seq data. The software is cross-platform and Open
-Source, and based on Open Source dependencies. Output is provided in
-standard GFF files, and easily imported into the Gaggle Genome Browser
-for manual curation and data exploration.
+\noindent We have developed Pique, a conceptually simple, easy to use
+ChIP-Seq peak finding application for bacterial and archaeal ChIP-Seq
+data. The software is cross-platform and Open Source, and based on
+Open Source dependencies. Output is provided in standardized
+bioinformatic formats, and easily imported by the Gaggle Genome
+Browser for manual curation and data exploration, or into statistical
+computing and graphics software such as R for further analysis.
 
 \section{Availability:} 
 
@@ -138,19 +129,16 @@ interactions in eukaryotic systems, there are clear advantages to
 adopting this technology for studying microbial systems. Microbial
 genomes typically are much smaller than eukaryotic genomes (the genome
 of {\em E. coli} is $\approx$2000 times smaller than the human
-genome), and have simpler replicon and chromatin structure.  We were
-surprised to find that software that works well in eukaryotic systems
-tends to fail when presented with an presumably lesser challenge.
+genome), and have simpler replicon and chromatin structure.  
 
-To our knowledge, only one other peak finding package, CSDeconv
-\cite{CSDeconv}, has been explicitly developed for finding peaks in
-microbial ChIP-Seq data. This MATLAB package successfully finds peaks
-in microbial ChIP-Seq data, but its application is limited by its
-dependency on costly proprietary software, slow performance, lack of
-support for manual curation, and high false negative rate. Herein we
-describe Pique, a conceptually simple, Python-based peak finding
-package that enables easy and rapid peak finding in bacterial and
-archaeal ChIP-Seq datasets.
+Only one other peak finding package, CSDeconv \cite{CSDeconv}, has
+been explicitly developed for finding peaks in microbial ChIP-Seq
+data. This MATLAB package successfully finds peaks in microbial
+ChIP-Seq data, but its application is limited by its dependency on
+costly proprietary software, slow performance, lack of support for
+manual curation. Herein we describe Pique, a conceptually simple,
+Python-based peak finding package that enables easy and rapid peak
+finding in bacterial and archaeal ChIP-Seq datasets.
 
 \section{Approach}
 
@@ -181,23 +169,23 @@ typically be completed in a few minutes.
 \begin{methods}
 \section{Methods}
 
-\noindent Prior to running Pique, Illumina (Solexa) reads should be
-quality filtered, quality trimmed, and aligned to a reference genome
-using the user's preferred short-read sequence aligner. Pique requires
-a BAM file as input \cite{sam_format}. We suggest using all contigs of
-the reference genome as the mapping target, but the user may prefer to
-proceed with one contig at a time if desired.
+\noindent Pique requires BAM files as input\cite{sam_format}.
+Therefore, prior to using Pique, Illumina (Solexa) reads should first
+be quality filtered, quality trimmed, and aligned to a reference
+genome, preferably using all contigs of the reference genome as the
+mapping target. We suggest using all contigs of the reference genome
+as the mapping target, but the user may prefer to proceed with one
+contig at a time if desired.
 
-The user may optionally supply a map of coverage features. Pique
-supports three features; analysis regions, exclusion regions, and
-normalization regions. By default, Pique treats each contig as a
-single analysis regions, but the user may designate regions within a
-contig for separate analysis. This is useful where a gene dosage
-polymorphism has systematically altered the coverage level in a large
-region. Exclusion regions are simply masked out of their respective
-analysis regions, and are useful for removing coverage variation due
-to repetitive DNA. If the user designates normalization regions within
-an analysis region, Pique will use them to compensate for total coverage
+By default, Pique treats each contig as a single analysis region, but
+the user may optionally designate regions within a contig for separate
+analysis by supplying a feature map.  This may be useful when coverage
+level are systematically altered over large regions.  Pique supports
+three features types; analysis regions, masking regions, and
+normalization regions. Masking regions are simply masked out of their
+respective analysis regions, and are useful for removing coverage
+variation due to repetitive DNA. Normalization regions selected within
+an analysis region, are used to compensate for total coverage
 discrepancies between the background and ChIP alignments.
 
 The user launches the primary analysis stage by providing alignment an
@@ -207,9 +195,9 @@ optional an coverage feature map. The primary analysis proceeds thusly
 
 \begin{itemize}
 
-\item The alignment files are digested, and the analysis regions are
-  initialized. If a coverage feature map provided, the analysis
-  regions are separated and the exclusion regions applied.
+\item The alignment files are digested into coverage tracks, and the
+  analysis regions are initialized in memory. Provided masking regions
+  are applied.
 
 \item The coverage noise threshold is measured by comparing the
   relative total coverage within the normalization regions. (The user
@@ -257,46 +245,50 @@ optional an coverage feature map. The primary analysis proceeds thusly
 % heuristic models other peak callers user. We should say something
 % here about these models, and why decided not to use them.
 
-\noindent For each putative peak, the enrichment ratio of the ChIP
-alignment to the the control alignment, estimates the binding
-coordinate, and reports to the user, as well as the enrichment
-normalization factor for that analysis region are calculated and
-compiled into user output.  Determination of the statistical
-significance of a peak is highly specific to the experiment, and so
-Pique does not undertake this calculation.
+\noindent For each putative peak, Pique calculates the enrichment
+ratio of the ChIP alignment to the control alignment, the binding
+coordinate, and the enrichment normalization factor for that analysis
+region. 
 
 \end{methods}
 
-\begin{figure}[!tfbd peak - a nice one]%figure1
-  % \centerline{\includegraphics{example_data.png}
-  \begin{center}
-    {\resizebox{\imsize}{!}{\includegraphics{chr_example.pdf}}}
-    %{\resizebox{\imsize}{!}{\includegraphics{../PNRC200_0:21851.pdf}}}
-    %{\resizebox{\imsize}{!}{\includegraphics{../PNRC200_47121:88549.pdf}}}
-  \end{center}
-  \caption{Peaks found in the chromosome of the included sample
-    dataset, derived from ChIP-seq of tfbD in {\em Halobacterium
-      salinarum} sp. NRC1. Blue and red indicate coverage of reads
-    aligned from the ChIP-derived data to the forward and reverse
-    strands of the genome, respectively. Black indicates coverage
-    aligned from the whole cell extract data. Orange indicates a
-    detected peak. The maximum coverage in this data is 3204, but is
-    shown here truncated at 200.}\label{fig:01}
-\end{figure}
+% \begin{figure}[!tfbd peak - a nice one]%figure1
+%   % \centerline{\includegraphics{example_data.png}
+%   \begin{center}
+%     {\resizebox{\imsize}{!}{\includegraphics{chr_example.pdf}}}
+%     %{\resizebox{\imsize}{!}{\includegraphics{../PNRC200_0:21851.pdf}}}
+%     %{\resizebox{\imsize}{!}{\includegraphics{../PNRC200_47121:88549.pdf}}}
+%   \end{center}
+%   \caption{Peaks found in the chromosome of the included sample
+%     dataset, derived from ChIP-seq of tfbD in {\em Halobacterium
+%       salinarum} sp. NRC1. Blue and red indicate coverage of reads
+%     aligned from the ChIP-derived data to the forward and reverse
+%     strands of the genome, respectively. Black indicates coverage
+%     aligned from the whole cell extract data. Orange indicates a
+%     detected peak. The maximum coverage in this data is 3204, but is
+%     shown here truncated at 200.}\label{fig:01}
+% \end{figure}
 
 \begin{figure}[!tfbd data - reasonable spot showing curation]%figure2
   \begin{center}
     {\resizebox{\imsize}{!}{\includegraphics{peak_example.pdf}}}
     {\resizebox{\imsize}{!}{\includegraphics{peak_example_2.pdf}}}
   \end{center}
-  \caption{Examples of large and medium-size peaks.}\label{fig:02}
+  \caption{Peaks found in the included sample dataset, derived from
+    ChIP-seq of tfbD in {\em Halobacterium salinarum} sp. NRC1. Blue
+    and red shading indicate coverage of reads aligned from the
+    ChIP-derived data to the forward and reverse strands,
+    respectively. Blue and red lines represent the filtered coverage
+    levels for the forward and reverse strands, respectively. The
+    dashed line is the detected noise threshold for the region. Orange
+    indicates a detected peak.}\label{fig:02}
 \end{figure}
 
 \section{Discussion}
 
 The coverage enrichment is distributed differently between the forward
-and reverse strands due to the constrained read orientation imposed by
-the fragment size.
+and reverse strands because the possible read orientations are
+constrained by the fragment size.
 
 Pique does not attempt to filter peaks that are statistically
 insignificant. We have found that this part of the analysis is rather
@@ -306,25 +298,19 @@ relatively high false-positive rate. Thus, some kind of post-filtering
 is necessary. Pique provides the user with output that can be used to
 support a variety of such statistical tests.
 
-Some recommended filtering might include :
-
-\begin{itemize}
-\item Eliminate peaks that are significantly narrower than the size
-  range of the sequencing library.
-\item Eliminate peaks with a normalized enrichment ratio below unity.
-\item Eliminate peaks that have predicted binding sites that are very
-  skewed from the center of the enriched region.
-\end{itemize}
-
-Depending on how many peaks are recovered, the user may wish to try
-one or all of these, perhaps with clustering. However, if a
-``perfect'' peak list is required, we do not recommend relying on
-statiastical refinements alone. To facilitate manual curation, Pique
-outputs a track file of the coverage, a quantitative positional data
-of the estimated binding sites, and a bookmark file annotating the
-peaks. These files are simple to process by a variety of tools, and
-can be loaded directly into the Gaggle Genome Browser.\footnote{See
-  supplementary figure.}
+Some recommended filtering might include eliminating peaks that are
+significantly narrower than the size range of the sequencing library,
+peaks with a normalized enrichment ratio below unity, or peaks that
+have predicted binding sites that are very skewed from the center of
+the enriched region. Depending on how many peaks are recovered, the
+user may wish to try one or all of these, perhaps with
+clustering. However, if a ``perfect'' peak list is required, we do not
+recommend relying on statiastical refinements alone. To facilitate
+manual curation, Pique outputs a track file of the coverage, a
+quantitative positional data of the estimated binding sites, and a
+bookmark file annotating the peaks. These files are simple to process
+by a variety of tools, and can be loaded directly into the Gaggle
+Genome Browser.\footnote{See supplementary figure.}
 
 \section{Conclusion}
 
@@ -335,9 +321,9 @@ previously reported.
 \section*{Acknowledgement}
 \paragraph{Funding\textcolon} 
 
-This project was funded by UC Davis startup funds to MTF, NSF graduate
-fellowship AWARD NUMBER to EGW and DARPA award number HR0011-05-1-0057
-to RYN.
+This project was funded by UC Davis startup funds to MTF, NSF Graduate
+Research Fellowship awarded to EGW and DARPA award number
+HR0011-05-1-0057 to RYN.
 
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
