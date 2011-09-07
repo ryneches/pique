@@ -112,59 +112,71 @@ computing and graphics software such as R for further analysis.
 \section{Introduction}
 
 \noindent Next generation sequencing coupled with chromatin
-immuno\-pre\-cipi\-tation (ChIP-Seq) is revolutionizing our abilty to
+immuno\-pre\-cipi\-tation (ChIP-Seq) is revolutionizing our ability to
 genomically map protein-DNA associations for a wide variety of
 proteins.  The growing popularity of ChIP-Seq has spurred the
 development of over thirty peak picking algorithms (for a nearly
 completely list see \cite{wilbanks}). The relative performance of
-represetative peak detection algorithms on eukatyoric data and methods
-to assess performance have been recently reviewed by several authors
-\cite{Pepke, Laajala_review, too_many_peak_callers, peakranger,
-  peak_benchmark}.  Many of these peak picking methods have employed a
-number of sophisticated strategies to detect peaks in the typically
-sparsely covered eukaryotic datasets for which they are designed.
+representative peak detection algorithms on eukaryotic data and
+methods to assess performance have been recently reviewed by several
+authors \cite{Pepke, Laajala_review, too_many_peak_callers,
+  peakranger, peak_benchmark}.
 
 While ChIP-Seq has been predominantly used to interrogate protein-DNA
 interactions in eukaryotic systems, there are clear advantages to
-adopting this technology for studying microbial systems. Microbial
-genomes typically are much smaller than eukaryotic genomes (the genome
-of {\em E. coli} is $\approx$2000 times smaller than the human
-genome), and have simpler replicon and chromatin structure.  
+adopting this technology for studying microbes. Microbial genomes are
+typically smaller than eukaryotic genomes (the genome of {\em E. coli}
+is about 2000 times smaller than that of humans), and have simpler
+replicon and chromatin structure.
 
-Only one other peak finding package, CSDeconv \cite{CSDeconv}, has
-been explicitly developed for finding peaks in microbial ChIP-Seq
-data. This MATLAB package successfully finds peaks in microbial
-ChIP-Seq data, but its application is limited by its dependency on
-costly proprietary software, slow performance, lack of support for
-manual curation. Herein we describe Pique, a conceptually simple,
+Only one ChIP-Seq analysis tool, CSDeconv \cite{CSDeconv}, has been
+explicitly developed for microbial data. This MATLAB package
+successfully finds peaks in microbial ChIP-Seq data, but its
+application is limited by its dependency on costly proprietary
+software, slow performance, lack of support for manual
+curation. Herein we describe Pique, a conceptually simple,
 Python-based peak finding package that enables easy and rapid peak
 finding in bacterial and archaeal ChIP-Seq datasets.
 
 \section{Approach}
 
 \noindent ChIP-Seq in bacteria and archaea yields coverage several
-orders of magnitude larger than in eukaryotic systems.  This generates
-data with continuous signal across the microbial chromosome rather
-than the sparse coverage typically present in eukaryotic ChIP-Seq
-data.  This feature of microbial ChIP-Seq data permits simpler, faster
-algorithms to be used. We have based our algorithm on classic noise
-reduction techniques from signal processing.
+orders of magnitude larger than in eukaryotic systems, resulting in
+continuous coverage rather than the sparse coverage typically present
+in eukaryotic ChIP-Seq data.  This feature of microbial ChIP-Seq
+experiments permits simpler, faster algorithms to be used. We have
+based our algorithm on classic noise reduction techniques from signal
+processing.
 
 Pique is designed for use in systems that have genomic complexities
 such as IS elements, gene dosage polymorphisms and accessory genomes
-that cause variations in sequence coverage unrelated to ChIP, or in
-cases where the organism under study is not identical to the reference
-genome. The resulting enrichment ``pedestals'' and ``holes'' can be
-very problematic for detecting peaks and calculating enrichment
-levels. Pique allows the user to optionally supply a map of these
-features as a GFF file, and the software will automatically perform a
-segmented analysis.
+that cause coverage variations unrelated to ChIP, or in cases where
+the organism under study is not identical to the reference genome. The
+resulting enrichment ``pedestals'' and ``holes'' can be problematic
+for detecting peaks and calculating enrichment levels. If the user
+provides a map of these features, the software will automatically
+perform a segmented analysis.
 
-Pique has integrated curation support through the Gaggle Genome
-Browser. This permits interactive curation of the peak list and
-analysis of the ChIP-Seq data in the context of other Gaggle-enabled
-resources. Interactive curation of a microbial ChIP-Seq data set can
-typically be completed in a few minutes.
+The wide variety of microbial systems, target proteins, protocols, and
+experimental conditions, calls for fairly tailored statistical
+approaches to ChIP-Seq. Instead of attempting to anticipate each of
+these (and their combinations) by presenting the user with a very
+large number of statistical and heuristic parameters, we have chosen
+to focus on the aspects of the analysis that are in common; finding
+putative peaks and estimating binding coordinates and binding
+affinities. The determination of statistical significance is usually
+quite easy for any particular experiment, but is quite difficult to
+accurately generalize.
+
+We address this in two ways. First, we provide a quantities for each
+peak that can be used to ascertain which peaks are statistically
+significant (usually, this involves little more than sorting the table
+and choosing a cutoff). Second, we provide integrated support for
+curation using the Gaggle Genome Browser. This permits interactive
+curation of the peak list and analysis of the ChIP-Seq data in the
+context of other Gaggle-enabled resources. Interactive curation of a
+microbial ChIP-Seq data set can typically be completed in a few
+minutes.
 
 \begin{methods}
 \section{Methods}
@@ -173,14 +185,12 @@ typically be completed in a few minutes.
 Therefore, prior to using Pique, Illumina (Solexa) reads should first
 be quality filtered, quality trimmed, and aligned to a reference
 genome, preferably using all contigs of the reference genome as the
-mapping target. We suggest using all contigs of the reference genome
-as the mapping target, but the user may prefer to proceed with one
-contig at a time if desired.
+mapping target. 
 
 By default, Pique treats each contig as a single analysis region, but
 the user may optionally designate regions within a contig for separate
 analysis by supplying a feature map.  This may be useful when coverage
-level are systematically altered over large regions.  Pique supports
+levels are systematically altered over large regions.  Pique supports
 three features types; analysis regions, masking regions, and
 normalization regions. Masking regions are simply masked out of their
 respective analysis regions, and are useful for removing coverage
@@ -231,8 +241,10 @@ optional an coverage feature map. The primary analysis proceeds thusly
   track within user-annotated non-peak regions. Features that exceed
   the noise threshold are identified.
 
-\item To determine if a feature corresponds to a binding event, we
-  require that the stop coordinate of the forward strand enrichment
+\item The coverage enrichment is distributed differently between the
+  forward and reverse strands because the possible read orientations
+  are constrained by the fragment size. Pique exploits this by
+  requiring that the stop coordinate of the forward strand enrichment
   envelope must fall between the coordinates of the reverse strand
   enrichment envelope, and that the start coordinate of the reverse
   strand enrichment envelope fall between the coordinates of the
@@ -286,10 +298,6 @@ region.
 
 \section{Discussion}
 
-The coverage enrichment is distributed differently between the forward
-and reverse strands because the possible read orientations are
-constrained by the fragment size.
-
 Pique does not attempt to filter peaks that are statistically
 insignificant. We have found that this part of the analysis is rather
 specific to the data and to the experiment. Pique is designed to
@@ -314,6 +322,14 @@ Genome Browser.\footnote{See supplementary figure.}
 
 \section{Conclusion}
 
+We conclude that Pique provides a rapid, open source platform for the
+sensitive detection of transcription factor binding sites in bacterial
+and archaeal ChIP-seq experiments. We leverage standard signal
+processing algorithms to rapidly identify binding sites. Downstream
+analysis is supported via integration with statistical and graphics
+software such as R, and curation via integration with the
+user-friendly Gaggle Genome Browser and the suite of Gaggle tools.
+
 We note that Pique should also work well with eukaryotic datasets
 provided they are gathered with greater coverage than has been
 previously reported.
@@ -321,9 +337,9 @@ previously reported.
 \section*{Acknowledgement}
 \paragraph{Funding\textcolon} 
 
-This project was funded by UC Davis startup funds to MTF, NSF Graduate
-Research Fellowship awarded to EGW and DARPA award number
-HR0011-05-1-0057 to RYN.
+This project was funded by UC Davis startup funds to M.T.F., NSF Graduate
+Research Fellowship awarded to E.G.W. and DARPA award number
+HR0011-05-1-0057 to R.Y.N.
 
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
