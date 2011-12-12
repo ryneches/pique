@@ -158,25 +158,25 @@ provides a map of these features, the software will automatically
 perform a segmented analysis.
 
 The wide variety of microbial systems, target proteins, protocols, and
-experimental conditions, calls for fairly tailored statistical
-approaches to ChIP-Seq. Instead of attempting to anticipate each of
-these (and their combinations) by presenting the user with a very
-large number of statistical and heuristic parameters, we have chosen
-to focus on the aspects of the analysis that are in common; finding
-putative peaks and estimating binding coordinates and binding
-affinities. The determination of statistical significance is usually
-quite easy for any particular experiment, but is quite difficult to
-accurately generalize.
+experimental conditions, calls for tailored statistical approaches to
+ChIP-Seq. Rather than attempting to anticipate each of these (and
+their combinations) by presenting the user with a very large number of
+statistical and heuristic parameters, we have chosen to focus on the
+aspects of the analysis that are common to all ChIP-Seq experiments;
+finding putative peaks, estimating binding coordinates and binding
+affinities. The determination of statistical significance is typically
+straightforward for any particular experiment, but is quite difficult
+to robustly generalize.
 
-We address this in two ways. First, we provide a quantities for each
-peak that can be used to ascertain which peaks are statistically
-significant (usually, this involves little more than sorting the table
-and choosing a cutoff). Second, we provide integrated support for
-curation using the Gaggle Genome Browser. This permits interactive
-curation of the peak list and analysis of the ChIP-Seq data in the
-context of other Gaggle-enabled resources. Interactive curation of a
-microbial ChIP-Seq data set can typically be completed in a few
-minutes.
+Pique allows users to create high-quality peak lists in two ways.
+First, we provide quantities for each peak that can be used to
+ascertain which peaks are statistically significant (usually, this
+involves little more than sorting the table and choosing a
+cutoff). Second, we provide integrated support for curation using the
+Gaggle Genome Browser. This permits interactive curation of the peak
+list and analysis of the ChIP-Seq data in the context of other
+Gaggle-enabled resources. Interactive curation of a microbial ChIP-Seq
+data set can typically be completed in a few minutes.
 
 \begin{methods}
 \section{Methods}
@@ -184,8 +184,8 @@ minutes.
 \noindent Pique requires BAM files as input\cite{sam_format}.
 Therefore, prior to using Pique, Illumina (Solexa) reads should first
 be quality filtered, quality trimmed, and aligned to a reference
-genome, preferably using all contigs of the reference genome as the
-mapping target. 
+genome (ideally, all contigs of the reference genome should be used as
+the mapping target).
 
 By default, Pique treats each contig as a single analysis region, but
 the user may optionally designate regions within a contig for separate
@@ -195,13 +195,12 @@ three features types; analysis regions, masking regions, and
 normalization regions. Masking regions are simply masked out of their
 respective analysis regions, and are useful for removing coverage
 variation due to repetitive DNA. Normalization regions selected within
-an analysis region, are used to compensate for total coverage
+an analysis region are used to compensate for total coverage
 discrepancies between the background and ChIP alignments.
 
 The user launches the primary analysis stage by providing alignment an
-file for the ChIP data, an alignment file for the control data, and
-optional an coverage feature map. The primary analysis proceeds thusly
-:
+file for the ChIP data, an alignment file for the control data, and a
+coverage feature map. The primary analysis proceeds thusly :
 
 \begin{itemize}
 
@@ -234,7 +233,9 @@ optional an coverage feature map. The primary analysis proceeds thusly
 
 \item A Blackman window of a diameter equal to the read length is
   convolved with the filtered coverage track to remove features
-  smaller than one read. 
+  smaller than one read. This reduces the effect of fragmentation
+  position bias, and may be especially useful when transposon-based
+  library construction is used.
 
 \item The noise threshold in the ChIP coverage track is measured by
   comparing the coverage distribution in the ChIP track to the control
@@ -301,8 +302,7 @@ region.
 Pique does not attempt to filter peaks that are statistically
 insignificant. We have found that this part of the analysis is rather
 specific to the data and to the experiment. Pique is designed to
-achieve a low false-negative rate, which comes at the cost of a
-relatively high false-positive rate. Thus, some kind of post-filtering
+achieve a low false-negative rate. Thus, some kind of post-filtering
 is necessary. Pique provides the user with output that can be used to
 support a variety of such statistical tests.
 
@@ -313,12 +313,12 @@ have predicted binding sites that are very skewed from the center of
 the enriched region. Depending on how many peaks are recovered, the
 user may wish to try one or all of these, perhaps with
 clustering. However, if a ``perfect'' peak list is required, we do not
-recommend relying on statiastical refinements alone. To facilitate
-manual curation, Pique outputs a track file of the coverage, a
-quantitative positional data of the estimated binding sites, and a
-bookmark file annotating the peaks. These files are simple to process
-by a variety of tools, and can be loaded directly into the Gaggle
-Genome Browser.\footnote{See supplementary figure.}
+recommend relying on heuristic refinements alone. To facilitate manual
+curation, Pique outputs a track file of the coverage, a quantitative
+positional data of the estimated binding sites, and a bookmark file
+annotating the peaks. These files are simple to process by a variety
+of tools, and can be loaded directly into the Gaggle Genome
+Browser.\footnote{See supplementary figure.}
 
 \section{Conclusion}
 
