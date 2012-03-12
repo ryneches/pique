@@ -21,7 +21,7 @@ def loadBAM( file ) :
     # open the BAM file
     samfile = pysam.Samfile( file, 'rb' )
     tracks = {}
-
+    
     # loop over the congigs and build forward and reverse coverage
     # tracks for them
     for n,contig in enumerate(samfile.references) :
