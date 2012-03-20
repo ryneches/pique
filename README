@@ -4,6 +4,16 @@ genome. It was developed for studying gene expression in Halobacterium
 salinarum sp. NRC1, sequenced using barcoded 40bp Illumina reads as
 part of an ongoing project in Marc Facciotti's lab at UC Davis.
 
+AUTHOR & CONTACT INFORMATION
+----------------------------
+
+Pique was written by Russell Neches, a graduate student in Jonathan
+Eisen's laboratory. 
+
+    Russell's Blog    : http://vort.org/
+    Russell's Twitter : http://twitter.com/#!/ryneches
+    Lab homepage      : http://phylogenomics.wordpress.com/
+
 INSTALLING
 ----------
 
@@ -188,12 +198,14 @@ insignificant. We have found that this part of the analysis is rather
 specific to the data and to the experiment. 
 
 To address this, Pique is designed to achieve a low false-negative
-rate at the cost of a relatively high false-positive rate. The idea is
-that it is painstaking work to find a putative peak, it is less
-difficult to discard unsatisfactory peaks once they have been found.
-Thus, some kind of post-filtering is necessary. Pique provides the
-user with output that can be used to support a variety of such
-statistical tests.
+rate at the cost of a potentially high false-positive rate (it appears
+that the false-positive rate is in practice rather low compared to
+other software, but we have not implemented any filtering to prevent
+them from happening). The idea is that it is painstaking work to find
+a putative peak, it is less difficult to discard unsatisfactory peaks
+once they have been found.  Thus, some kind of post-filtering is
+necessary. Pique provides the user with output that can be used to
+support a variety of such statistical tests.
 
 Some recommended filtering might include :
 
