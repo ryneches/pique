@@ -253,9 +253,21 @@ feature map. The primary analysis proceeds as follows :
 
 \end{itemize}
 
-% FIXME : The overlap criterion is a very crude version of the
-% heuristic models other peak callers user. We should say something
-% here about these models, and why decided not to use them.
+\begin{figure}[!tfbd data - reasonable spot showing curation]%figure2
+  \begin{center}
+    {\resizebox{\imsize}{!}{\includegraphics{peak_example.pdf}}}
+    {\resizebox{\imsize}{!}{\includegraphics{peak_example_2.pdf}}}
+  \end{center}
+  \caption{Peaks found in the included sample dataset, derived from
+    ChIP-seq of tfbD in {\em Halobacterium salinarum} sp. NRC1. Blue
+    and red shading indicate coverage of reads aligned from the
+    ChIP-derived data to the forward and reverse strands,
+    respectively. Blue and red lines represent the filtered coverage
+    levels for the forward and reverse strands, respectively. The
+    dashed line is the detected noise threshold for the
+    region. Detected peaks are indicated in orange
+    boxes.}\label{fig:02}
+\end{figure}
 
 \noindent For each putative peak, Pique calculates the enrichment
 ratio of the ChIP alignment to the control alignment, the binding
@@ -281,21 +293,133 @@ region.
 %     shown here truncated at 200.}\label{fig:01}
 % \end{figure}
 
-\begin{figure}[!tfbd data - reasonable spot showing curation]%figure2
+\section{Results}
+
+Performance of Pique was benchmarked against CSDeconv using a ChIP-Seq
+experiment targeting tfbD in late stationary phase of {\em
+  Halobacterium salinarum} sp. NRC1. The putative TfbD binding motif
+for this organism is analogous to [???] a similar archaeon's TFB
+protein in photocrosslinking study \cite{tfb_promoter}, and is thought
+to consist of a TFB recognition element (BRE), a TATA box, a proximal
+promoter element (PPE) and a transcription start site (TSS). This
+putative promoter motif was scanned against each peak region using
+MAST \cite{MAST} with an $e$-value cutoff of 100 and the default motif
+$p$-value cutoff of $10^{-4}$. Peaks found by each software package were
+also scanned for experimentally determined transcript start sites
+(TSS) \cite{halo_promoters} (Table \ref{table1}).
+
+\begin{table}
   \begin{center}
-    {\resizebox{\imsize}{!}{\includegraphics{peak_example.pdf}}}
-    {\resizebox{\imsize}{!}{\includegraphics{peak_example_2.pdf}}}
+    \begin{tabular}{l r r r r}
+      Found by & Peaks & TSS & Motif & TSS \& Motif \\
+      \hline
+      Pique or CSDeconv & 647 & 332 & 197 & 69 \\
+      Pique             & 417 & 225 & 128 & 50 \\
+      CSDeconv          & 388 & 213 & 138 & 50 \\
+      Pique \& CSDeconv & 158 & 106 & 69  & 31 \\
+      Pique only        & 259 & 119 & 59  & 19 \\
+      CSDeconv only     & 230 & 107 & 69  & 19 \\
+    \end{tabular}
   \end{center}
-  \caption{Peaks found in the included sample dataset, derived from
-    ChIP-seq of tfbD in {\em Halobacterium salinarum} sp. NRC1. Blue
-    and red shading indicate coverage of reads aligned from the
-    ChIP-derived data to the forward and reverse strands,
-    respectively. Blue and red lines represent the filtered coverage
-    levels for the forward and reverse strands, respectively. The
-    dashed line is the detected noise threshold for the
-    region. Detected peaks are indicated in orange
-    boxes.}\label{fig:02}
+  \caption{Putative binding motifs and transcript start sites detected 
+    in peaks recovered by Pique and CSDeconv.}\label{table1}
+\end{table}
+
+Enrichment ratios (the ratio of the integrated coverage to the
+background) for each peak were calculated, and peaks from each
+software package for each category were then placed in rank order
+(Fig. \ref{ranked_peaks}). It was found that Pique recovered more
+peaks than CSDeconv, and more peaks with experimentally verified
+transcript start sites. It was found that Pique and CSDeconv recovered
+peaks containing the full putative binding motif (BRE-TATA-PPE-TSS) at
+the same rate.
+
+\begin{figure}
+  \begin{center}
+    {\resizebox{\imsize}{!}{\includegraphics{pique_csd_ranks.pdf}}}
+  \end{center}
+  \caption{Performance of Pique and CSDeconv on a ChIP-seq experiment
+    ({\em Halobacterium salinarum} sp. NRC1 transcription initiation
+    factor TFB tfbD in late stationary phase) was studied by comparing
+    lists of peaks. Peak lists are shown here ranked by enrichment
+    ratio. Pique recovers more peaks than CSDeconv, and more of these
+    peak regions contain an experimentally determined transcription
+    start site (TSS). Both software packages recovered the same number
+    of peaks containing the predicted binding motif (PBM). Both
+    software packages recovered the same number of peaks in which a
+    transcript start site was found less than 50bp downstream from a
+    binding motif. TSS coordinates were experimentally verified (Koide
+    {\em et al.}) \cite{halo_promoters} and motifs were predicted
+    using Motif Catcher (Seitzer {\em et al.}, publication
+    pending).}\label{ranked_peaks}
 \end{figure}
+
+In order to ascertain the quality of the predicted peak regions
+uniquely predicted by each software package, an {\em ab initio} search
+for the putative binding motif was conducted for each list of peaks. 
+
+Sequence entries were created by extracting 100-bp stretches of
+sequence centered at each respective called peak center.  Each
+sequence data set was subjected to an iterative MC MAST/MEME
+MotifCatcher search [3] with 100 seeds. This search was conducted for
+five groups of sequences corresponding to all peak regions found by
+Pique, regions found exclusively by Pique, all peak regions found by
+CSDeconv, regions found by CSDeconv exclusively, and peak regions
+found by both software packages. Motifs could be discovered on the
+forward and reverse strand, and could be anywhere from 20 to 40
+nucleotides in length (Supplementary Figure 2). A putative binding
+motif was discovered in all five sets of peaks.
+
+The pairwise distances between motifs was computed by the average log
+likelihood ratio (ALLR), and clustered using UPGMA (program
+defaults). All motifs that were significantly similar to the putative
+canonical TFB motif were clustered, and for cases where more than two
+significant motif matches were discovered in a given data set, motifs
+were clustered and familial profiles were computed. Membership
+clustering thresholds were tried from 0 to 1.0 in increments of 0.10,
+and the familial profile motif with the lowest $e$-value was taken
+from each dataset as its ``representative'' motif profile.  For cases
+where two or fewer significant motif matches were determined, the
+motif match with the lower $e$-value was taken as the representative
+motif profile of its respective data set. Representative motifs were
+compared using STAMP \cite{STAMP} with the ALLR motif comparison
+measure and UPGMA clustering (Fig. \ref{motif-tree}).
+
+\begin{figure}
+  \begin{center}
+    {\resizebox{\imsize}{!}{\includegraphics{motif-tree.pdf}}}
+  \end{center}
+  \caption{Motifs recovered by Pique and CSDeconv are qualitatively
+    different.}\label{motif-tree}
+\end{figure}
+
+It was found that the motifs computed from the list of peak regions
+recovered by Pique and CSDeconv clustered closely with the canonical
+binding motif, as did motifs computed from the list of peak regions in
+common to both software packages. However, motifs computed from the
+list of peak regions recovered {\em exclusively} by Pique clustered
+with the canonical motif, but the motifs computed from the list of
+peak regions recovered {\em exclusively} by CSDeconv did not
+(Fig. \ref{motif-tree}). Furthermore, the $e$-value of the best motif
+computed from the CSDeconv-unique peak regions is the lowest among the
+five, suggesting that a higher proportion of false positives may be
+among this list.
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{ l l }
+      Peak list & Motif $e$-value \\
+      \hline
+      CSDeconv all      & $3.3 \times 10^{-144}$ \\
+      CSDeconv only     & $5.2 \times 10^{-35}$ \\
+      Pique \& CSDeconv & $6.9 \times 10^{-77}$ \\
+      Pique all         & $4.6 \times 10^{-130}$ \\
+      Pique only        & $4.9 \times 10^{-82}$ \\
+    \end{tabular}
+  \end{center}
+  \caption{Statistical support for motifs computed from lists of peaks 
+    found by Pique and CSDeconv.}
+\end{table}
 
 \section{Discussion}
 
@@ -307,26 +431,6 @@ rate. This allows Pique to work without modification on many different
 kinds of experiments, but at the cost of some post-filtering. Pique
 provides the user with output that can be used to support a variety of
 such statistical tests.
-
-\begin{figure}
-  \begin{center}
-    {\resizebox{\imsize}{!}{\includegraphics{pique_csd_ranks.pdf}}}
-  \end{center}
-  \caption{Performance of Pique and CSDeconv on a ChIP-seq experiment
-    ({\em Halobacterium salinarum} sp. NRC1 transcription initiation
-    factor TFB tfbD under vegetative growth conditions) was studied by
-    comparing lists of peaks. Peak lists are shown here ranked by
-    enrichment ratio. Pique recovers more peaks than CSDeconv, and
-    more of these peak regions contain an experimentally determined
-    transcription start site (TSS). Both software packages recovered
-    the same number of peaks containing the predicted binding motif
-    (PBM). Both software packages recovered the same number of peaks
-    in which a transcript start site was found less than 50bp
-    downstream from a binding motif. TSS coordinates were
-    experimentally verified (Koide {\em et al.}) \cite{halo_promoters}
-    and motifs were predicted using Motif Catcher (Seitzer {\em et
-      al.}, publication pending).}\label{fig:02}
-\end{figure}
 
 Some recommended filtering might include eliminating peaks that are
 significantly narrower than the size range of the sequencing library,
@@ -343,6 +447,12 @@ are simple to process by a variety of tools, and can be loaded
 directly into the Gaggle Genome Browser. False positives are easy to
 recognize visually, and can be easily deleted.\footnote{See
   supplementary figure.}
+
+
+
+
+
+
 
 \section{Conclusion}
 
