@@ -2,17 +2,15 @@
 %\usepackage{amsmath}
 %\usepackage{enumerate}
 \usepackage{graphicx}
+%\usepackage[sorting=none]{biblatex}
+
 %\author{Rusell~Y.~Neches, Elizabeth~.G.~Wilbanks, Philip~M.~ } 
 %\title{Analyzing ChIP-seq data with Pique}
 
-%\addtolength{\oddsidemargin}{-.875in}
-%\addtolength{\evensidemargin}{-.875in}
-%\addtolength{\textwidth}{1.75in}
-%\addtolength{\topmargin}{-.875in}
-%\addtolength{\textheight}{1.75in}
+%\bibliography{writeup}
 
-\copyrightyear{2011}
-\pubyear{2011}
+\copyrightyear{2012}
+\pubyear{2012}
 
 % This writeup is intended to be submitted to Bioinformatics as an
 % Applicaiton Note under either the Gene Expression or Sequence
@@ -314,14 +312,20 @@ such statistical tests.
   \begin{center}
     {\resizebox{\imsize}{!}{\includegraphics{pique_csd_ranks.pdf}}}
   \end{center}
-  \caption{Performance of Pique and CSDeconv on a ChIP-seq tfbD in
-    {\em Halobacterium salinarum} sp. NRC1. Pique recovers more peaks
-    from the dataset than CSDeconv, and more of these peak regions
-    contain a predicted transcription start site. Both software
-    packages recovered the same number of peaks containing the
-    predicted binding motif and peaks containing transcript start
-    sites less than 50bp downstream from the binding
-    motif.}\label{fig:02}
+  \caption{Performance of Pique and CSDeconv on a ChIP-seq experiment
+    ({\em Halobacterium salinarum} sp. NRC1 transcription initiation
+    factor TFB tfbD under vegetative growth conditions) was studied by
+    comparing lists of peaks. Peak lists are shown here ranked by
+    enrichment ratio. Pique recovers more peaks than CSDeconv, and
+    more of these peak regions contain an experimentally determined
+    transcription start site (TSS). Both software packages recovered
+    the same number of peaks containing the predicted binding motif
+    (PBM). Both software packages recovered the same number of peaks
+    in which a transcript start site was found less than 50bp
+    downstream from a binding motif. TSS coordinates were
+    experimentally verified (Koide {\em et al.}) \cite{halo_promoters}
+    and motifs were predicted using Motif Catcher (Seitzer {\em et
+      al.}, publication pending).}\label{fig:02}
 \end{figure}
 
 Some recommended filtering might include eliminating peaks that are
@@ -361,13 +365,13 @@ This project was funded by UC Davis startup funds to M.T.F., NSF Graduate
 Research Fellowship awarded to E.G.W. and DARPA award number
 HR0011-05-1-0057 to R.Y.N.
 
-%\bibliographystyle{natbib}
+\bibliographystyle{unsrt}
 %\bibliographystyle{achemnat}
 %\bibliographystyle{plainnat}
 %\bibliographystyle{abbrv}
 %\bibliographystyle{bioinformatics}
 
-\bibliographystyle{plain}
+%\bibliographystyle{plain}
 
 \bibliography{writeup}
 
