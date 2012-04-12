@@ -295,18 +295,40 @@ region.
 
 \section{Results}
 
-Performance of Pique was benchmarked against CSDeconv using a ChIP-Seq
-experiment targeting tfbD in late stationary phase of {\em
-  Halobacterium salinarum} sp. NRC1. The putative TfbD binding motif
-for this organism is analogous to [???] a similar archaeon's TFB
-protein in photocrosslinking study \cite{tfb_promoter}, and is thought
-to consist of a TFB recognition element (BRE), a TATA box, a proximal
-promoter element (PPE) and a transcription start site (TSS). This
-putative promoter motif was scanned against each peak region using
-MAST \cite{MAST} with an $e$-value cutoff of 100 and the default motif
-$p$-value cutoff of $10^{-4}$. Peaks found by each software package were
-also scanned for experimentally determined transcript start sites
-(TSS) \cite{halo_promoters} (Table \ref{table1}).
+Performance of Pique was benchmarked against CSDeconv two ChIP-Seq
+experiments. The first experiment targeted TfbD (transcription
+initiation factor IIB 4) DNA-binding events in late stationary phase
+of {\em Halobacterium salinarum} sp. NRC1 described in Wilbanks {\em
+  et al.} \cite{wilbanks}. Peak lists for both Pique and CSdeconv were
+compared with experimentally verified transcription start sites
+collected by Koide {\em et al} \cite{halo_promoters} and scanned for
+the presence of putative binding motifs using MAST\cite{MAST}. An {\em
+  ab initio} search for putative binding motifs in each peak list was
+conducted, and the recovered motifs compared using STAMP \cite{STAMP}.
+
+The second experiment targeted the DosR (dormancy survival regulator)
+DNA-binding events after two hours exposure to oxygen after growth to
+early log phase of {\em Mycobacterium tuberculosis} described in Lun
+{\em et al.}  \cite{CSDeconv}. To the best of our knowledge,
+transcription start sites have not been systematically verified
+experimentally in this organism, and so putative transcription start
+sites were identified using the putative binding motif found
+constructed by Gerasimova {\em et al.} \cite{DosR_motif} using
+MAST. An {\em ab initio} search for putative binding motifs was
+conducted, and the recovered motifs compared using STAMP. 
+
+\subsection{TfbD in {\em Halobacterium salinarum} sp. NRC1}
+
+The putative TfbD binding motif for this organism is analogous to
+[???] a similar archaeon's TFB protein in photocrosslinking study
+\cite{tfb_promoter}, and is thought to consist of a TFB recognition
+element (BRE), a TATA box, a proximal promoter element (PPE) and a
+transcription start site (TSS). This putative promoter motif was
+scanned against each peak region using MAST \cite{MAST} with an
+$e$-value cutoff of 100 and the default motif $p$-value cutoff of
+$10^{-4}$. Peaks found by each software package were also scanned for
+experimentally determined transcript start sites (TSS)
+\cite{halo_promoters} (Table \ref{table1}).
 
 \begin{table}
   \begin{center}
@@ -420,6 +442,9 @@ among this list.
   \caption{Statistical support for motifs computed from lists of peaks 
     found by Pique and CSDeconv.}
 \end{table}
+
+\subsection{DosR in {\em Mycobacterium tuberculosis}}
+
 
 \section{Discussion}
 
