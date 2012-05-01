@@ -5,6 +5,7 @@ Pique.
 import pique
 import sys
 import argparse
+import pickle
 
 parser = argparse.ArgumentParser( description='Pique batch mode.' )
 
@@ -26,11 +27,16 @@ parser.add_argument( '-a', action='store', dest='alpha', default=30, type=int,
 parser.add_argument( '-l', action='store', dest='l_thresh', default=300, type=int,
                         help='L threshold value (expected binding footprint)' )
 
+parser.add_argument( '-p',  action='store_true', 
+                            dest='pickle_file',
+                            default=False, 
+                            required=False, 
+                            help='Make a pickel file' )
 
 args = parser.parse_args()
 
 
-def run( name, ipfile, bgfile, mapfile, alpha, l_thresh ) :
+def run( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
     
     # set logfile
     logfile = name + '.log'
@@ -80,7 +86,12 @@ def run( name, ipfile, bgfile, mapfile, alpha, l_thresh ) :
         pique.msg( logfile, '     noise threshold  : ' + str(PA.data[ar_name]['N_thresh']) )
         pique.msg( logfile, '     filter threshold : ' + str(PA.data[ar_name]['n_thresh']) )
         pique.msg( logfile, '     normalizations   : ' + ', '.join( map(str, PA.data[ar_name]['norms']) ) )
-
+    
+    # if a pickle file was requested, write it
+    pique.msg( logfile, 'pickling analysis workbench...' )
+    if pickle_file :
+        pickle.dump( PA, open( name + '.pickle', 'w' ) )
+    
     # write output files
     pique.msg( logfile, 'writing output files...' )
     pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
@@ -93,4 +104,4 @@ def run( name, ipfile, bgfile, mapfile, alpha, l_thresh ) :
     # done!
     pique.msg( logfile, 'run completed.' )
 
-run( args.name, args.ipfile, args.bgfile, args.mapfile, args.alpha, args.l_thresh )
+run( args.name, args.ipfile, args.bgfile, args.mapfile, args.alpha, args.l_thresh, args.pickle_file )
