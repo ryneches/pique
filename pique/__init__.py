@@ -7,12 +7,18 @@ import data
 import analysis
 import fileIO
 import processing
+import mapmaker
+import values
+import runtime
 
 # suppress annoying scypy warnings
 warnings.simplefilter("ignore", DeprecationWarning)
 
 class PiqueException( Exception ) :
     pass
+
+def version() :
+    return values.version
 
 def readtrack( filename ) :
     """

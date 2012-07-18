@@ -17,6 +17,17 @@ def hist( numpy.ndarray[DTYPE_t, ndim=1] data,  \
         int bins,                               \
         int window,                             \
         int stride ) :
+    """
+    A two-dimensional windowed histogram with strides, used here to
+    visualize genome-wide read coverage.
+
+        data    : A 1-D Numpy array of integers representing coverage
+        lowest  : Lowest coverage in the histogram
+        highest : Higest coverage in the histogram
+        bins    : Number of bins in the histogram
+        window  : Length of the sliding window
+        stride  : Strides between windows
+    """
     cdef int overlap  = int(ceil( window / float(stride) ))
     cdef int w = len(data)/stride + overlap
     cdef numpy.ndarray r = numpy.zeros( [ bins, w ], dtype=DTYPE )
