@@ -6,12 +6,18 @@ import pique
 import sys
 import argparse
 import pickle
+import numpy
+import pylab
 from Tkinter import *
 from tkFileDialog import *
 
 
-def batch( args ) :
+# entry point functions for mode commands
 
+def batch( args ) :
+    """
+    entry point for batch mode
+    """
     pique.runtime.run(  args.name,
                         args.ipfile,
                         args.bgfile,
@@ -22,13 +28,63 @@ def batch( args ) :
 
 def mainTk( args ) :
     """
-    entry point for Tk interface.
+    entry point for Tk interface
     """
     root = Tk()
     app = PiqueApp( root )
     root.mainloop()
 
+def mapmaker( args ) :
+    """
+    entry point for mapmaker utility
+    """
+    logfile = args.name + '.mapmaker.log'
+    mapfile = args.name + '.map.gff'
+    
+    pique.msg( logfile, 'starting mapmaker for project : ' + args.name )
+    
+    pique.msg( logfile, '  -> BAM file    : ' + args.bamfile      )
+    pique.msg( logfile, '  -> map file    : ' + mapfile           )
+    pique.msg( logfile, '  -> window      : ' + str(args.window)  )
+    pique.msg( logfile, '  -> stride      : ' + str(args.stride)  )
+    pique.msg( logfile, '  -> bins        : ' + str(args.bins)    )
+    pique.msg( logfile, '  -> highest bin : ' + str(args.highest) )
+    pique.msg( logfile, '  -> lowest bin  : ' + str(args.lowest)  )
+    
+    pique.msg( logfile, 'loading data...' )
+    
+    data = pique.fileIO.loadBAM( args.bamfile )
+    
+    pique.msg( logfile, '  found contigs :' )
+    
+    for contig in data.keys() :
+        pique.msg( logfile, '    ' + contig )
+        pique.msg( logfile, '      ' + str(len(data[contig]['forward'])) )
+    
+    pique.msg( logfile, 'making spectral histograms...' )
+    
+    sh = {}
+    for contig in data.keys() :
+        pique.msg( logfile, '  :: making sectral histogram for contig ' + contig )
+        d = numpy.array( data[contig]['forward'] + data[contig]['reverse'], dtype = int )
+        sh[contig] = pique.mapmaker.hist(   d,
+                                            args.lowest,
+                                            args.highest,
+                                            args.bins,
+                                            args.window,
+                                            args.stride     )
+    
+    # save images of spectral histograms
+    pique.msg( logfile, 'saving images of spectral histograms...' )
+    
+    for contig in sh.keys() :
+        pique.msg( logfile, '  :: saving image for contig ' + contig )
+        pylab.contourf( sh[contig] )
+        imgname = args.name + '_' + contig + '.png'
+        pylab.savefig( imgname, format='png' )
 
+
+# the main argument parser
 parser = argparse.ArgumentParser( 
                             description = 'Pique, a ChIP-seq analytical tool.',
                             prog        = 'pique' )
@@ -45,50 +101,103 @@ parser_batch.add_argument(  '-name',
                             action      = 'store', 
                             dest        = 'name', 
                             required    = True,
-                            help        = 'Project name.' )
+                            help        = 'project name' )
 
 parser_batch.add_argument(  '-ip', 
                             action      = 'store', 
                             dest        = 'ipfile', 
                             required    = True,
-                            help        = 'BAM file for IP data.' )
+                            help        = 'BAM file for IP data' )
 
 parser_batch.add_argument(  '-bg',
                             action      = 'store',
                             dest        = 'bgfile',
                             required    = True,
-                            help        = 'BAM file for control data.' )
+                            help        = 'BAM file for control data' )
 
 parser_batch.add_argument(  '-map',
                             action      = 'store',
                             dest        = 'mapfile',
                             required    = True,
-                            help        = 'Genome map file.' )
+                            help        = 'genome map file' )
 
 parser_batch.add_argument(  '-a', 
                             action      = 'store',
                             dest        = 'alpha',
                             default     = 30,
                             type        = int,
-                            help        = 'Read length' )
+                            help        = 'read length' )
 
 parser_batch.add_argument(  '-l',
                             action      = 'store',
                             dest        = 'l_thresh',
                             default     = 300,
                             type        = int,
-                            help        = 'Expected binding footprint' )
+                            help        = 'expected binding footprint' )
 
 parser_batch.add_argument(  '-p', 
                             action      = 'store_true', 
                             dest        = 'pickle_file',
                             default     = False, 
                             required    = False, 
-                            help        = 'Make a pickel file' )
+                            help        = 'make a pickel file' )
 
 # Tk mode
 parser_tk = subparsers.add_parser( 'tk', help='GUI mode for peak detection' )
 parser_tk.set_defaults( func=mainTk )
+
+# mapmaker mode
+parser_map = subparsers.add_parser( 'mapmaker', help='genome analysis region mapping utility' )
+parser_map.set_defaults( func=mapmaker )
+
+parser_map.add_argument(  '-name', 
+                            action      = 'store', 
+                            dest        = 'name', 
+                            required    = True,
+                            help        = 'project name' )
+
+parser_map.add_argument(   '-bamfile', 
+                            action      = 'store', 
+                            dest        = 'bamfile', 
+                            required    = True,
+                            help        = 'BAM file of aligned data' )
+
+parser_map.add_argument(   '-window',
+                            action      = 'store',
+                            dest        = 'window',
+                            default     = 50000,
+                            type        = int,
+                            help        = 'sliding window size' )
+
+parser_map.add_argument(   '-stride',
+                            action      = 'store',
+                            dest        = 'stride',
+                            default     = 200,
+                            type        = int,
+                            help        = 'stride length' )
+
+parser_map.add_argument(   '-highest',
+                            action      = 'store',
+                            dest        = 'highest',
+                            required    = True,
+                            type        = int,
+                            help        = 'highest histogram bin' )
+
+parser_map.add_argument(   '-lowest',
+                            action      = 'store',
+                            dest        = 'lowest',
+                            required    = True,
+                            type        = int,
+                            help        = 'lowest histogram bin' )
+
+parser_map.add_argument(   '-bins',
+                            action      = 'store',
+                            dest        = 'bins',
+                            default     = 64,
+                            type        = int,
+                            help        = 'number of histogram bins' )
+
+
 
 class PiqueApp :
     def __init__( self, master ) :

@@ -11,7 +11,7 @@ GFFkeys = ['contig','source','feature','start','stop','score','strand','frame','
 
 def loadBAM( file ) :
     """
-    Read eeach contig in a BAM file and return a dictionary of tracks.
+    Read each contig in a BAM file and return a dictionary of tracks.
     Each track contains scalar length, and two vectors representing
     the forward and everse coverage across the contig.
     """
