@@ -5,10 +5,66 @@ Pique runtime.
 import pique
 import sys
 import pickle
+import pylab
+import numpy
 
-
-def run( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
+def makemap( name, bamfile, window, stride, highest, lowest, bins ) :
+    """
+    This function drives the genome map making workflow.
+    """
+    logfile = name + '.mapmaker.log'
+    mapfile = name + '.map.gff'
     
+    pique.msg( logfile, 'starting mapmaker for project : ' + name )
+    
+    pique.msg( logfile, '  -> BAM file    : ' + bamfile      )
+    pique.msg( logfile, '  -> map file    : ' + mapfile      )
+    pique.msg( logfile, '  -> window      : ' + str(window)  )
+    pique.msg( logfile, '  -> stride      : ' + str(stride)  )
+    pique.msg( logfile, '  -> bins        : ' + str(bins)    )
+    pique.msg( logfile, '  -> highest bin : ' + str(highest) )
+    pique.msg( logfile, '  -> lowest bin  : ' + str(lowest)  )
+    
+    pique.msg( logfile, 'loading data...' )
+    
+    data = pique.fileIO.loadBAM( bamfile )
+    
+    pique.msg( logfile, '  found contigs :' )
+    
+    for contig in data.keys() :
+        pique.msg( logfile, '    ' + contig )
+        pique.msg( logfile, '      ' + str(len(data[contig]['forward'])) )
+    
+    pique.msg( logfile, 'making spectral histograms...' )
+    
+    sh = {}
+    for contig in data.keys() :
+        pique.msg( logfile, '  :: making sectral histogram for contig ' + contig )
+        d = numpy.array( data[contig]['forward'] + data[contig]['reverse'], dtype = int )
+        sh[contig] = pique.mapmaker.hist(   d,
+                                            lowest,
+                                            highest,
+                                            bins,
+                                            window,
+                                            stride     )
+    
+    # save images of spectral histograms
+    pique.msg( logfile, 'saving images of spectral histograms...' )
+    
+    for contig in sh.keys() :
+        pylab.cla() # clean up crumbs from last plot
+        pylab.clf() # clean up crumbs from last plot
+        pique.msg( logfile, '  :: saving image for contig ' + contig )
+        pylab.contourf( sh[contig], bins )
+        pylab.title( name + ' : ' + contig )
+        imgname = name + '_' + contig + '.png'
+        pylab.savefig( imgname, format='png' )
+    
+
+def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
+    """
+    This function drives the peak detection workflow.
+    """
     # set logfile
     logfile = name + '.log'
     

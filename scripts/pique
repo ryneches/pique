@@ -5,9 +5,7 @@ Pique.
 import pique
 import sys
 import argparse
-import pickle
 import numpy
-import pylab
 from Tkinter import *
 from tkFileDialog import *
 
@@ -18,13 +16,13 @@ def batch( args ) :
     """
     entry point for batch mode
     """
-    pique.runtime.run(  args.name,
-                        args.ipfile,
-                        args.bgfile,
-                        args.mapfile,
-                        args.alpha,
-                        args.l_thresh,
-                        args.pickle_file )
+    pique.runtime.detect(   args.name,
+                            args.ipfile,
+                            args.bgfile,
+                            args.mapfile,
+                            args.alpha,
+                            args.l_thresh,
+                            args.pickle_file )
 
 def mainTk( args ) :
     """
@@ -38,51 +36,13 @@ def mapmaker( args ) :
     """
     entry point for mapmaker utility
     """
-    logfile = args.name + '.mapmaker.log'
-    mapfile = args.name + '.map.gff'
-    
-    pique.msg( logfile, 'starting mapmaker for project : ' + args.name )
-    
-    pique.msg( logfile, '  -> BAM file    : ' + args.bamfile      )
-    pique.msg( logfile, '  -> map file    : ' + mapfile           )
-    pique.msg( logfile, '  -> window      : ' + str(args.window)  )
-    pique.msg( logfile, '  -> stride      : ' + str(args.stride)  )
-    pique.msg( logfile, '  -> bins        : ' + str(args.bins)    )
-    pique.msg( logfile, '  -> highest bin : ' + str(args.highest) )
-    pique.msg( logfile, '  -> lowest bin  : ' + str(args.lowest)  )
-    
-    pique.msg( logfile, 'loading data...' )
-    
-    data = pique.fileIO.loadBAM( args.bamfile )
-    
-    pique.msg( logfile, '  found contigs :' )
-    
-    for contig in data.keys() :
-        pique.msg( logfile, '    ' + contig )
-        pique.msg( logfile, '      ' + str(len(data[contig]['forward'])) )
-    
-    pique.msg( logfile, 'making spectral histograms...' )
-    
-    sh = {}
-    for contig in data.keys() :
-        pique.msg( logfile, '  :: making sectral histogram for contig ' + contig )
-        d = numpy.array( data[contig]['forward'] + data[contig]['reverse'], dtype = int )
-        sh[contig] = pique.mapmaker.hist(   d,
-                                            args.lowest,
-                                            args.highest,
-                                            args.bins,
-                                            args.window,
-                                            args.stride     )
-    
-    # save images of spectral histograms
-    pique.msg( logfile, 'saving images of spectral histograms...' )
-    
-    for contig in sh.keys() :
-        pique.msg( logfile, '  :: saving image for contig ' + contig )
-        pylab.contourf( sh[contig] )
-        imgname = args.name + '_' + contig + '.png'
-        pylab.savefig( imgname, format='png' )
-
+    pique.runtime.makemap(  args.name,
+                            args.bamfile,
+                            args.window,
+                            args.stride,
+                            args.highest,
+                            args.lowest,
+                            args.bins )
 
 # the main argument parser
 parser = argparse.ArgumentParser( 
@@ -325,7 +285,7 @@ class PiqueApp :
         # pickle file
         pickle_file = name + '.pickle'
         
-        pique.runtime.run( name, IPfile, BGfile, mapfile, alpha, l_thresh, pickle_file )
+        pique.runtime.detect( name, IPfile, BGfile, mapfile, alpha, l_thresh, pickle_file )
         self.master.quit()
 
 args = parser.parse_args()

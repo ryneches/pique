@@ -11,7 +11,8 @@ Pique was written by Russell Neches, a graduate student in Jonathan
 Eisen's laboratory. 
 
     Russell's Blog    : http://vort.org/
-    Russell's Twitter : http://twitter.com/#!/ryneches
+    Russell's Twitter : @ryneches
+    Russell's Email   : ryneches at ucdavis dot edu
     Lab homepage      : http://phylogenomics.wordpress.com/
 
 INSTALLING
@@ -45,6 +46,8 @@ This package requires the following packages :
     scipy
     numpy
     pysam
+    cython
+    matplotlib
         
 Suggested :
 
@@ -58,9 +61,27 @@ USAGE
 This software can be used either as a stand-alone application, or as a
 library accessed by your own software.
 
-As a stand-alone application, simply invoke pique.py like so :
+To use pique as a stand-alone application, there is a self-documenting
+command line interface :
 
-    $ ./pique.py
+    $ ./pique -h
+    usage: pique [-h] {batch,tk,mapmaker} ...
+    
+    Pique, a ChIP-seq analytical tool.
+    
+    optional arguments:
+      -h, --help           show this help message and exit
+    
+    commands:
+    {batch,tk,mapmaker}
+      batch              command-line mode for peak detection
+      tk                 GUI mode for peak detection
+      mapmaker           genome analysis region mapping utility
+
+The application has three modes, batch, tk, and mapmaker. To access
+the GUI interface, run :
+
+    $ pique tk
 
 The application window will appear. Enter a name for your project in
 the 'Project name' field; this will be the name prefix for the output
@@ -84,6 +105,56 @@ output files will be written in the directory from which pique.py was
 invoked. Run time for a bacterial genome depends on the number of
 mapped reads and the length of the genome. For our projects, we have
 found that a run takes about one to five minutes.
+
+BATCH MODE
+----------
+
+If you have many experiments to process, it may be more convenient to
+run pique from a script. 
+
+    $ pique batch -h
+    usage: pique batch [-h] -name NAME -ip IPFILE -bg BGFILE -map MAPFILE
+                       [-a ALPHA] [-l L_THRESH] [-p]
+
+    optional arguments:
+      -h, --help    show this help message and exit
+      -name NAME    project name
+      -ip IPFILE    BAM file for IP data
+      -bg BGFILE    BAM file for control data
+      -map MAPFILE  genome map file
+      -a ALPHA      read length
+      -l L_THRESH   expected binding footprint
+      -p            make a pickel file
+
+The arguments are essentially the same as those found in the GUI,
+except for the option of making a pickle file. If this option is
+enabled, after completing the anaysis, pique will dump the entire
+analysis workbench object into a pickle file. This can be very useful
+for debugging and data post-processing in Python. For example, the
+pickle file can be used to load the analysis workbench into an
+interactive ipython session and used to generate figures.
+
+    http://docs.python.org/2/library/pickle.html
+
+MAPMAKER MODE
+-------------
+
+    $ pique mapmaker -h
+    usage: pique mapmaker [-h] -name NAME -bamfile BAMFILE [-window
+    WINDOW]
+                          [-stride STRIDE] -highest HIGHEST -lowest LOWEST
+                          [-bins BINS]
+
+    optional arguments:
+      -h, --help        show this help message and exit
+      -name NAME        project name
+      -bamfile BAMFILE  BAM file of aligned data
+      -window WINDOW    sliding window size
+      -stride STRIDE    stride length
+      -highest HIGHEST  highest histogram bin
+      -lowest LOWEST    lowest histogram bin
+      -bins BINS        number of histogram bins
+
 
 GENOME MAP FILE
 ---------------
