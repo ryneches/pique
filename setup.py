@@ -7,7 +7,8 @@ except ImportError:
     print '(WARNING: importing distutils, not setuptools!)'
     from distutils.core import setup
 
-ext_modules = [ Extension( 'pique.mapmaker', [ 'pique/mapmaker.pyx' ] ) ]
+ext_modules = [ Extension( 'pique.mapmaker', [ 'pique/mapmaker.pyx' ] ),
+                Extension( 'pique.peak'    , [ 'pique/peak.pyx'     ] ) ]
 
 setup(name = 'pique',
     version = '0.1',

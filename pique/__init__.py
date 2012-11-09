@@ -10,6 +10,7 @@ import processing
 import mapmaker
 import values
 import runtime
+import peak
 
 # suppress annoying scypy warnings
 warnings.simplefilter("ignore", DeprecationWarning)
