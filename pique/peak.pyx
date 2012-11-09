@@ -8,8 +8,8 @@ DTYPE = numpy.float64
 ctypedef numpy.float64_t DTYPE_t
 
 @cython.boundscheck(False)
-def peakdet( v,            \
-             delta,         \
+def peakdet( v,         \
+             delta,     \
              x = None):
     """
     Converted from MATLAB script at http://billauer.co.il/peakdet.html
@@ -35,13 +35,13 @@ def peakdet( v,            \
     % This function is released to the public domain; Any use is allowed.
     
     """
-    v = numpy.asarray( v, dtype=numpy.float64 )
+    v = numpy.asarray( v, dtype=DTYPE )
 
     maxtab = []
     mintab = []
     
-    cdef DTYPE_t mx = numpy.inf
-    cdef DTYPE_t mn = -numpy.inf
+    cdef DTYPE_t mx = -numpy.inf
+    cdef DTYPE_t mn =  numpy.inf
     
     cdef DTYPE_t mxpos = numpy.nan
     cdef DTYPE_t mnpos = numpy.nan
@@ -51,7 +51,7 @@ def peakdet( v,            \
     if x is None:
         x = numpy.arange(len(v))
     else :    
-        x = numpy.asarray( x, dtype=numpy.float64 )
+        x = numpy.asarray( x, dtype=DTYPE )
     
     if len(v) != len(x):
         raise pique.PiqueException( 'Input vectors v and x must have same length')
