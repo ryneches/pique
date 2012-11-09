@@ -4,7 +4,7 @@ Pique runtime.
 """
 import pique
 import sys
-import pickle
+import cPickle
 import pylab
 import numpy
 
@@ -117,7 +117,7 @@ def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
     # if a pickle file was requested, write it
     pique.msg( logfile, 'pickling analysis workbench...' )
     if pickle_file :
-        pickle.dump( PA, open( name + '.pickle', 'w' ) )
+        cPickle.dump( PA, open( name + '.pickle', 'w' ) )
     
     # write output files
     pique.msg( logfile, 'writing output files...' )
