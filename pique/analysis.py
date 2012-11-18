@@ -133,7 +133,7 @@ class PiqueAnalysis :
         Find the peaks in an anlysis region and append them to the
         data dictionary.
         """
-        length = len( d['bg']['forward'] )
+        length = len( self.data[ar_name]['bg']['forward'] )
         maxcov = max( numpy.concatenate( (                          \
                         self.data[ar_name]['ip']['forward'],        \
                         self.data[ar_name]['ip']['reverse'] ) ) )
@@ -141,12 +141,12 @@ class PiqueAnalysis :
         # find local maxima in the forward starnd
         peaks_f = pique.peak.peakdet(                               \
                         self.data[ar_name]['ip']['forward'],        \
-                        top_delta*maxcov )[0]
+                        pique.constants.top_delta*maxcov )[0]
 
         # find local maxima in the reverse starand
         peaks_r = pique.peak.peakdet(                               \
                         self.data[ar_name]['ip']['reverse'],        \
-                        top_delta*maxcov )[0]
+                        pique.constants.top_delta*maxcov )[0]
         
         # build up a peak annotation for maxima in the forward and
         # reverse strand coverage that occur within the peak
@@ -195,14 +195,14 @@ class PiqueAnalysis :
                         er = None
                     
                     annotations = {                                 \
-                        'binds_at'          : x                     \
+                        'binds_at'          : x,                    \
                         'enrichment_ratio'  : er
                     }
                     
                     # normalizations
                     for i,norm in enumerate(self.data[ar_name]['norms']) :
                         name = 'norm_' + str(i)
-                            annotations[name] = norm
+                        annotations[name] = norm
                     
                     peak = {                                        \
                         'start'             : start,                \
