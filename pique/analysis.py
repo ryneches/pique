@@ -6,8 +6,6 @@ import processing
 import pique
 import numpy
 import scipy
-#import stats
-
 
 class PiqueAnalysis :
     """
@@ -129,8 +127,97 @@ class PiqueAnalysis :
             nn  = nip / nbg
             n.append( self.noise_threshold( bg ) / nn )
         self.data[ar_name]['n_thresh'] = numpy.mean(n)
-        
+
     def find_peaks( self, ar_name ) :
+        """
+        Find the peaks in an anlysis region and append them to the
+        data dictionary.
+        """
+        length = len( d['bg']['forward'] )
+        maxcov = max( numpy.concatenate( (                          \
+                        self.data[ar_name]['ip']['forward'],        \
+                        self.data[ar_name]['ip']['reverse'] ) ) )
+        
+        # find local maxima in the forward starnd
+        peaks_f = pique.peak.peakdet(                               \
+                        self.data[ar_name]['ip']['forward'],        \
+                        top_delta*maxcov )[0]
+
+        # find local maxima in the reverse starand
+        peaks_r = pique.peak.peakdet(                               \
+                        self.data[ar_name]['ip']['reverse'],        \
+                        top_delta*maxcov )[0]
+        
+        # build up a peak annotation for maxima in the forward and
+        # reverse strand coverage that occur within the peak
+        # separation distance
+        for ix, iy in peaks_f :
+            for jx, jy in peaks_r :
+                if jx - ix > 0 and jx - ix < pique.constants.peak_separation :
+                    
+                    x = int((ix+jx)/2.0)
+                    
+                    # find the region around the forward strand
+                    # maximum
+                    fx0,fx1 = pique.peak.region(                    \
+                        self.data[ar_name]['ip']['forward'],        \
+                        ix,                                         \
+                        pique.constants.reg_delta,                  \
+                        radius=pique.constants.radius )
+                    
+                    # find the region around the reverse strand
+                    # maximum
+                    rx0,rx1 = pique.peak.region(                    \
+                        self.data[ar_name]['ip']['reverse'],        \
+                        jx,                                         \
+                        pique.constants.reg_delta,                  \
+                        radius=pique.constants.radius )
+                    
+                    # the region start and stop coordinates    
+                    start = ix - fx0
+                    stop  = jx + rx1
+                    
+                    # compute the enrichment ratio....
+                    ip_e = sum( 
+                        self.data[ar_name]['IP']['forward'][start:stop]   \
+                      + self.data[ar_name]['IP']['reverse'][start:stop]   )
+                    
+                    bg_e = sum( 
+                        self.data[ar_name]['BG']['forward'][start:stop]   \
+                      + self.data[ar_name]['BG']['reverse'][start:stop]   )
+                    
+                    fip_f = self.data[ar_name]['ip']['forward'][start:stop]
+                    fip_r = self.data[ar_name]['ip']['reverse'][start:stop]
+                    
+                    if not float(bg_e) == 0 :
+                        er = float(ip_e) / float(bg_e)
+                    else :
+                        er = None
+                    
+                    annotations = {                                 \
+                        'binds_at'          : x                     \
+                        'enrichment_ratio'  : er
+                    }
+                    
+                    # normalizations
+                    for i,norm in enumerate(self.data[ar_name]['norms']) :
+                        name = 'norm_' + str(i)
+                            annotations[name] = norm
+                    
+                    peak = {                                        \
+                        'start'             : start,                \
+                        'stop'              : stop,                 \
+                        'annotations'       : annotations
+                    }
+
+                    self.data[ar_name]['peaks'].append(peak)
+        
+    def find_peaks_depricated( self, ar_name ) :
+        """
+        Find the peaks in an analysis region.
+        
+        WARNING : THIS FUNCTION IS DEPRICATED.
+        """
         fp = processing.findregions( self.data[ar_name]['ip']['forward'],   \
                                      self.data[ar_name]['n_thresh']         )
         rp = processing.findregions( self.data[ar_name]['ip']['reverse'],   \
