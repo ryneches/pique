@@ -11,6 +11,7 @@ import mapmaker
 import values
 import runtime
 import peak
+import constants
 
 # suppress annoying scypy warnings
 warnings.simplefilter("ignore", DeprecationWarning)

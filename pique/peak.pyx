@@ -109,11 +109,11 @@ def region( v,      \
     cdef DTYPE_t x1 =  numpy.inf
     
     for x0 in numpy.arange(radius) :
-        if v[x-x0] <= v[x] :
+        if v[x-x0] <= v[x] * delta :
             break
 
     for x1 in numpy.arange(radius) :
-        if v[x+x1] <= v[x] :
+        if v[x+x1] <= v[x] * delta :
             break
     
     return x0, x1
