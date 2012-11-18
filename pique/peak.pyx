@@ -87,3 +87,34 @@ def peakdet( v,         \
                 lookformax = True
 
     return maxtab, mintab
+
+
+@cython.boundscheck(False)
+def region( v,      \
+            x,      \
+            delta,  \
+            radius=1000 ) :
+    """
+    Calculate the points around a peak which fall below delta, where
+    delta is the fraction of the maximum height of the peak.
+        
+        v       : the array contianing the data
+        x       : the array coordiate of the peak
+        delta   : cutoff ratio
+        radius  : terminate serach beyond this radius
+        
+    """
+    
+    cdef DTYPE_t x0 = -numpy.inf
+    cdef DTYPE_t x1 =  numpy.inf
+    
+    for x0 in numpy.arange(radius) :
+        if v[x-x0] <= v[x] :
+            break
+
+    for x1 in numpy.arange(radius) :
+        if v[x+x1] <= v[x] :
+            break
+    
+    return x0, x1
+
