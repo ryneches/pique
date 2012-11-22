@@ -3,7 +3,7 @@
 # Permitted separation between peaks found on the forward and reverse
 # strand. This should correspond with the difference between the
 # fragment length and the read length.
-peak_separation = 200
+peak_separation = 50
 
 # The fall-off from maximum needed to indentify a local maximum
 top_delta       = 0.05
