@@ -7,7 +7,7 @@ import numpy
 def test_init_PiqueData() :
     
     # does the data load?
-    D = pique.data.PiqueData( 'data/IP.bam', 'data/WCE.bam' )
+    D = pique.data.PiqueData( 'data/IP.bam', 'data/WCE.bam', 'data/map.gff', name='test' )
     
     # did we get the expected number of contigs?
     assert len( D.data.keys() ) == 3
@@ -24,3 +24,5 @@ def test_init_PiqueData() :
         assert type(D.data[contig]['BG']['forward']) is numpy.ndarray
         assert type(D.data[contig]['BG']['reverse']) is numpy.ndarray
 
+def test_import_cython_stuff() :
+    import pique.peak
