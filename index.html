@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Pique : A efficient peak finder for high coverage ChIP-seq experiments." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Pique</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ryneches/pique">View on GitHub</a>
+
+          <h1 id="project_title">Pique</h1>
+          <h2 id="project_tagline">A efficient peak finder for high coverage ChIP-seq experiments.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ryneches/pique/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ryneches/pique/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>The pique package is an efficiency peak finder for ChIP-seq
+experiments that yield high coverage allignments to the reference
+genome. It was developed for studying gene expression in Halobacterium
+salinarum sp. NRC1, sequenced using barcoded 40bp Illumina reads as
+part of an ongoing project in Marc Facciotti's lab at UC Davis.</p>
+
+<p><img src="https://github.com/ryneches/pique/raw/master/docs/peak_example_2.png" alt="A peek at peaks in Pique."></p>
+
+<h2>Author &amp; Contact Information</h2>
+
+<p>Pique was written by Russell Neches, a graduate student in Jonathan
+Eisen's laboratory. </p>
+
+<ul>
+<li>Russell's Blog    : <a href="http://vort.org">http://vort.org/</a>
+</li>
+<li>Russell's Twitter : <a href="https://twitter.com/ryneches">@ryneches</a>
+</li>
+<li>Russell's Email   : ryneches at ucdavis dot edu</li>
+<li>Lab homepage      : <a href="http://phylogenomics.wordpress.com/">http://phylogenomics.wordpress.com/</a>
+</li>
+</ul><h2>Installation</h2>
+
+<p>Do the usual python thing.</p>
+
+<pre><code>$ cd pique
+$ python setup.py install --prefix=/someplace/PYTHONPATH/knows/about
+</code></pre>
+
+<h2>Tests</h2>
+
+<p>Tests are designed to be used with nose. </p>
+
+<pre><code>http://somethingaboutorange.com/mrl/projects/nose/
+</code></pre>
+
+<p>The tests (stupidly) depend on hard-coded paths to find the test data
+files, so you have to run nosetests from the main module directory
+(i.e., the one that has setup.py in it).</p>
+
+<pre><code>$ cd pique
+$ nosetests
+</code></pre>
+
+<h2>Dependencies</h2>
+
+<p>This package requires the following packages :</p>
+
+<ul>
+<li>    scipy</li>
+<li>    numpy</li>
+<li>    pysam</li>
+<li>    cython</li>
+<li>    matplotlib</li>
+</ul><p>Suggested :</p>
+
+<ul>
+<li>    ipython</li>
+<li>    samtools</li>
+<li>    Gaggle Genome Browser</li>
+</ul><h2>Usage</h2>
+
+<p>This software can be used either as a stand-alone application, or as a
+library accessed by your own software.</p>
+
+<p>To use pique as a stand-alone application, there is a self-documenting
+command line interface :</p>
+
+<pre><code>$ ./pique -h
+usage: pique [-h] {batch,tk,mapmaker} ...
+
+Pique, a ChIP-seq analytical tool.
+
+optional arguments:
+  -h, --help           show this help message and exit
+
+commands:
+{batch,tk,mapmaker}
+  batch              command-line mode for peak detection
+  tk                 GUI mode for peak detection
+  mapmaker           genome analysis region mapping utility
+</code></pre>
+
+<p>The application has three modes, batch, tk, and mapmaker. To access
+the GUI interface, run :</p>
+
+<pre><code>$ pique tk
+</code></pre>
+
+<p><img src="https://github.com/ryneches/pique/raw/master/docs/Pique_GUI.png" alt="The Pique Tk GUI."></p>
+
+<p>The application window will appear. Enter a name for your project in
+the 'Project name' field; this will be the name prefix for the output
+files. Choose files for the IP and BG (background) tracks; these
+should be indexed BAM files, created by mapping your IP and control
+reads to the reference sequence. Many different tools can be used for
+this, such as bowtie, bwa and SHRiMP.</p>
+
+<p>The IP and background BAM files must contain identical contig names.</p>
+
+<p>If desired, choose a genome map file ('Map (optional)'). See below for
+how to create one.</p>
+
+<p>Enter the dominant fragment length of the sequencing library, and the
+read length used for the sequencing run. If you have performed quality
+trimming, you may wish to use the average or median read length after
+trimming for the read length.</p>
+
+<p>Then, click 'Run.' Your BAM files will be loaded and processed, and
+output files will be written in the directory from which pique.py was
+invoked. Run time for a bacterial genome depends on the number of
+mapped reads and the length of the genome. For our projects, we have
+found that a run takes about one to five minutes.</p>
+
+<h2>Batch Mode</h2>
+
+<p>If you have many experiments to process, it may be more convenient to
+run pique from a script. </p>
+
+<pre><code>$ pique batch -h
+usage: pique batch [-h] -name NAME -ip IPFILE -bg BGFILE -map MAPFILE
+                   [-a ALPHA] [-l L_THRESH] [-p]
+
+optional arguments:
+  -h, --help    show this help message and exit
+  -name NAME    project name
+  -ip IPFILE    BAM file for IP data
+  -bg BGFILE    BAM file for control data
+  -map MAPFILE  genome map file
+  -a ALPHA      read length
+  -l L_THRESH   expected binding footprint
+  -p            make a pickel file
+</code></pre>
+
+<p>The arguments are essentially the same as those found in the GUI,
+except for the option of making a pickle file. If this option is
+enabled, after completing the anaysis, pique will dump the entire
+analysis workbench object into a pickle file. This can be very useful
+for debugging and data post-processing in Python. For example, the
+pickle file can be used to load the analysis workbench into an
+interactive ipython session and used to generate figures.</p>
+
+<pre><code>http://docs.python.org/2/library/pickle.html
+</code></pre>
+
+<h2>Mapmaker Mode</h2>
+
+<pre><code>$ pique mapmaker -h
+usage: pique mapmaker [-h] -name NAME -bamfile BAMFILE [-window
+WINDOW]
+                      [-stride STRIDE] -highest HIGHEST -lowest LOWEST
+                      [-bins BINS]
+
+optional arguments:
+  -h, --help        show this help message and exit
+  -name NAME        project name
+  -bamfile BAMFILE  BAM file of aligned data
+  -window WINDOW    sliding window size
+  -stride STRIDE    stride length
+  -highest HIGHEST  highest histogram bin
+  -lowest LOWEST    lowest histogram bin
+  -bins BINS        number of histogram bins
+</code></pre>
+
+<h2>Genome Map File</h2>
+
+<p>The Genome Map File is a GFF-formatted file describing three kinds of
+features; analysis regions, masking regions, and normalization
+regions. Analysis and masking region annotations are optional;
+however, each analysis region MUST have at least one normalization
+region. (Note : If you do not describe any analysis regions, one will
+automatically be created spanning each contig. So, if you do not
+describe any analysis regions for a contig, you must still describe at
+least one normalization region for that contig.)</p>
+
+<p>Analysis regions should use the feature name 'analysis_region' in the
+file, and describe sub-regions of the contig that you wish to process
+independently. For example, if there are inconsistencies in coverage
+level due to gene dosage variations with respect to the reference,
+processing the dosage regions separately can improve peak detection.</p>
+
+<p>Masking regions should use the feature name 'mask' in the file, and
+describe sub-regions of the analysis regions that you wish to delete
+from the analysis. (Note: Masking regions <em>must</em> fall completely
+within an analysis region.) This is useful for hiding coverage
+aberrations due to repetitive regions, such as IS elements.</p>
+
+<p>By default, an analysis region describing the whole contig is created
+for each contig. When an analysis region is loaded by the user via the
+mapping file, the default analysis region for that contig is deleted. </p>
+
+<p>Normalization regions should use the name 'norm_region' in the map
+file, and describe regions (within analysis regions) in which there
+are thought to be no binding events. These regions will be used to
+calibrate the sequencing coverage between the IP track and the control
+track. If the user chooses poor normalization regions, Pique will
+still function, but will produce incorrect normalization factors and
+may set the peak detection cutoff too stringently.</p>
+
+<p>Features described in the genome map file must use the same contig
+names as the IP and background BAM files. To see them, run :</p>
+
+<pre><code>$ samtools view -H BAMfile.bam
+</code></pre>
+
+<p>Most columns in the GFF file are unused, and may be left empty (as
+long as the correct number of tabs are present). The required fields
+are :</p>
+
+<pre><code>0   contig name
+2   'analysis_region', 'mask' or 'norm_region'
+3   start coordinate
+4   end coordinate
+</code></pre>
+
+<p>An example genome map file is provided (data/map.gff).</p>
+
+<h2>Output Files</h2>
+
+<pre><code>&lt;name&gt;.IP.track  : A GGB-formatted track file of the IP data
+&lt;name&gt;.BG.track  : A GGB-formatted track file of the BG data
+&lt;name&gt;.bookmark  : A list of GGB bookmarks for each peak
+&lt;name&gt;.qp        : GGB-formatted quantitative positional data 
+                   of binding coordinates
+&lt;name&gt;.gff       : A GFF file of each peak
+&lt;name&gt;.peak.tsv  : Peak statistical quantities in TSV format
+</code></pre>
+
+<p>The GFF output file includes the following columns :</p>
+
+<pre><code>0   contig name
+1   software version
+2   feature description
+3   start coordinate
+4   end coordinate
+5   enrichment ratio relative to background
+</code></pre>
+
+<p>The TSV output includes the following columns :</p>
+
+<pre><code>0   contig
+1   start
+2   stop
+3   binds_at            # binding coordinate
+4   enrichment_ratio    
+5   average_contig_norm # mean of all norms
+6   std_contig_norm     # standard deviation of all norms
+7..                     # all subsequent colunms are the norms
+</code></pre>
+
+<p>The bookmark file contains some additional annotations in addition to
+the required GGB bookmark information :</p>
+
+<pre><code>binds_at            estimated binding coordinate
+enrichment_ratio    enrichment ratio relative to background
+norm_0, norm_1...   the normalization factors calculated from the
+                    normilization regions
+</code></pre>
+
+<h2>Caveats</h2>
+
+<p>Binding coordinates : The peak calling step (pique.py) will attempt to
+calculate a binding coordinate for the putative peaks it finds. The
+method used is extremely naive, but we find that it generally comes
+within about 5bp of the expected binding site.</p>
+
+<p>Double peaks : Some enriched regions contain two binding sites, but
+the algorithm is unable to de-convolute them. We have tried running
+these regions through several other peak callers with little success.
+We have included a script for identifying sites that are likely to be
+double peaks to assist with curation.</p>
+
+<h2>Downstream Analysis</h2>
+
+<p>Pique does not attempt to filter peaks that are statistically
+insignificant. We have found that this part of the analysis is rather
+specific to the data and to the experiment. </p>
+
+<p>To address this, Pique is designed to achieve a low false-negative
+rate at the cost of a potentially high false-positive rate (it appears
+that the false-positive rate is in practice rather low compared to
+other software, but we have not implemented any filtering to prevent
+them from happening). The idea is that it is painstaking work to find
+a putative peak, it is less difficult to discard unsatisfactory peaks
+once they have been found.  Thus, some kind of post-filtering is
+necessary. Pique provides the user with output that can be used to
+support a variety of such statistical tests.</p>
+
+<p>Some recommended filtering might include :</p>
+
+<ol>
+<li>Eliminate peaks that are significantly narrower than the size range of the sequencing library, and perhaps other peaks that cluster with them.</li>
+<li>Eliminate peaks with a normalized enrichment ratio below 1.0, or peaks that cluster with them.</li>
+<li>Eliminate peaks that have predicted binding sites that are very skewed from the center of the enriched region.</li>
+</ol><p>Depending on how many peaks are recovered, the user may wish to try
+one or all of these, perhaps with clustering to avoid arbitrary
+cutoffs.</p>
+
+<p>However, we do not recommend trying to generate a "perfect" peak list
+by statistical analysis alone.</p>
+
+<h2>Manual Curation</h2>
+
+<p>Microbial genomes are fairly small. It is probably not worth the
+effort to undertake a very complicated statistical effort to eliminate
+all false positives. We recommend applying a few basic statistical
+tests, and then loading tracks, quantitative positionals and bookmarks
+into the Gaggle Genome Browser.</p>
+
+<p>Once the data is loaded into the browser, view the bookmark list. When
+you select a bookmark, the browser will automatically scan to that
+region of the genome and highlight the putative peak region. If you
+think the peak is a false positive, press the delete key.</p>
+
+<p>When you are finished, save a copy of the bookmark file. We find that
+curation of a microbial genome in this way takes about ten to twenty
+minutes.</p>
+
+<h2>Inspirational Quote</h2>
+
+<p>I met men at every turn who owned from one thousand to thirty thousand
+"feet" in undeveloped silver mines, every single foot of which they
+believed would shortly be worth from fifty to a thousand dollars—and
+as often as any other way they were men who had not twenty-five
+dollars in the world. Every man you met had his new mine to boast of,
+and his "specimens" ready; and if the opportunity offered, he would
+infallibly back you into a corner and offer as a favor to you, not to
+him, to part with just a few feet in the "Golden Age," or the "Sarah
+Jane," or some other unknown stack of croppings, for money enough to
+get a "square meal" with, as the phrase went. And you were never to
+reveal that he had made you the offer at such a ruinous price, for it
+was only out of friendship for you that he was willing to make the
+sacrifice. Then he would fish a piece of rock out of his pocket, and
+after looking mysteriously around as if he feared he might be waylaid
+and robbed if caught with such wealth in his possession, he would dab
+the rock against his tongue, clap an eyeglass to it, and exclaim:</p>
+
+<p>"Look at that! Right there in that red dirt! See it? See the specks of
+gold? And the streak of silver? That's from the Uncle Abe. There's a
+hundred thousand tons like that in sight! Right in sight, mind you!
+And when we get down on it and the ledge comes in solid, it will be
+the richest thing in the world! Look at the assay! I don't want you to
+believe me—look at the assay!"</p>
+
+<p>Then he would get out a greasy sheet of paper which showed that the
+portion of rock assayed had given evidence of containing silver and
+gold in the proportion of so many hundreds or thousands of dollars to
+the ton.</p>
+
+<p>I little knew, then, that the custom was to hunt out the richest piece
+of rock and get it assayed! Very often, that piece, the size of a
+filbert, was the only fragment in a ton that had a particle of metal
+in it—and yet the assay made it pretend to represent the average value
+of the ton of rubbish it came from!</p>
+
+<ul>
+<li>Mark Twain, Roughing It</li>
+</ul><h2>Legal Stuff</h2>
+
+<p>Copyright (c) 2012, Russell Neches
+All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:</p>
+
+<ul>
+<li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+<li>Neither the name of the University of California, Davis nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</li>
+</ul><p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Pique maintained by <a href="https://github.com/ryneches">ryneches</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
