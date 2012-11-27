@@ -18,10 +18,19 @@ Eisen's laboratory.
 INSTALLING
 ----------
 
-Do the usual python thing.
+Do the usual python thing. We recomend using virtualenv, because it's
+nice.
 
-    $ cd pique
-    $ python setup.py install --prefix=/someplace/PYTHONPATH/knows/about
+    $ cd ~
+    $ virtualenv --system-site-packages opt
+    $ PATH=~/opt/bin:$PATH
+    $ pip install numpy         # install prerequisites
+    $ pip install scipy         # install prerequisites
+    $ pip install cython        # install prerequisites
+    $ pip install matplotlib    # install prerequisites
+    $ pip install pysam         # install prerequisites
+    $ pip install pique         # install Pique
+    $ pique test
 
 
 TESTS
