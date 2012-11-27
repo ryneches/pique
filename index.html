@@ -53,11 +53,36 @@ Eisen's laboratory. </p>
 </li>
 </ul><h2>Installation</h2>
 
-<p>Do the usual python thing.</p>
+<p>Do the usual python thing. We recommend using <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>, because it's nice.</p>
 
-<pre><code>$ cd pique
-$ python setup.py install --prefix=/someplace/PYTHONPATH/knows/about
+<pre><code>$ cd ~
+$ virtualenv --system-site-packages opt
+$ PATH=~/opt/bin:$PATH
+$ pip install numpy         # install prerequisites
+$ pip install scipy         # install prerequisites
+$ pip install cython        # install prerequisites
+$ pip install matplotlib    # install prerequisites
+$ pip install pysam         # install prerequisites
+$ pip install pique         # install Pique
+$ pique test
 </code></pre>
+
+<h2>Testing Data</h2>
+
+<p>A testing data set is <a href="http://figshare.com/articles/A_ChIP-seq_test_dataset/98106">available on Figshare</a>. It was made from a his-tagged tfbD pulldown in <em>Halobacterium salinarum</em>, sequenced on the Illumina GAII. The reads were mapped using <a href="http://bowtie-bio.sourceforge.net/">bowtie</a> to a cut-down chromosome and one plasmid. Unmapped reads were discarded. The dataset can be cited separately as :</p>
+
+<blockquote>
+<p>A ChIP-seq test dataset. Russell Neches, Marc Facciotti, Elizabeth G. Wilbanks, Phillip M. Seitzer. <strong>figshare</strong>.
+Retrieved 06:12, Nov 27, 2012 (GMT)
+<a href="http://dx.doi.org/10.6084/m9.figshare.98106">http://dx.doi.org/10.6084/m9.figshare.98106</a></p>
+</blockquote>
+
+<p>If you want to try out the test data, simply run :</p>
+
+<pre><code>$ pique test
+</code></pre>
+
+<p>The test data will automatically be downloaded to <code>/tmp/pique/</code>, and the resulting output data will be written to your current working directory.</p>
 
 <h2>Tests</h2>
 
@@ -98,22 +123,23 @@ library accessed by your own software.</p>
 <p>To use pique as a stand-alone application, there is a self-documenting
 command line interface :</p>
 
-<pre><code>$ ./pique -h
-usage: pique [-h] {batch,tk,mapmaker} ...
+<pre><code>$ pique --help
+usage: pique [-h] {batch,tk,test,mapmaker} ...
 
 Pique, a ChIP-seq analytical tool.
 
 optional arguments:
-  -h, --help           show this help message and exit
+  -h, --help            show this help message and exit
 
 commands:
-{batch,tk,mapmaker}
-  batch              command-line mode for peak detection
-  tk                 GUI mode for peak detection
-  mapmaker           genome analysis region mapping utility
+  {batch,tk,test,mapmaker}
+    batch               command-line mode for peak detection
+    tk                  GUI mode for peak detection
+    test                testing mode, downloads online test data
+    mapmaker            genome analysis region mapping utility
 </code></pre>
 
-<p>The application has three modes, batch, tk, and mapmaker. To access
+<p>The application has four modes, batch, tk, test and mapmaker. To access
 the GUI interface, run :</p>
 
 <pre><code>$ pique tk
