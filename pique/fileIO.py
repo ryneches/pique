@@ -26,9 +26,16 @@ def downloadURL( url, path ) :
     file = url.split('/')[-1]
     u = urllib.urlopen(url)
     file_path = os.path.join( path, file )
-    f = open( file_path, 'wb')
+
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
+
+    # if we've already downloaded the file, don't download it again
+    if os.path.isfile( file_path ) :
+        if os.path.getsize( path ) == file_size :
+            return file_path
+    
+    f = open( file_path, 'wb')
     
     print "Downloading: %s Bytes: %s" % (file, file_size)
     
