@@ -8,7 +8,11 @@ import argparse
 import numpy
 from Tkinter import *
 from tkFileDialog import *
-
+try :
+    import argcomplete
+    argcomplete_present = True
+except ImportError :
+    argcomplete_present = False
 
 # entry point functions for mode commands
 
@@ -303,6 +307,10 @@ class PiqueApp :
         
         pique.runtime.detect( name, IPfile, BGfile, mapfile, alpha, l_thresh, pickle_file )
         self.master.quit()
+
+if argcomplete_present :
+    argcomplete.autocomplete(parser)
+    
 
 args = parser.parse_args()
 args.func(args)
