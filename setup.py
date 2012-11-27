@@ -11,19 +11,16 @@ ext_modules = [ Extension( 'pique.mapmaker', [ 'pique/mapmaker.pyx' ] ),
                 Extension( 'pique.peak'    , [ 'pique/peak.pyx'     ] ) ]
 
 setup(name = 'pique',
-    version = '0.1',
+    version = '0.1.1',
     description = 'An efficient peak finder for high coverage ChIP-seq experiments.',
     #long_description=read('README'),
     author = 'Russell Neches',
     author_email = 'ryneches@ucdavis.edu',
     url = 'https://github.com/ryneches/pique',
-    packages = ['pique', 'pique.tests'],
-    package_data = {'pique.tests': ['test_IP_fwd.txt',  \
-                                    'test_IP_rev.txt',  \
-                                    'test_WCE_fwd.txt', \
-                                    'test_WCE_rev.txt'  ]},
+    packages = [ 'pique' ],
     license = 'BSD',
     test_suite = 'nose.collector',
+    tests_require=['nose'],
     cmdclass = { 'build_ext' : build_ext },
     ext_modules = ext_modules,
     classifiers = [

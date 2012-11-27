@@ -24,13 +24,46 @@ nice.
     $ cd ~
     $ virtualenv --system-site-packages opt
     $ PATH=~/opt/bin:$PATH
-    $ pip install numpy         # install prerequisites
-    $ pip install scipy         # install prerequisites
-    $ pip install cython        # install prerequisites
-    $ pip install matplotlib    # install prerequisites
-    $ pip install pysam         # install prerequisites
+    $ pip install numpy         # prerequisite
+    $ pip install scipy         # prerequisite
+    $ pip install cython        # prerequisite
+    $ pip install matplotlib    # prerequisite
+    $ pip install pysam         # prerequisite
+    $ pip install argcomplete   # suggested package
+    $ pip install ipython       # suggested package
     $ pip install pique         # install Pique
     $ pique test
+
+If you are running Debian or Ubuntu, we recommend using apt-get for
+most of the prerequisites.
+
+    $ sudo apt-get install  python-numpy        \
+                            python-scipy        \
+                            python-matplotlib   \
+                            python-virtualenv   \
+                            cython              \
+                            ipython
+    $ cd ~
+    $ virtualenv --system-site-packages opt
+    $ PATH=~/opt/bin:$PATH
+    $ pip install pysam
+    $ pip install argcomplete
+    $ pip install pique
+    $ pique test
+
+In your .bashrc file, we suggest adding ~/opt/bin to your PATH :
+    
+    $ cd ~
+    $ cat >> .bashrc
+    PATH=~/opt/bin:$PATH
+    export PATH
+    [ctrl-D]
+
+If you installed argcomplete, you can enable tab completion for pique
+commands by placing this into your .bashrc :
+
+    eval "$(register-python-argcomplete pique)"
+
 
 TESTING DATA
 ------------
@@ -85,6 +118,7 @@ Suggested :
 
     ipython
     samtools
+    argcomplete
     Gaggle Genome Browser
 
 USAGE

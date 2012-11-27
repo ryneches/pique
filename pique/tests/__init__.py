@@ -2,19 +2,19 @@
 nose tests for pique.
 """
 import pique.data
+import pique.constants
 import numpy
 
 def test_init_PiqueData() :
     
     # does the data load?
-    D = pique.data.PiqueData( 'data/IP.bam', 'data/WCE.bam', 'data/map.gff', name='test' )
-    
-    # did we get the expected number of contigs?
-    assert len( D.data.keys() ) == 3
+    D = pique.data.PiqueData( pique.constants.test_ip_file,     \
+                              pique.constants.test_bg_file,     \
+                              pique.constants.test_map_file,    \
+                              name='test' )
     
     # are they the ones we were looking for?
     assert D.data.keys().__contains__( 'Chromosome' )
-    assert D.data.keys().__contains__( 'PNRC100' )
     assert D.data.keys().__contains__( 'PNRC200' )
     
     # is the track data present?
