@@ -18,7 +18,7 @@ Eisen's laboratory.
 INSTALLING
 ----------
 
-Do the usual python thing. We recomend using virtualenv, because it's
+Do the usual python thing. We recommend using virtualenv, because it's
 nice.
 
     $ cd ~
@@ -32,6 +32,29 @@ nice.
     $ pip install pique         # install Pique
     $ pique test
 
+TESTING DATA
+------------
+
+A testing data set is [available on
+Figshare](http://figshare.com/articles/A_ChIP-seq_test_dataset/98106).
+It was made from a his-tagged tfbD pulldown in _Halobacterium
+salinarum_, sequenced on the Illumina GAII. The reads were mapped
+using [bowtie](http://bowtie-bio.sourceforge.net/) to a cut-down
+chromosome and one plasmid. Unmapped reads were discarded. The dataset
+can be cited separately as :
+
+    A ChIP-seq test dataset. Russell Neches, Marc Facciotti, Elizabeth
+    G. Wilbanks, Phillip M. Seitzer. **figshare**.
+    Retrieved 06:12, Nov 27, 2012 (GMT)
+    http://dx.doi.org/10.6084/m9.figshare.98106
+
+If you want to try out the test data, simply run :
+
+    $ pique test
+
+The test data will automatically be downloaded to `/tmp/pique/`, and
+the resulting output data will be written to your current working
+directory.
 
 TESTS
 -----
@@ -73,21 +96,22 @@ library accessed by your own software.
 To use pique as a stand-alone application, there is a self-documenting
 command line interface :
 
-    $ ./pique -h
-    usage: pique [-h] {batch,tk,mapmaker} ...
+    $ pique --help
+    usage: pique [-h] {batch,tk,test,mapmaker} ...
     
     Pique, a ChIP-seq analytical tool.
     
     optional arguments:
-      -h, --help           show this help message and exit
+      -h, --help            show this help message and exit
     
     commands:
-    {batch,tk,mapmaker}
-      batch              command-line mode for peak detection
-      tk                 GUI mode for peak detection
-      mapmaker           genome analysis region mapping utility
+      {batch,tk,test,mapmaker}
+        batch               command-line mode for peak detection
+        tk                  GUI mode for peak detection
+        test                testing mode, downloads online test data
+        mapmaker            genome analysis region mapping utility
 
-The application has three modes, batch, tk, and mapmaker. To access
+The application has four modes, batch, tk, test and mapmaker. To access
 the GUI interface, run :
 
     $ pique tk
