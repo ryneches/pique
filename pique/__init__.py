@@ -8,7 +8,6 @@ import analysis
 import fileIO
 import processing
 import mapmaker
-import values
 import runtime
 import peak
 import constants
