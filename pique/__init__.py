@@ -20,7 +20,7 @@ class PiqueException( Exception ) :
     pass
 
 def version() :
-    return values.version
+    return constants.version
 
 def readtrack( filename ) :
     """

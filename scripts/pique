@@ -32,6 +32,18 @@ def mainTk( args ) :
     app = PiqueApp( root )
     root.mainloop()
 
+def test( args ) :
+    """
+    entry point for test mode
+    """
+    pique.runtime.detect(   'test',
+                            pique.constants.test_ip_file,
+                            pique.constants.test_bg_file,
+                            pique.constants.test_map_file,
+                            30,
+                            300,
+                            True )
+
 def mapmaker( args ) :
     """
     entry point for mapmaker utility
@@ -105,6 +117,10 @@ parser_batch.add_argument(  '-p',
 # Tk mode
 parser_tk = subparsers.add_parser( 'tk', help='GUI mode for peak detection' )
 parser_tk.set_defaults( func=mainTk )
+
+# test mode
+parser_tk = subparsers.add_parser( 'test', help='testing mode, downloads online test data' )
+parser_tk.set_defaults( func=test )
 
 # mapmaker mode
 parser_map = subparsers.add_parser( 'mapmaker', help='genome analysis region mapping utility' )

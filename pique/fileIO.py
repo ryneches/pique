@@ -5,9 +5,52 @@ Generate coverage tracks from a BAM file.
 import pysam
 import numpy
 import sys
+import urllib
+import constants
+import os
 
 GFFkeys = ['contig','source','feature','start','stop','score','strand','frame','group']
 
+def downloadURL( url, path ) :
+    """
+    Download a file.
+    
+    Code adapted from 
+    http://stackoverflow.com/questions/22676/how-do-i-download-a-file-over-http-using-python
+    """
+    
+    # create cache_dir if it doesn't exist already
+    if not os.path.isdir( path ) :
+        os.mkdir( path )
+    
+    file = url.split('/')[-1]
+    u = urllib.urlopen(url)
+    file_path = os.path.join( path, file )
+    f = open( file_path, 'wb')
+    meta = u.info()
+    file_size = int(meta.getheaders("Content-Length")[0])
+    
+    print "Downloading: %s Bytes: %s" % (file, file_size)
+    
+    file_size_dl = 0
+    block_sz = 8192
+    while True:
+        
+        buffer = u.read(block_sz)
+        
+        # if the buffer is embty, time to stop
+        if not buffer:
+            break
+        
+        file_size_dl += len(buffer)
+        f.write(buffer)
+        status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+        status = status + chr(8)*(len(status)+1)
+        print status,
+        
+    f.close()
+    
+    return file_path
 
 def loadBAM( file ) :
     """
@@ -15,6 +58,12 @@ def loadBAM( file ) :
     Each track contains scalar length, and two vectors representing
     the forward and everse coverage across the contig.
     """
+
+    # if the file path is a URL, download it to the cache directory
+    # specified in pique.constants.cache_dir
+    if file.split(':')[0].lower() == 'http' :
+        file = downloadURL( file, constants.cache_dir )
+    
     # index the BAM file
     pysam.index( file )
     
@@ -53,6 +102,12 @@ def loadGFF( file ) :
     """
     Parse a GFF file and return the analysis region and mask features.
     """
+
+    # if the file path is a URL, download it to the cache directory
+    # specified in pique.constants.cache_dir
+    if file.split(':')[0].lower() == 'http' :
+        file = downloadURL( file, constants.cache_dir )
+
     regions = []
     masks   = []
     norms   = []

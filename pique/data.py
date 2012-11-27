@@ -127,6 +127,9 @@ class PiqueData :
         BAM files must be prepared in such a way that the contig names
         are identical, and each IP track must be identical in length
         to its corresponding background contig.
+        
+        If the file names are valid URLs, attempt to download the data
+        to the cache directory specified in pique.constants.cache_dir.
         """
         
         IP_tracks = fileIO.loadBAM( IP_file )

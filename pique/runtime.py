@@ -72,7 +72,7 @@ def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
     
     # log inputs
     pique.msg( logfile, '  -> IP file  : ' + ipfile   )
-    pique.msg( logfile, '  -> BG file  : ' + ipfile   )
+    pique.msg( logfile, '  -> BG file  : ' + bgfile   )
     pique.msg( logfile, '  -> map file : ' + mapfile  )
     pique.msg( logfile, '  -> alpha    : ' + str(alpha)    )
     pique.msg( logfile, '  -> l_thresh : ' + str(l_thresh) )
