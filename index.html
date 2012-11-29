@@ -53,7 +53,8 @@ Eisen's laboratory. </p>
 </li>
 </ul><h2>Installation</h2>
 
-<p>Do the usual python thing. We recommend using <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>, because it's nice.</p>
+<p><strong>General Instructions</strong> : You can do the usual python thing. We recommend using
+virtualenv, because it's nice.</p>
 
 <pre><code>$ cd ~
 $ virtualenv --system-site-packages opt
@@ -69,8 +70,8 @@ $ pip install pique         # install Pique
 $ pique test
 </code></pre>
 
-<p>If you are running Debian or Ubuntu, we recommend using apt for
-most of the prerequisites.</p>
+<p><strong>Debian and Ubuntu</strong> : We recommend using apt-get for most of the
+prerequisites.</p>
 
 <pre><code>$ sudo apt-get install  python-numpy        \
                         python-scipy        \
@@ -96,8 +97,37 @@ export PATH
 [ctrl-D]
 </code></pre>
 
-<p>If you installed argcomplete, you can enable tab completion for pique
-commands by placing this into your .bashrc :</p>
+<p><strong>MacOS</strong> : Unfortunately, MacOS doesn't come with virtualenv or any sort
+of useful global package management system. Here's how to fix that, at 
+least for Python :</p>
+
+<pre><code>$ sudo easy_install pip     # install pip globally
+</code></pre>
+
+<p>Make sure pip works :</p>
+
+<pre><code>$ pip
+Usage: pip COMMAND [OPTIONS]
+pip: error: You must give a command (use "pip help" to see a 
+list of commands)
+</code></pre>
+
+<p>Now, install virtualenv :</p>
+
+<pre><code>$ sudo pip install virtualenv
+</code></pre>
+
+<p>Make sure that works :</p>
+
+<pre><code>$ virtualenv
+You must provide a DEST_DIR
+...
+</code></pre>
+
+<p>Now, scroll back up and follow the General Instructions.</p>
+
+<p><strong>Using argcomplete</strong> : If you chose to install argcomplete, you can enable tab
+completion for pique commands by placing this into your .bashrc :</p>
 
 <pre><code>eval "$(register-python-argcomplete pique)"
 </code></pre>
