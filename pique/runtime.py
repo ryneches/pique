@@ -5,13 +5,14 @@ Pique runtime.
 import pique
 import sys
 import cPickle
-import pylab
 import numpy
 
 def makemap( name, bamfile, window, stride, highest, lowest, bins ) :
     """
     This function drives the genome map making workflow.
     """
+    import pylab 
+
     logfile = name + '.mapmaker.log'
     mapfile = name + '.map.gff'
     

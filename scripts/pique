@@ -52,6 +52,11 @@ def mapmaker( args ) :
     """
     entry point for mapmaker utility
     """
+    try :
+        import pylab
+    except ImportError :
+        print "Matplotlib not installed; mapmaker mode disabled."
+
     pique.runtime.makemap(  args.name,
                             args.bamfile,
                             args.window,

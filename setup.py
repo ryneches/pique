@@ -30,6 +30,6 @@ setup(name = 'pique',
         'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: BSD License'
     ],
-    requires = [ 'numpy', 'scipy', 'cython', 'pysam', 'matplotlib' ],
+    requires = [ 'numpy', 'scipy', 'cython', 'pysam' ],
     scripts = [ 'scripts/pique' ]
     )

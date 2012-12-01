@@ -18,8 +18,8 @@ Eisen's laboratory.
 INSTALLING
 ----------
 
-Do the usual python thing. We recommend using virtualenv, because it's
-nice.
+General Instructions : You can do the usual python thing. We recommend using
+virtualenv, because it's nice.
 
     $ cd ~
     $ virtualenv --system-site-packages opt
@@ -27,15 +27,15 @@ nice.
     $ pip install numpy         # prerequisite
     $ pip install scipy         # prerequisite
     $ pip install cython        # prerequisite
-    $ pip install matplotlib    # prerequisite
     $ pip install pysam         # prerequisite
     $ pip install argcomplete   # suggested package
+    $ pip install matplotlib    # suggested package
     $ pip install ipython       # suggested package
     $ pip install pique         # install Pique
     $ pique test
 
-If you are running Debian or Ubuntu, we recommend using apt-get for
-most of the prerequisites.
+Debian and Ubuntu : We recommend using apt-get for most of the
+prerequisites.
 
     $ sudo apt-get install  python-numpy        \
                             python-scipy        \
@@ -59,8 +59,33 @@ In your .bashrc file, we suggest adding ~/opt/bin to your PATH :
     export PATH
     [ctrl-D]
 
-If you installed argcomplete, you can enable tab completion for pique
-commands by placing this into your .bashrc :
+MacOS : Unfortunately, MacOS doesn't come with virtualenv or any sort
+of useful global package management system. Here's how to fix that :
+
+    $ sudo easy_install pip     # install pip globally
+
+Make sure pip works :
+
+    $ pip
+    Usage: pip COMMAND [OPTIONS]
+    pip: error: You must give a command (use "pip help" to see a 
+    list of commands)
+
+Now, install virtualenv :
+
+    $ sudo pip install virtualenv
+
+Make sure that works :
+
+    $ virtualenv
+    You must provide a DEST_DIR
+    ...
+
+Now, scroll back up and follow the General Instructions.
+
+
+Using argcomplete : If you installed argcomplete, you can enable tab
+completion for pique commands by placing this into your .bashrc :
 
     eval "$(register-python-argcomplete pique)"
 
@@ -112,10 +137,10 @@ This package requires the following packages :
     numpy
     pysam
     cython
-    matplotlib
         
 Suggested :
 
+    matplotlib
     ipython
     samtools
     argcomplete
