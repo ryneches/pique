@@ -11,7 +11,7 @@ ext_modules = [ Extension( 'pique.mapmaker', [ 'pique/mapmaker.pyx' ] ),
                 Extension( 'pique.peak'    , [ 'pique/peak.pyx'     ] ) ]
 
 setup(name = 'pique',
-    version = '0.1.1',
+    version = '0.1.2',
     description = 'An efficient peak finder for high coverage ChIP-seq experiments.',
     #long_description=read('README'),
     author = 'Russell Neches',
