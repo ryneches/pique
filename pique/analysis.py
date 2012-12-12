@@ -133,27 +133,29 @@ class PiqueAnalysis :
         Find the peaks in an anlysis region and append them to the
         data dictionary.
         """
-        length = len( self.data[ar_name]['bg']['forward'] )
-        maxcov = max( numpy.concatenate( (                          \
-                        self.data[ar_name]['ip']['forward'],        \
-                        self.data[ar_name]['ip']['reverse'] ) ) )
+
+        ipf = self.data[ar_name]['ip']['forward']
+        ipr = self.data[ar_name]['ip']['reverse']
+        bgf = self.data[ar_name]['bg']['forward']
+        bgr = self.data[ar_name]['bg']['reverse']
         
+        length = len( ipf )
+        
+        norm_f = ipf/sum(ipf) - bgf/sum(bgf)
+        norm_r = ipr/sum(ipr) - bgr/sum(bgr)
+
+        maxcov = max( numpy.concatenate( ( norm_f, norm_r ) ) )
+
         # find local maxima in the forward starnd
         peaks_f = pique.peak.peakdet(                               \
-                        self.data[ar_name]['ip']['forward']      /  \
-                        sum(self.data[ar_name]['ip']['forward']) -  \
-                        self.data[ar_name]['bg']['forward']      /  \
-                        sum(self.data[ar_name]['bg']['forward']),   \
+                        norm_f,                                     \
                         pique.constants.top_delta*maxcov )[0]
 
         # find local maxima in the reverse starand
         peaks_r = pique.peak.peakdet(                               \
-                        self.data[ar_name]['ip']['reverse']      /  \
-                        sum(self.data[ar_name]['ip']['reverse']) -  \
-                        self.data[ar_name]['bg']['reverse']      /  \
-                        sum(self.data[ar_name]['bg']['reverse']),   \
+                        norm_r,                                     \
                         pique.constants.top_delta*maxcov )[0]
-        
+
         # build up a peak annotation for maxima in the forward and
         # reverse strand coverage that occur within the peak
         # separation distance
@@ -166,7 +168,7 @@ class PiqueAnalysis :
                     # find the region around the forward strand
                     # maximum
                     fx0,fx1 = pique.peak.region(                    \
-                        self.data[ar_name]['ip']['forward'],        \
+                        ipf,                                        \
                         ix,                                         \
                         pique.constants.reg_delta,                  \
                         radius=pique.constants.radius )
@@ -174,7 +176,7 @@ class PiqueAnalysis :
                     # find the region around the reverse strand
                     # maximum
                     rx0,rx1 = pique.peak.region(                    \
-                        self.data[ar_name]['ip']['reverse'],        \
+                        ipr,                                        \
                         jx,                                         \
                         pique.constants.reg_delta,                  \
                         radius=pique.constants.radius )

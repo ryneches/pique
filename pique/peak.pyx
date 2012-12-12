@@ -107,19 +107,25 @@ def region( v,      \
     
     cdef DTYPE_t x0 = -numpy.inf
     cdef DTYPE_t x1 =  numpy.inf
-    cdef max_v      = len(v) - 1
+    cdef int max_v  =  len(v) - 1
+    cdef int hang_0 =  0
+    cdef int hang_1 =  0
     
-    for x0 in numpy.arange(radius) :
-        if x - x0 <= 0  :
-            # bounds check
-            break
+    if x - radius < 0 :
+        hang_0 = abs( x - radius )
+    else :
+        hang_0 = 0
+
+    if x + radius > max_v :
+        hang_1 = x + radius - max_v
+    else :
+        hang_1 = 0
+
+    for x0 in numpy.arange( radius - hang_0 ) :
         if v[x-x0] <= v[x] * delta :
             break
 
-    for x1 in numpy.arange(radius) :
-        if x + x1 >= max_v :
-            # bounds check
-            break
+    for x1 in numpy.arange( radius - hang_1 ) :
         if v[x+x1] <= v[x] * delta :
             break
     
