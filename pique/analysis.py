@@ -140,12 +140,18 @@ class PiqueAnalysis :
         
         # find local maxima in the forward starnd
         peaks_f = pique.peak.peakdet(                               \
-                        self.data[ar_name]['ip']['forward'],        \
+                        self.data[ar_name]['ip']['forward']      /  \
+                        sum(self.data[ar_name]['ip']['forward']) -  \
+                        self.data[ar_name]['bg']['forward']      /  \
+                        sum(self.data[ar_name]['bg']['forward']),   \
                         pique.constants.top_delta*maxcov )[0]
 
         # find local maxima in the reverse starand
         peaks_r = pique.peak.peakdet(                               \
-                        self.data[ar_name]['ip']['reverse'],        \
+                        self.data[ar_name]['ip']['reverse']      /  \
+                        sum(self.data[ar_name]['ip']['reverse']) -  \
+                        self.data[ar_name]['bg']['reverse']      /  \
+                        sum(self.data[ar_name]['bg']['reverse']),   \
                         pique.constants.top_delta*maxcov )[0]
         
         # build up a peak annotation for maxima in the forward and
