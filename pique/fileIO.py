@@ -178,6 +178,27 @@ def writetrack( file, data, track='IP' ) :
                 f.write( contig + '\t-\t' + str(n) + '\t' + str(i) + '\n' )
     f.close()
 
+def writeWAV( file, data, contig, track='IP', minusBG=True, amplify=True ) :
+    """
+    Write a WAV-format audio file for a given track.
+    """
+    from scipy.io.wavfile import write
+    left  = data[contig][track]['forward']
+    right = data[contig][track]['reverse']
+    if minusBG :
+        leftBG  = data[contig]['BG']['forward']
+        rightBG = data[contig]['BG']['forward']
+        left_n    = numpy.median(left)
+        right_n   = numpy.median(right)
+        leftBG_n  = numpy.median(leftBG)
+        rightBG_n = numpy.median(rightBG)
+
+        left  = ( left/left_n   - leftBG/leftBG_n   )
+        right = ( right/right_n - rightBG/rightBG_n )
+        left  = 2**14 * ( left/max(left)   )
+        right = 2**14 * ( right/max(right) )
+        write( file, 4800, numpy.array(zip(*(left,right))).astype(numpy.int16) )
+
 def writeQP( file, data ) :
     """
     Write GGB quantitative positional file of estimated binding
