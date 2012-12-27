@@ -201,6 +201,7 @@ commands:
     batch               command-line mode for peak detection
     tk                  GUI mode for peak detection
     test                testing mode, downloads online test data
+    bam2wav             BAM to WAV conversion utility
     mapmaker            genome analysis region mapping utility
 </code></pre>
 
@@ -283,6 +284,25 @@ optional arguments:
   -highest HIGHEST  highest histogram bin
   -lowest LOWEST    lowest histogram bin
   -bins BINS        number of histogram bins
+</code></pre>
+
+<h2>bam2wav mode</h2>
+
+<p>As an alternative to visualization, pique contains a utility for
+converting ChIP-seq data into audio data. The background alighment is
+subtracted from the IP alighment, and a seperate WAV file is written
+for each contig. Coverage information for reads that map in the
+forward and reverse orientations is represented on the left and right
+audio channels, respectively. </p>
+
+<pre><code>$ pique bam2wav -h
+usage: pique bam2wav [-h] -name NAME -ip IPFILE -bg BGFILE
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -name NAME  project name
+  -ip IPFILE  BAM file for IP data
+  -bg BGFILE  BAM file for control data
 </code></pre>
 
 <h2>Genome Map File</h2>
