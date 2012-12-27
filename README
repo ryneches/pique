@@ -252,12 +252,12 @@ MAPMAKER MODE
 BAM2WAV MODE
 ------------
 
-As an alternative to visualization, pique contains a utility for
-converting ChIP-seq data into audio data. The background alighment is
-subtracted from the IP alighment, and a seperate WAV file is written
-for each contig. Coverage information for reads that map in the
-forward and reverse orientations is represented on the left and right
-audio channels, respectively. 
+As an alternative to visualization, pique contains a utility for 
+converting ChIP-seq data into audio data. The background alignment 
+is subtracted from the IP alignment, and a separate WAV file is 
+written for each contig. Coverage information for reads that map 
+in the forward and reverse orientations is represented on the left 
+and right audio channels, respectively.
 
     $ pique bam2wav -h
     usage: pique bam2wav [-h] -name NAME -ip IPFILE -bg BGFILE
@@ -267,7 +267,6 @@ audio channels, respectively.
       -name NAME  project name
       -ip IPFILE  BAM file for IP data
       -bg BGFILE  BAM file for control data
-
 
 
 GENOME MAP FILE
