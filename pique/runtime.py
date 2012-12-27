@@ -7,7 +7,13 @@ import sys
 import cPickle
 import numpy
 
-def makemap( name, bamfile, window, stride, highest, lowest, bins ) :
+def makemap( name, 
+             bamfile,
+             window,
+             stride, 
+             highest,
+             lowest,
+             bins ) :
     """
     This function drives the genome map making workflow.
     """
@@ -62,7 +68,14 @@ def makemap( name, bamfile, window, stride, highest, lowest, bins ) :
         pylab.savefig( imgname, format='png' )
     
 
-def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
+def detect( name,
+            ipfile, 
+            bgfile,
+            mapfile,
+            alpha,
+            l_thresh,
+            pickle_file,
+            wav_file ) :
     """
     This function drives the peak detection workflow.
     """
@@ -116,10 +129,21 @@ def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
         pique.msg( logfile, '     normalizations   : ' + ', '.join( map(str, PA.data[ar_name]['norms']) ) )
     
     # if a pickle file was requested, write it
-    pique.msg( logfile, 'pickling analysis workbench...' )
     if pickle_file :
+        pique.msg( logfile, 'pickling analysis workbench...' )
         cPickle.dump( PA, open( name + '.pickle', 'w' ) )
     
+    # if a WAV file was requested, write it
+    if wav_file :
+        for contig in PA.keys() :
+            file = name + '_' + contig + '.wav'
+            pique.msg( logfile, 'writing WAV output : ' + file )
+            pique.fileIO.writeWAV( file,
+                                   PA,
+                                   track='IP',
+                                   minusBG=True,
+                                   amplify=True )
+
     # write output files
     pique.msg( logfile, 'writing output files...' )
     pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
@@ -131,5 +155,51 @@ def detect( name, ipfile, bgfile, mapfile, alpha, l_thresh, pickle_file ) :
 
     # done!
     pique.msg( logfile, 'run completed.' )
+
+def bam2wav( name,
+             ipfile, 
+             bgfile ) :
+    """
+    This function drives the creation of a WAV file from a BAM file.
+    """
+    
+    # set logfile
+    logfile = name + '.log'
+    
+    pique.msg( logfile, 'converting BAM files to WAV files for project : ' + name )
+    
+    # log inputs
+    pique.msg( logfile, '  -> IP file  : ' + ipfile   )
+    pique.msg( logfile, '  -> BG file  : ' + bgfile   )
+    
+    # load the data
+    pique.msg( logfile, 'loading data...' )
+    D = pique.data.PiqueData( ipfile, bgfile, '', name=name )
+    
+    pique.msg( logfile, '  found contigs :' )
+    for contig in D.data.keys() :
+        pique.msg( logfile, '    ' + contig )
+        pique.msg( logfile, '      length : ' + str(D.data[contig]['length']) )
+        for r in D.data[contig]['regions'] :
+            start = str( r['start'] )
+            stop  = str( r['stop']  )
+            pique.msg( logfile, '      analysis region : ' + start + ':' + stop )
+        for m in D.data[contig]['masks'] :
+            start = str( m['start'] )
+            stop  = str( m['stop']  )
+            pique.msg( logfile, '      masking region  : ' + start + ':' + stop )
+    # write the WAV files
+    for contig in D.data.keys() :
+        file = name + '_' + contig + '.wav'
+        pique.msg( logfile, 'writing WAV output : ' + file )
+        pique.fileIO.writeWAV( file,
+                               D.data,
+                               contig,
+                               track='IP',
+                               minusBG=True,
+                               amplify=True )
+
+    # done!
+    pique.msg( logfile, 'conversion completed.' )
 
 

@@ -26,7 +26,8 @@ def batch( args ) :
                             args.mapfile,
                             args.alpha,
                             args.l_thresh,
-                            args.pickle_file )
+                            args.pickle_file,
+                            args.wav_file )
 
 def mainTk( args ) :
     """
@@ -46,7 +47,17 @@ def test( args ) :
                             pique.constants.test_map_file,
                             30,
                             300,
+                            True,
                             True )
+
+def bam2wav( ags ) :
+    """
+    entry point for ban2wav utility
+    """
+    pique.runtime.bam2wav(  args.name,
+                            args.ipfile,
+                            args.bgfile )
+
 
 def mapmaker( args ) :
     """
@@ -130,6 +141,29 @@ parser_tk.set_defaults( func=mainTk )
 # test mode
 parser_tk = subparsers.add_parser( 'test', help='testing mode, downloads online test data' )
 parser_tk.set_defaults( func=test )
+
+# bam2wav mode options
+parser_bam2wav = subparsers.add_parser( 'bam2wav', help='command-line mode converting BAM files to WAV files' )
+
+parser_bam2wav.set_defaults( func=bam2wav )
+
+parser_bam2wav.add_argument( '-name', 
+                             action     = 'store', 
+                             dest       = 'name', 
+                             required   = True,
+                             help       = 'project name' )
+
+parser_bam2wav.add_argument( '-ip', 
+                             action     = 'store', 
+                             dest       = 'ipfile', 
+                             required   = True,
+                             help       = 'BAM file for IP data' )
+
+parser_bam2wav.add_argument( '-bg',
+                             action     = 'store',
+                             dest       = 'bgfile',
+                             required   = True,
+                             help       = 'BAM file for control data' )
 
 # mapmaker mode
 parser_map = subparsers.add_parser( 'mapmaker', help='genome analysis region mapping utility' )
