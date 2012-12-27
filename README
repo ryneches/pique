@@ -156,19 +156,21 @@ To use pique as a stand-alone application, there is a self-documenting
 command line interface :
 
     $ pique --help
-    usage: pique [-h] {batch,tk,test,mapmaker} ...
+    usage: pique [-h] {batch,tk,test,bam2wav,mapmaker} ...
     
     Pique, a ChIP-seq analytical tool.
     
     optional arguments:
       -h, --help            show this help message and exit
-    
+
     commands:
-      {batch,tk,test,mapmaker}
+      {batch,tk,test,bam2wav,mapmaker}
         batch               command-line mode for peak detection
         tk                  GUI mode for peak detection
         test                testing mode, downloads online test data
+        bam2wav             BAM to WAV conversion utility
         mapmaker            genome analysis region mapping utility
+
 
 The application has four modes, batch, tk, test and mapmaker. To access
 the GUI interface, run :
@@ -246,6 +248,26 @@ MAPMAKER MODE
       -highest HIGHEST  highest histogram bin
       -lowest LOWEST    lowest histogram bin
       -bins BINS        number of histogram bins
+
+BAM2WAV MODE
+------------
+
+As an alternative to visualization, pique contains a utility for
+converting ChIP-seq data into audio data. The background alighment is
+subtracted from the IP alighment, and a seperate WAV file is written
+for each contig. Coverage information for reads that map in the
+forward and reverse orientations is represented on the left and right
+audio channels, respectively. 
+
+    $ pique bam2wav -h
+    usage: pique bam2wav [-h] -name NAME -ip IPFILE -bg BGFILE
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+      -name NAME  project name
+      -ip IPFILE  BAM file for IP data
+      -bg BGFILE  BAM file for control data
+
 
 
 GENOME MAP FILE

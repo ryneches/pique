@@ -143,7 +143,7 @@ parser_tk = subparsers.add_parser( 'test', help='testing mode, downloads online 
 parser_tk.set_defaults( func=test )
 
 # bam2wav mode options
-parser_bam2wav = subparsers.add_parser( 'bam2wav', help='command-line mode converting BAM files to WAV files' )
+parser_bam2wav = subparsers.add_parser( 'bam2wav', help='BAM to WAV conversion utility' )
 
 parser_bam2wav.set_defaults( func=bam2wav )
 
