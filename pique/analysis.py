@@ -141,8 +141,8 @@ class PiqueAnalysis :
         
         length = len( ipf )
         
-        norm_f = ipf/median(ipf) - bgf/median(bgf)
-        norm_r = ipr/median(ipr) - bgr/median(bgr)
+        norm_f = ipf/numpy.median(ipf) - bgf/numpy.median(bgf)
+        norm_r = ipr/numpy.median(ipr) - bgr/numpy.median(bgr)
 
         maxcov = max( numpy.concatenate( ( norm_f, norm_r ) ) )
 

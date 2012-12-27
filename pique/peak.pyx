@@ -74,13 +74,13 @@ def peakdet( v,         \
             mnpos = x[i]
         
         if lookformax:
-            if this < mx-delta:
+            if this < mx-delta and mx != -numpy.inf :
                 maxtab.append((mxpos, mx))
                 mn = this
                 mnpos = x[i]
                 lookformax = False
         else:
-            if this > mn+delta:
+            if this > mn+delta and mn != numpy.inf:
                 mintab.append((mnpos, mn))
                 mx = this
                 mxpos = x[i]
@@ -105,8 +105,8 @@ def region( v,      \
         
     """
     
-    cdef DTYPE_t x0 = -numpy.inf
-    cdef DTYPE_t x1 =  numpy.inf
+    cdef DTYPE_t x0 =  0 
+    cdef DTYPE_t x1 =  0
     cdef int max_v  =  len(v) - 1
     cdef int hang_0 =  0
     cdef int hang_1 =  0

@@ -134,6 +134,13 @@ parser_batch.add_argument(  '-p',
                             required    = False, 
                             help        = 'make a pickel file' )
 
+parser_batch.add_argument(  '-w', 
+                            action      = 'store_true', 
+                            dest        = 'wav_file',
+                            default     = False, 
+                            required    = False, 
+                            help        = 'make WAV files' )
+
 # Tk mode
 parser_tk = subparsers.add_parser( 'tk', help='GUI mode for peak detection' )
 parser_tk.set_defaults( func=mainTk )

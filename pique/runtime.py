@@ -135,15 +135,17 @@ def detect( name,
     
     # if a WAV file was requested, write it
     if wav_file :
-        for contig in PA.keys() :
+        for contig in D.data.keys() :
             file = name + '_' + contig + '.wav'
             pique.msg( logfile, 'writing WAV output : ' + file )
-            pique.fileIO.writeWAV( file,
-                                   PA,
-                                   track='IP',
-                                   minusBG=True,
-                                   amplify=True )
-
+            pique.fileIO.writeWAV(  file,
+                                    D.data,
+                                    contig,
+                                    track='IP',
+                                    minusBG=True,
+                                    amplify=True )
+    
+    
     # write output files
     pique.msg( logfile, 'writing output files...' )
     pique.fileIO.writepeaksGFF(  name + '.gff',      PA.data )
