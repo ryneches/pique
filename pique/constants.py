@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Pique version
-version         = '0.1.4'
+version         = '0.1.5'
 
 # cache directory for storing temporary and downloaded files
 cache_dir       = '/tmp/pique'
