@@ -6,6 +6,7 @@ try:
 except ImportError:
     print '(WARNING: importing distutils, not setuptools!)'
     from distutils.core import setup
+import numpy as np
 
 ext_modules = [ Extension( 'pique.mapmaker', [ 'pique/mapmaker.pyx' ] ),
                 Extension( 'pique.peak'    , [ 'pique/peak.pyx'     ] ) ]
@@ -22,6 +23,7 @@ setup(name = 'pique',
     test_suite = 'nose.collector',
     tests_require=['nose'],
     cmdclass = { 'build_ext' : build_ext },
+    include_dirs = [ np.get_include() ],
     ext_modules = ext_modules,
     classifiers = [
         'Development Status :: 4 - Beta',
