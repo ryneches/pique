@@ -98,10 +98,15 @@ export PATH
 </code></pre>
 
 <p><strong>MacOS</strong> : Unfortunately, MacOS doesn't come with virtualenv or any sort
-of useful global package management system. Here's how to fix that, at 
-least for Python :</p>
+of useful global package management system. You may wish to follow <a href="http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/">these instructions</a> to get numpy, cython and scipy installed on MacOS. You will need XCode installed and the command line tools enabled, and you will then have to install a FORTRAN compiler to build scipy. If you use <a href="http://mxcl.github.com/homebrew/">Homebrew</a> as the instructions liked above suggest, it's not too bad. Here is the gist of it :</p>
 
-<pre><code>$ sudo easy_install pip     # install pip globally
+<pre><code>$ easy_install pip     # install pip globally
+</code></pre>
+
+<p><strong>Warning for MacOS</strong> : As of January 25th, 2013, <a href="https://github.com/pypa/pip/issues/707">pip 1.2.1 contains a bug</a> that will causes certain package manifest files in numpy to be skipped. This causes the scipy installation to fail. The bug has been fixed in the development version of pip, which you can install as follows :</p>
+
+<pre><code>$ git clone https://github.com/pypa/pip.git
+$ easy_install ./pip
 </code></pre>
 
 <p>Make sure pip works :</p>
