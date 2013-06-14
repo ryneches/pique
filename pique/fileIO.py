@@ -208,10 +208,11 @@ def writeQP( file, data ) :
     f.write( 'sequence\tstrand\tposition\tvalue\n' )
     for ar_name in data.keys() :
         ar      = data[ar_name]
+        rstart  = ar['region']['start']
         contig  = ar['contig']
         for e in ar['peaks'] :
             er    = str( e['annotations']['enrichment_ratio'] )
-            bc    = str( e['annotations']['binds_at'] )
+            bc    = str( rstart + e['annotations']['binds_at'] )
             f.write( contig + '\t'  \
                     + '.\t'         \
                     + bc + '\t'     \
@@ -246,8 +247,8 @@ def writepeakTSV( file, data ) :
             for e in ar['peaks'] :
                 start = str( rstart + e['start'] )
                 stop  = str( rstart + e['stop']  )
-                er    = str(e['annotations']['enrichment_ratio'])
-                bc    = str(e['annotations']['binds_at'])
+                er    = str( e['annotations']['enrichment_ratio'] )
+                bc    = str( rstart + e['annotations']['binds_at'] )
                 line  = '\t'.join( [ contig, start, stop, bc, er, n_av, n_std ] )
                 line  = line + '\t' + '\t'.join( map( str, norms ) ) + '\n'
                 f.write( line )
@@ -278,6 +279,9 @@ def writebookmarks( file, data, name='' ) :
                     + 'none\tpeak\t'    )
             if e.has_key( 'annotations' ) :
                 for key,value in e['annotations'].items() :
+                    # translate to contig coordiantes
+                    if key == 'binds_at' :
+                        value = value + rstart
                     f.write( str(key) + ':' + str(value) + ' ' )
             f.write( '\n' )
     f.close()
